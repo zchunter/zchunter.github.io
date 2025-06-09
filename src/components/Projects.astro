@@ -6,11 +6,13 @@
     <p>Check out some of the projects I'm working on. No filler, no stock photos of handshakes — just the good stuff.</p>
     
     <div class="project-cards">
-        <div class="card">
-            <h3>XLIFF Text Swapper for Rise Courses</h3>
-            <p>A utility that saves you hours when updating localized Rise content.</p>
-            <span class="tag">Coming Soon</span>
-        </div>
+        <a href="/tools/xliff-swapper" class="card-link">
+            <div class="card">
+                <h3>XLIFF Text Swapper for Rise Courses</h3>
+                <p>A utility that saves you hours when updating localized Rise content.</p>
+                <span class="tag">Available Now</span>
+            </div>
+        </a>
         
         <div class="card">
             <h3>xAPI Testbed</h3>
@@ -23,28 +25,6 @@
 </section>
 
 <style>
-    #projects {
-        margin-bottom: 3rem;
-    }
-
-    h2 {
-        font-size: 1.8rem;
-        margin: 0 0 1rem;
-        color: #111827;
-    }
-
-    h3 {
-        font-size: 1.3rem;
-        margin: 0 0 0.5rem;
-    }
-
-    p {
-        color: #4b5563;
-        font-size: 1rem;
-        line-height: 1.6;
-        margin: 0 0 1rem;
-    }
-
     .project-cards {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -52,32 +32,10 @@
         margin: 1.5rem 0;
     }
 
-    .card {
-        padding: 1.5rem;
-        background: rgba(255, 255, 255, 0.8);
-        border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .tag {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        background: linear-gradient(83.21deg, #3245ff 0%, #bc52ee 100%);
-        color: white;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        margin-top: 0.5rem;
-    }
-
-    .note {
-        font-style: italic;
-        opacity: 0.8;
+    .card-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
     }
 
     @media screen and (max-width: 768px) {

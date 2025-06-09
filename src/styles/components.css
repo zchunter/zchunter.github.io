@@ -1,0 +1,190 @@
+/* Component styles for reusable UI elements */
+
+/* Accordion Styles */
+.accordion {
+    margin-bottom: 2rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.accordion-item {
+    width: 100%;
+}
+
+.accordion-button {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #111827;
+    font-weight: 500;
+    padding: 1rem 1.25rem;
+    width: 100%;
+    text-align: left;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.accordion-button::after {
+    content: '+';
+    font-size: 1.2rem;
+}
+
+.accordion-button:not(.collapsed)::after {
+    content: '−';
+}
+
+.accordion-content {
+    display: none;
+    padding: 1rem 1.25rem;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.accordion-body {
+    padding: 0.5rem 0;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    color: #111827;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+input[type="file"] {
+    display: block;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Replacement Row Styles */
+#replacements {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.replacement-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.replacement-row input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    color: #ef4444;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
+}
+
+/* Button Styles */
+.button-group {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.primary {
+    background: linear-gradient(83.21deg, #3245ff 0%, #bc52ee 100%);
+    color: white;
+}
+
+.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.secondary {
+    background-color: #6b7280;
+    color: white;
+}
+
+.success {
+    background-color: #10b981;
+    color: white;
+}
+
+.outline {
+    background: none;
+    border: 1px solid #3245ff;
+    color: #3245ff;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+th {
+    background-color: rgba(50, 69, 255, 0.05);
+    font-weight: 600;
+    color: #111827;
+}
+
+/* Spinner */
+.spinner {
+    display: none;
+    width: 1rem;
+    height: 1rem;
+    border: 0.2em solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spinner 0.75s linear infinite;
+    margin-left: 0.5rem;
+}
+
+@keyframes spinner {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .button-group {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}

@@ -1,0 +1,38 @@
+/* Specific styles for the XLIFF tool page */
+
+/* Accordion Styles */
+.accordion-content {
+    display: none;
+}
+
+.accordion-item {
+    background-color: white;
+    border-radius: 4px;
+}
+
+.accordion-header {
+    background-color: white;
+    margin: 0;
+}
+
+.accordion-button {
+    padding: 1rem;
+    background-color: white;
+}
+
+.accordion-body {
+    padding: 1rem;
+}
+
+/* Results Section */
+#results {
+    display: none;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Hide CSV file input */
+#csvFile {
+    display: none;
+}
