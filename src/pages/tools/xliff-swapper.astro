@@ -1,0 +1,554 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Contact from '../../components/Contact.astro';
+import Footer from '../../components/Footer.astro';
+import background from '../../assets/background.svg';
+import { processXliff } from '../../scripts/xliff-tool.js';
+---
+
+<Layout>
+    <img id="background" src={background.src} alt="" fetchpriority="high" />
+    <main>
+        <div class="container">
+            <h1>XLIFF Processor</h1>
+            <p class="lead">Process XLIFF files from Articulate Rise with text replacements and Unicode corrections.</p>
+            
+            <div class="accordion" id="infoAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingInfo">
+                        <button class="accordion-button collapsed" type="button" id="accordionToggle">
+                            About This Tool & Privacy Information
+                        </button>
+                    </h2>
+                    <div id="collapseInfo" class="accordion-content">
+                        <div class="accordion-body">
+                            <h5>What This Tool Does</h5>
+                            <ul>
+                                <li>Lints and corrects common Unicode substitutions (quotes, hyphens)</li>
+                                <li>Replaces specified text pairs throughout the file</li>
+                                <li>Replaces "source>" tags with "target>" tags</li>
+                                <li>Properly handles XML formatting and escaping</li>
+                                <li>Preserves special characters like &lt;, &gt;, &amp;, ", ', [, and ]</li>
+                            </ul>
+                            
+                            <h5>Privacy Information</h5>
+                            <ul>
+                                <li><strong>Complete Privacy:</strong> Files never leave your computer</li>
+                                <li><strong>No Server Processing:</strong> All processing happens in your browser</li>
+                                <li><strong>Works Offline:</strong> Once loaded, the tool works without internet connection</li>
+                                <li><strong>No Data Storage:</strong> No data is stored or tracked</li>
+                            </ul>
+                            
+                            <h5>How It Works</h5>
+                            <p>This tool uses JavaScript to process your XLIFF files directly in your browser. When you upload a file, it's read locally by your browser, processed according to your specifications, and then made available for download - all without sending any data to external servers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <form id="xliffForm">
+                <div class="form-group">
+                    <label for="xliffFile">Select XLIFF File:</label>
+                    <input type="file" id="xliffFile" accept=".xlf">
+                </div>
+                
+                <div class="form-group">
+                    <label>Text Replacements:</label>
+                    <div id="replacements">
+                        <div class="replacement-row">
+                            <input type="text" class="original" placeholder="Original Text">
+                            <input type="text" class="replacement" placeholder="Replacement Text">
+                            <button type="button" class="btn-remove">×</button>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button type="button" class="btn secondary" id="addReplacement">Add Replacement</button>
+                        <button type="button" class="btn outline" id="importCSV">Import CSV</button>
+                        <input type="file" id="csvFile" accept=".csv,.txt">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn primary">
+                    Process XLIFF
+                    <span class="spinner" id="spinner"></span>
+                </button>
+            </form>
+            
+            <div id="results">
+                <h3>Processing Results</h3>
+                <div id="replacementSummary"></div>
+                <div class="button-group">
+                    <a id="downloadLink" class="btn success" download="processed.xlf">Download Processed File</a>
+                    <a id="downloadReportLink" class="btn outline-secondary" download="report.csv">Download Report CSV</a>
+                </div>
+            </div>
+        </div>
+
+        <Contact />
+        <Footer />
+    </main>
+</Layout>
+
+<style>
+    #background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        filter: blur(100px);
+    }
+
+    main {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(83.21deg, #3245ff 0%, #bc52ee 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+        margin: 1.5rem 0 1rem;
+        color: #111827;
+    }
+
+    h5 {
+        font-size: 1.1rem;
+        margin: 1.5rem 0 0.5rem;
+        color: #111827;
+    }
+
+    .lead {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #4b5563;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Accordion Styles */
+    .accordion {
+        margin-bottom: 2rem;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .accordion-item {
+        width: 100%;
+    }
+
+    .accordion-button {
+        background-color: rgba(255, 255, 255, 0.8);
+        color: #111827;
+        font-weight: 500;
+        padding: 1rem 1.25rem;
+        width: 100%;
+        text-align: left;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .accordion-button::after {
+        content: '+';
+        font-size: 1.2rem;
+    }
+
+    .accordion-button:not(.collapsed)::after {
+        content: '−';
+    }
+
+    .accordion-content {
+        display: none;
+        padding: 1rem 1.25rem;
+        background-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .accordion-body {
+        padding: 0.5rem 0;
+    }
+
+    /* Form Styles */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    label {
+        display: block;
+        color: #111827;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    input[type="file"] {
+        display: block;
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    #csvFile {
+        display: none;
+    }
+
+    /* Replacement Row Styles */
+    #replacements {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .replacement-row {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    .replacement-row input {
+        flex: 1;
+        padding: 0.5rem;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .btn-remove {
+        background: none;
+        border: none;
+        color: #ef4444;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0 0.5rem;
+    }
+
+    /* Button Styles */
+    .button-group {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .primary {
+        background: linear-gradient(83.21deg, #3245ff 0%, #bc52ee 100%);
+        color: white;
+    }
+
+    .primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .secondary {
+        background-color: #6b7280;
+        color: white;
+    }
+
+    .success {
+        background-color: #10b981;
+        color: white;
+    }
+
+    .outline {
+        background: none;
+        border: 1px solid #3245ff;
+        color: #3245ff;
+    }
+
+    .outline-secondary {
+        background: none;
+        border: 1px solid #6b7280;
+        color: #6b7280;
+    }
+
+    /* Results Section */
+    #results {
+        display: none;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    /* Table Styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1.5rem;
+    }
+
+    th, td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    th {
+        background-color: rgba(50, 69, 255, 0.05);
+        font-weight: 600;
+        color: #111827;
+    }
+
+    /* Spinner */
+    .spinner {
+        display: none;
+        width: 1rem;
+        height: 1rem;
+        border: 0.2em solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: spinner 0.75s linear infinite;
+        margin-left: 0.5rem;
+    }
+
+    @keyframes spinner {
+        to { transform: rotate(360deg); }
+    }
+
+    @media screen and (max-width: 768px) {
+        h1 {
+            font-size: 2rem;
+        }
+
+        .replacement-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .button-group {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<script>
+    // Import the processXliff function from the module
+    import { processXliff } from '../../scripts/xliff-tool.js';
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize accordion
+        const accordionToggle = document.getElementById('accordionToggle');
+        const collapseInfo = document.getElementById('collapseInfo');
+        
+        if (accordionToggle && collapseInfo) {
+            accordionToggle.addEventListener('click', () => {
+                const isCollapsed = accordionToggle.classList.contains('collapsed');
+                
+                if (isCollapsed) {
+                    accordionToggle.classList.remove('collapsed');
+                    collapseInfo.style.display = 'block';
+                } else {
+                    accordionToggle.classList.add('collapsed');
+                    collapseInfo.style.display = 'none';
+                }
+            });
+        }
+        
+        // Hide results initially
+        const resultsSection = document.getElementById('results');
+        if (resultsSection) {
+            resultsSection.style.display = 'none';
+        }
+        
+        // Hide spinner initially
+        const spinner = document.getElementById('spinner');
+        if (spinner) {
+            spinner.style.display = 'none';
+        }
+        
+        // Add replacement row
+        const addReplacementBtn = document.getElementById('addReplacement');
+        if (addReplacementBtn) {
+            addReplacementBtn.addEventListener('click', () => {
+                const replacementsContainer = document.getElementById('replacements');
+                const newRow = document.createElement('div');
+                newRow.className = 'replacement-row';
+                newRow.innerHTML = `
+                    <input type="text" class="original" placeholder="Original Text">
+                    <input type="text" class="replacement" placeholder="Replacement Text">
+                    <button type="button" class="btn-remove">×</button>
+                `;
+                replacementsContainer.appendChild(newRow);
+                
+                // Add event listener to the new remove button
+                const removeBtn = newRow.querySelector('.btn-remove');
+                removeBtn.addEventListener('click', () => {
+                    newRow.remove();
+                });
+            });
+        }
+        
+        // Add event listeners to existing remove buttons
+        document.querySelectorAll('.btn-remove').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.closest('.replacement-row').remove();
+            });
+        });
+        
+        // Import CSV functionality
+        const importCSVBtn = document.getElementById('importCSV');
+        const csvFileInput = document.getElementById('csvFile');
+        
+        if (importCSVBtn && csvFileInput) {
+            importCSVBtn.addEventListener('click', () => {
+                csvFileInput.click();
+            });
+            
+            csvFileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const content = e.target.result;
+                        const lines = content.split(/\r?\n/);
+                        
+                        // Clear existing replacements
+                        const replacementsContainer = document.getElementById('replacements');
+                        replacementsContainer.innerHTML = '';
+                        
+                        // Add new replacements from CSV
+                        lines.forEach(line => {
+                            if (line.trim()) {
+                                const [original, replacement] = line.split(',').map(item => item.trim());
+                                if (original && replacement) {
+                                    const newRow = document.createElement('div');
+                                    newRow.className = 'replacement-row';
+                                    newRow.innerHTML = `
+                                        <input type="text" class="original" placeholder="Original Text" value="${original}">
+                                        <input type="text" class="replacement" placeholder="Replacement Text" value="${replacement}">
+                                        <button type="button" class="btn-remove">×</button>
+                                    `;
+                                    replacementsContainer.appendChild(newRow);
+                                    
+                                    // Add event listener to the new remove button
+                                    const removeBtn = newRow.querySelector('.btn-remove');
+                                    removeBtn.addEventListener('click', () => {
+                                        newRow.remove();
+                                    });
+                                }
+                            }
+                        });
+                    };
+                    reader.readAsText(file);
+                }
+            });
+        }
+        
+        // Form submission
+        const xliffForm = document.getElementById('xliffForm');
+        if (xliffForm) {
+            xliffForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                
+                const fileInput = document.getElementById('xliffFile');
+                const file = fileInput.files[0];
+                
+                if (!file) {
+                    alert('Please select an XLIFF file.');
+                    return;
+                }
+                
+                // Show spinner
+                if (spinner) {
+                    spinner.style.display = 'inline-block';
+                }
+                
+                // Collect replacements
+                const replacements = [];
+                document.querySelectorAll('.replacement-row').forEach(row => {
+                    const original = row.querySelector('.original').value.trim();
+                    const replacement = row.querySelector('.replacement').value.trim();
+                    if (original && replacement) {
+                        replacements.push([original, replacement]);
+                    }
+                });
+                
+                // Read and process the file
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const content = e.target.result;
+                    const { content: processedContent, replacementCounts } = processXliff(content, replacements);
+                    
+                    // Create download link
+                    const downloadLink = document.getElementById('downloadLink');
+                    const blob = new Blob([processedContent], { type: 'application/xml' });
+                    const url = URL.createObjectURL(blob);
+                    downloadLink.href = url;
+                    downloadLink.download = file.name.replace('.xlf', '_processed.xlf');
+                    
+                    // Create report CSV
+                    let reportCSV = 'Original Text,Replacement Text,Count\n';
+                    replacements.forEach(([original, replacement]) => {
+                        reportCSV += `"${original}","${replacement}",${replacementCounts[original]}\n`;
+                    });
+                    
+                    const reportBlob = new Blob([reportCSV], { type: 'text/csv' });
+                    const reportUrl = URL.createObjectURL(reportBlob);
+                    const downloadReportLink = document.getElementById('downloadReportLink');
+                    downloadReportLink.href = reportUrl;
+                    downloadReportLink.download = 'replacement_report.csv';
+                    
+                    // Display summary
+                    const replacementSummary = document.getElementById('replacementSummary');
+                    let summaryHTML = '<table><thead><tr><th>Original Text</th><th>Replacement Text</th><th>Count</th></tr></thead><tbody>';
+                    
+                    replacements.forEach(([original, replacement]) => {
+                        summaryHTML += `<tr><td>${original}</td><td>${replacement}</td><td>${replacementCounts[original]}</td></tr>`;
+                    });
+                    
+                    summaryHTML += '</tbody></table>';
+                    replacementSummary.innerHTML = summaryHTML;
+                    
+                    // Show results
+                    if (resultsSection) {
+                        resultsSection.style.display = 'block';
+                    }
+                    
+                    // Hide spinner
+                    if (spinner) {
+                        spinner.style.display = 'none';
+                    }
+                };
+                
+                reader.readAsText(file);
+            });
+        }
+    });
+</script>

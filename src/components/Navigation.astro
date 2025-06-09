@@ -1,0 +1,61 @@
+---
+---
+
+<nav>
+    <div class="nav-container">
+        <a href="/" class="home-link">Zach Hunter</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/tools/xliff-swapper">XLIFF Tool</a>
+        </div>
+    </div>
+</nav>
+
+<style>
+    nav {
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+    }
+
+    .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .home-link {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #111827;
+        text-decoration: none;
+        background: linear-gradient(83.21deg, #3245ff 0%, #bc52ee 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    .nav-links a {
+        color: #4b5563;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+        color: #111827;
+    }
+
+    @media screen and (max-width: 768px) {
+        .nav-container {
+            flex-direction: column;
+            gap: 1rem;
+        }
+    }
+</style>
