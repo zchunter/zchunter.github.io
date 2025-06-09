@@ -32,6 +32,23 @@
     border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+#replacementSummary table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+#replacementSummary th, 
+#replacementSummary td {
+    padding: 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+#replacementSummary .total-row {
+    background-color: #f8f8f8;
+}
+
 /* File input styling */
 input[type="file"] {
     width: 100%;

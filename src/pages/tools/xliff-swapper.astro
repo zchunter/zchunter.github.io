@@ -362,11 +362,18 @@ import '../../styles/xliff-tool.css';
                                     downloadLink.download = file.name.replace('.xlf', '_processed.xlf');
                                 }
                                 
+                                // Calculate totals
+                                let totalReplacements = 0;
+                                replacements.forEach(([original]) => {
+                                    totalReplacements += replacementCounts[original] || 0;
+                                });
+                                
                                 // Create report CSV
-                                let reportCSV = 'Original Text,Replacement Text,Count\n';
+                                let reportCSV = 'Original Text,Replacement Text,Replacements Made\n';
                                 replacements.forEach(([original, replacement]) => {
                                     reportCSV += `"${original}","${replacement}",${replacementCounts[original] || 0}\n`;
                                 });
+                                reportCSV += `"TOTAL","${replacements.length} patterns",${totalReplacements}\n`;
                                 
                                 const downloadReportLink = document.getElementById('downloadReportLink');
                                 if (downloadReportLink) {
@@ -378,11 +385,14 @@ import '../../styles/xliff-tool.css';
                                 // Display summary
                                 const replacementSummary = document.getElementById('replacementSummary');
                                 if (replacementSummary) {
-                                    let summaryHTML = '<table><thead><tr><th>Original Text</th><th>Replacement Text</th><th>Count</th></tr></thead><tbody>';
+                                    let summaryHTML = '<table><thead><tr><th>Original Text</th><th>Replacement Text</th><th>Replacements Made</th></tr></thead><tbody>';
                                     
                                     replacements.forEach(([original, replacement]) => {
                                         summaryHTML += `<tr><td>${original}</td><td>${replacement}</td><td>${replacementCounts[original] || 0}</td></tr>`;
                                     });
+                                    
+                                    // Add total row
+                                    summaryHTML += `<tr class="total-row"><td colspan="2"><strong>TOTAL (${replacements.length} patterns)</strong></td><td><strong>${totalReplacements}</strong></td></tr>`;
                                     
                                     summaryHTML += '</tbody></table>';
                                     replacementSummary.innerHTML = summaryHTML;
