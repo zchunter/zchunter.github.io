@@ -127,7 +127,16 @@ import '../../styles/xliff-tool.css';
                     // Add event listener to the remove button
                     const removeBtn = row.querySelector('.btn-remove');
                     if (removeBtn) {
-                        removeBtn.addEventListener('click', () => row.remove());
+                        removeBtn.addEventListener('click', () => {
+                            // Only remove if there's more than one row
+                            if (replacementsContainer && replacementsContainer.querySelectorAll('.replacement-row').length > 1) {
+                                row.remove();
+                            } else {
+                                // Clear the fields instead of removing the last row
+                                const inputs = row.querySelectorAll('input');
+                                inputs.forEach(input => input.value = '');
+                            }
+                        });
                     }
                     
                     return row;
@@ -210,15 +219,27 @@ import '../../styles/xliff-tool.css';
                 });
             }
             
+            // Function to add remove button event listeners
+            function addRemoveButtonListeners() {
+                document.querySelectorAll('.btn-remove').forEach(btn => {
+                    if (btn) {
+                        btn.addEventListener('click', () => {
+                            const row = btn.closest('.replacement-row');
+                            // Only remove if there's more than one row
+                            if (row && replacementsContainer && replacementsContainer.querySelectorAll('.replacement-row').length > 1) {
+                                row.remove();
+                            } else if (row) {
+                                // Clear the fields instead of removing the last row
+                                const inputs = row.querySelectorAll('input');
+                                inputs.forEach(input => input.value = '');
+                            }
+                        });
+                    }
+                });
+            }
+            
             // Add event listeners to existing remove buttons
-            document.querySelectorAll('.btn-remove').forEach(btn => {
-                if (btn) {
-                    btn.addEventListener('click', () => {
-                        const row = btn.closest('.replacement-row');
-                        if (row) row.remove();
-                    });
-                }
-            });
+            addRemoveButtonListeners();
             
             // Import CSV functionality
             if (importCSVBtn && csvFileInput) {
@@ -245,11 +266,43 @@ import '../../styles/xliff-tool.css';
                                 lines.forEach(line => {
                                     if (!line.trim()) return;
                                     
-                                    const parts = line.split(',').map(item => item.trim());
+                                    // Parse CSV line properly handling quoted fields with commas
+                                    const parseCSVLine = (text) => {
+                                        const result = [];
+                                        let current = '';
+                                        let inQuotes = false;
+                                        
+                                        for (let i = 0; i < text.length; i++) {
+                                            const char = text[i];
+                                            
+                                            if (char === '"') {
+                                                inQuotes = !inQuotes;
+                                            } else if (char === ',' && !inQuotes) {
+                                                result.push(current.trim());
+                                                current = '';
+                                            } else {
+                                                current += char;
+                                            }
+                                        }
+                                        
+                                        result.push(current.trim());
+                                        return result;
+                                    };
+                                    
+                                    const parts = parseCSVLine(line);
                                     if (parts.length < 2) return;
                                     
-                                    const original = parts[0];
-                                    const replacement = parts[1];
+                                    let original = parts[0];
+                                    let replacement = parts[1];
+                                    
+                                    // Remove surrounding quotes if present
+                                    if (original.startsWith('"') && original.endsWith('"')) {
+                                        original = original.substring(1, original.length - 1);
+                                    }
+                                    
+                                    if (replacement.startsWith('"') && replacement.endsWith('"')) {
+                                        replacement = replacement.substring(1, replacement.length - 1);
+                                    }
                                     
                                     if (original && replacement) {
                                         replacementsContainer.appendChild(createReplacementRow(original, replacement));
