@@ -366,6 +366,9 @@ import '../../styles/xliff-tool.css';
 
                                 // Function to escape special characters in XML
                                 function escapeSpecialChars(text) {
+                                    // Only escape characters that aren't already part of XML tags
+                                    // This function is only applied to text content, not tags
+                                    
                                     // First, temporarily replace existing XML entities to protect them
                                     const placeholders = {
                                         '&lt;': '___LT___',
@@ -441,13 +444,21 @@ import '../../styles/xliff-tool.css';
                                             }
                                         });
                                         
-                                        // Restore XML tags
+                                        // Escape special characters in the processed content
+                                        // (but only for the text parts, not the placeholders)
+                                        processedContent = processedContent.replace(/(__TAG_\d+__)|([^_]+)/g, (match, placeholder, text) => {
+                                            if (placeholder) {
+                                                return placeholder; // Keep placeholders as is
+                                            } else if (text) {
+                                                return escapeSpecialChars(text); // Only escape text content
+                                            }
+                                            return match;
+                                        });
+                                        
+                                        // Restore XML tags (after escaping text)
                                         processedContent = processedContent.replace(/__TAG_(\d+)__/g, (match, index) => {
                                             return tagPlaceholders[parseInt(index)];
                                         });
-                                        
-                                        // Escape special characters in the processed content
-                                        processedContent = escapeSpecialChars(processedContent);
                                         
                                         // Replace source with target
                                         const targetTag = sourceTag.replace('source', 'target');
