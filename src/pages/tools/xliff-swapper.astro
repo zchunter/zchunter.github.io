@@ -33,10 +33,10 @@ import '../../styles/xliff-tool.css';
                             
                             <h5>Privacy Information</h5>
                             <ul>
-                                <li><strong>Complete Privacy:</strong> Files never leave your computer</li>
-                                <li><strong>No Server Processing:</strong> All processing happens in your browser</li>
+                                <li><strong>Complete File Privacy:</strong> Your XLIFF files never leave your computer</li>
+                                <li><strong>No Server Processing:</strong> All file processing happens in your browser</li>
                                 <li><strong>Works Offline:</strong> Once loaded, the tool works without internet connection</li>
-                                <li><strong>No Data Storage:</strong> No data is stored or tracked</li>
+                                <li><strong>Minimal Usage Data:</strong> Only anonymous usage metrics are collected (number of items checked and replacements made)</li>
                             </ul>
                             
                             <h5>How It Works</h5>
@@ -91,6 +91,39 @@ import '../../styles/xliff-tool.css';
 
 <script>
     // @ts-nocheck
+    
+    // Function to log xAPI usage data
+    async function logXapiUsage(replacementsChecked, totalReplacements) {
+        try {
+            const payload = {
+                replacements: new Array(replacementsChecked),
+                totalReplacements
+            };
+            console.log("xAPI payload:", payload);
+            
+            // Use relative URL in development to avoid CORS issues
+            const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+            const apiUrl = isLocalhost 
+                ? "/.netlify/functions/send-xapi"  // Use relative URL for local development
+                : "https://astroresumeconnect.netlify.app/.netlify/functions/send-xapi";
+                
+            const response = await fetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+            
+            if (response.ok) {
+                console.log("xAPI usage statement sent successfully.");
+            } else {
+                console.warn("xAPI request failed with status:", response.status);
+            }
+        } catch (err) {
+            console.warn("xAPI logging failed:", err);
+        }
+    }
     
     document.addEventListener('DOMContentLoaded', () => {
         try {
@@ -417,10 +450,8 @@ import '../../styles/xliff-tool.css';
                                     const sourcePattern = /(<source[^>]*>)(.*?)(<\/source>)/gs;
                                     
                                     content = content.replace(sourcePattern, (match, sourceTag, sourceContent, closingTag) => {
-                                        // Apply replacements to the content and count them
+                                        // 1. Protect XML tags in content
                                         let processedContent = sourceContent;
-                                        
-                                        // First, protect any XML tags in the content
                                         const tagPlaceholders = [];
                                         processedContent = processedContent.replace(/<[^>]+>/g, (tag) => {
                                             const placeholder = `__TAG_${tagPlaceholders.length}__`;
@@ -428,41 +459,33 @@ import '../../styles/xliff-tool.css';
                                             return placeholder;
                                         });
                                         
+                                        // 2. Apply replacements and count them
                                         replacements.forEach(([original, replacement]) => {
-                                            // Escape special regex characters in the original string
                                             const escapedOriginal = original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                                            
-                                            // Count occurrences in this specific source element
                                             const regex = new RegExp(escapedOriginal, 'g');
                                             const matches = processedContent.match(regex);
                                             const count = matches ? matches.length : 0;
                                             
                                             if (count > 0) {
                                                 replacementCounts[original] += count;
-                                                // Perform the replacement
                                                 processedContent = processedContent.replace(regex, replacement);
                                             }
                                         });
                                         
-                                        // Escape special characters in the processed content
-                                        // (but only for the text parts, not the placeholders)
+                                        // 3. Escape special characters (text only, not placeholders)
                                         processedContent = processedContent.replace(/(__TAG_\d+__)|([^_]+)/g, (match, placeholder, text) => {
-                                            if (placeholder) {
-                                                return placeholder; // Keep placeholders as is
-                                            } else if (text) {
-                                                return escapeSpecialChars(text); // Only escape text content
-                                            }
+                                            if (placeholder) return placeholder;
+                                            if (text) return escapeSpecialChars(text);
                                             return match;
                                         });
                                         
-                                        // Restore XML tags (after escaping text)
+                                        // 4. Restore XML tags
                                         processedContent = processedContent.replace(/__TAG_(\d+)__/g, (match, index) => {
                                             return tagPlaceholders[parseInt(index)];
                                         });
                                         
-                                        // Replace source with target
+                                        // 5. Replace source with target
                                         const targetTag = sourceTag.replace('source', 'target');
-                                        
                                         return targetTag + processedContent + closingTag.replace('source', 'target');
                                     });
                                     
@@ -484,8 +507,11 @@ import '../../styles/xliff-tool.css';
                                 // Calculate totals
                                 let totalReplacements = 0;
                                 replacements.forEach(([original]) => {
-                                    totalReplacements += replacementCounts[original] || 0;
+                                    const count = replacementCounts[original] || 0;
+                                    totalReplacements += count;
+                                    console.log(`Pattern: "${original}" - Count: ${count}`);
                                 });
+                                console.log(`Total patterns: ${replacements.length}, Total replacements: ${totalReplacements}`);
                                 
                                 // Create report CSV
                                 let reportCSV = 'Original Text,Replacement Text,Replacements Made\n';
@@ -519,6 +545,10 @@ import '../../styles/xliff-tool.css';
                                 
                                 // Show results
                                 if (resultsSection) resultsSection.style.display = 'block';
+                                
+                                // Log xAPI usage with debug info
+                                console.log(`Sending xAPI data: patterns=${replacements.length}, replacements=${totalReplacements}`);
+                                logXapiUsage(replacements.length, totalReplacements);
                             } catch (error) {
                                 console.error('Error processing XLIFF:', error);
                                 alert('Error processing XLIFF file. Please check the file format.');
