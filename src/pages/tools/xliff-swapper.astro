@@ -3,7 +3,6 @@ import Layout from '../../layouts/Layout.astro';
 import Contact from '../../components/Contact.astro';
 import Footer from '../../components/Footer.astro';
 import background from '../../assets/background.svg';
-import '../../styles/xliff-tool.css';
 ---
 
 <Layout>
@@ -44,6 +43,45 @@ import '../../styles/xliff-tool.css';
                         </div>
                     </div>
                 </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" id="usageToggle">
+                            How To Use This Tool
+                        </button>
+                    </h2>
+                    <div id="collapseUsage" class="accordion-content">
+                        <div class="accordion-body">
+                            <h5>Important Notes:</h5>
+                                <p>This tool modifies the text content of your Rise course by applying replacements directly within an exported XLIFF file. It does not edit published versions of the course, so you'll need to re-import the updated file and publish the course again for changes to take effect.</p>
+                                <p>To preserve your original content, it's strongly recommended that you either use Rise's Snapshots feature or duplicate the course before making any changes with this tool.</p>
+
+                                <h5>Step-by-Step Instructions</h5>
+                                <ol>
+                                    <li>
+                                    Open your course in Articulate Rise, go to <strong>Settings &gt; Translations</strong>, and select <strong>Export XLIFF file</strong>.
+                                    </li>
+                                    <li>
+                                    Open this tool and upload the exported <code>.xlf</code> file.
+                                    </li>
+                                    <li>
+                                    Add pairs of <em>original text</em> and <em>replacement text</em> to apply across the course.
+                                    </li>
+                                    <li>
+                                    Choose <strong>Process XLIFF</strong>. The tool will apply your changes and show a summary of which replacements were made.
+                                    </li>
+                                    <li>
+                                    ownload the processed XLIFF file. Optionally, download a CSV log of the results for your own records or reporting.
+                                    </li>
+                                    <li>
+                                    Go to <strong>Settings &gt; Translations</strong> in your Rise course and click <strong>Import translated text</strong>. Upload your modified file.
+                                    </li>
+                                    <li>
+                                    Review your updated course content and re-publish to make the changes live.
+                                    </li>
+                                </ol>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <form id="xliffForm">
@@ -56,15 +94,15 @@ import '../../styles/xliff-tool.css';
                     <label>Text Replacements:</label>
                     <div id="replacements">
                         <div class="replacement-row">
-                            <input type="text" class="original" placeholder="Original Text">
-                            <input type="text" class="replacement" placeholder="Replacement Text">
-                            <button type="button" class="btn-remove">×</button>
+                            <input type="text" class="original" placeholder="Original Text" aria-label="Original text to replace">
+                            <input type="text" class="replacement" placeholder="Replacement Text" aria-label="New replacement text">
+                            <button type="button" class="btn-remove" aria-label="Remove this replacement pair">×</button>
                         </div>
                     </div>
                     <div class="button-group">
                         <button type="button" class="btn secondary" id="addReplacement">Add Replacement</button>
                         <button type="button" class="btn outline" id="importCSV">Import CSV</button>
-                        <input type="file" id="csvFile" accept=".csv,.txt">
+                        <input type="file" id="csvFile" accept=".csv,.txt" aria-label="Import replacements from CSV file">
                     </div>
                 </div>
                 
@@ -141,65 +179,60 @@ import '../../styles/xliff-tool.css';
             // Hide results initially
             if (resultsSection) resultsSection.style.display = 'none';
             
-            // Helper function to create a replacement row
-            function createReplacementRow(original = '', replacement = '') {
-                // Clone the first row as a template to ensure consistent styling
-                const template = document.querySelector('.replacement-row');
-                if (template) {
-                    const row = template.cloneNode(true);
-                    
-                    // Set values if provided
-                    const originalInput = row.querySelector('.original');
-                    const replacementInput = row.querySelector('.replacement');
-                    
-                    if (originalInput && original) originalInput.value = original;
-                    if (replacementInput && replacement) replacementInput.value = replacement;
-                    
-                    // Add event listener to the remove button
-                    const removeBtn = row.querySelector('.btn-remove');
-                    if (removeBtn) {
-                        removeBtn.addEventListener('click', () => {
-                            // Only remove if there's more than one row
-                            if (replacementsContainer && replacementsContainer.querySelectorAll('.replacement-row').length > 1) {
-                                row.remove();
-                            } else {
-                                // Clear the fields instead of removing the last row
-                                const inputs = row.querySelectorAll('input');
-                                inputs.forEach(input => input.value = '');
-                            }
-                        });
+            // Function to create a new empty replacement row
+            function createEmptyRow() {
+                const row = document.createElement('div');
+                row.className = 'replacement-row';
+                
+                const originalInput = document.createElement('input');
+                originalInput.type = 'text';
+                originalInput.className = 'original';
+                originalInput.placeholder = 'Original Text';
+                originalInput.setAttribute('aria-label', 'Original text to replace');
+                
+                const replacementInput = document.createElement('input');
+                replacementInput.type = 'text';
+                replacementInput.className = 'replacement';
+                replacementInput.placeholder = 'Replacement Text';
+                replacementInput.setAttribute('aria-label', 'New replacement text');
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'btn-remove';
+                removeBtn.textContent = '×';
+                removeBtn.setAttribute('aria-label', 'Remove this replacement pair');
+                
+                removeBtn.addEventListener('click', () => {
+                    if (replacementsContainer.querySelectorAll('.replacement-row').length > 1) {
+                        row.remove();
+                    } else {
+                        originalInput.value = '';
+                        replacementInput.value = '';
                     }
-                    
-                    return row;
-                } else {
-                    // Fallback to creating elements if template not found
-                    const row = document.createElement('div');
-                    row.className = 'replacement-row';
-                    
-                    const originalInput = document.createElement('input');
-                    originalInput.type = 'text';
-                    originalInput.className = 'original';
-                    originalInput.placeholder = 'Original Text';
-                    if (original) originalInput.value = original;
-                    
-                    const replacementInput = document.createElement('input');
-                    replacementInput.type = 'text';
-                    replacementInput.className = 'replacement';
-                    replacementInput.placeholder = 'Replacement Text';
-                    if (replacement) replacementInput.value = replacement;
-                    
-                    const removeBtn = document.createElement('button');
-                    removeBtn.type = 'button';
-                    removeBtn.className = 'btn-remove';
-                    removeBtn.textContent = '×';
-                    removeBtn.addEventListener('click', () => row.remove());
-                    
-                    row.appendChild(originalInput);
-                    row.appendChild(replacementInput);
-                    row.appendChild(removeBtn);
-                    
-                    return row;
+                });
+                
+                row.appendChild(originalInput);
+                row.appendChild(replacementInput);
+                row.appendChild(removeBtn);
+                
+                return row;
+            }
+            
+            // Helper function to create a replacement row with values
+            function createReplacementRow(original, replacement) {
+                const row = createEmptyRow();
+                
+                if (original) {
+                    const originalInput = row.querySelector('.original');
+                    if (originalInput) originalInput.value = original;
                 }
+                
+                if (replacement) {
+                    const replacementInput = row.querySelector('.replacement');
+                    if (replacementInput) replacementInput.value = replacement;
+                }
+                
+                return row;
             }
             
             // Helper function to collect replacements from the form
@@ -234,7 +267,7 @@ import '../../styles/xliff-tool.css';
                 objectUrls.forEach(url => URL.revokeObjectURL(url));
             });
             
-            // Initialize accordion
+            // Initialize accordions
             if (accordionToggle && collapseInfo) {
                 accordionToggle.addEventListener('click', () => {
                     const isCollapsed = accordionToggle.classList.contains('collapsed');
@@ -243,34 +276,22 @@ import '../../styles/xliff-tool.css';
                 });
             }
             
+            const usageToggle = document.getElementById('usageToggle');
+            const collapseUsage = document.getElementById('collapseUsage');
+            if (usageToggle && collapseUsage) {
+                usageToggle.addEventListener('click', () => {
+                    const isCollapsed = usageToggle.classList.contains('collapsed');
+                    usageToggle.classList.toggle('collapsed');
+                    collapseUsage.style.display = isCollapsed ? 'block' : 'none';
+                });
+            }
+            
             // Add replacement row button
             if (addReplacementBtn && replacementsContainer) {
                 addReplacementBtn.addEventListener('click', () => {
-                    replacementsContainer.appendChild(createReplacementRow());
+                    replacementsContainer.appendChild(createEmptyRow());
                 });
             }
-            
-            // Function to add remove button event listeners
-            function addRemoveButtonListeners() {
-                document.querySelectorAll('.btn-remove').forEach(btn => {
-                    if (btn) {
-                        btn.addEventListener('click', () => {
-                            const row = btn.closest('.replacement-row');
-                            // Only remove if there's more than one row
-                            if (row && replacementsContainer && replacementsContainer.querySelectorAll('.replacement-row').length > 1) {
-                                row.remove();
-                            } else if (row) {
-                                // Clear the fields instead of removing the last row
-                                const inputs = row.querySelectorAll('input');
-                                inputs.forEach(input => input.value = '');
-                            }
-                        });
-                    }
-                });
-            }
-            
-            // Add event listeners to existing remove buttons
-            addRemoveButtonListeners();
             
             // Import CSV functionality
             if (importCSVBtn && csvFileInput) {
@@ -530,7 +551,7 @@ import '../../styles/xliff-tool.css';
                                 // Display summary
                                 const replacementSummary = document.getElementById('replacementSummary');
                                 if (replacementSummary) {
-                                    let summaryHTML = '<table><thead><tr><th>Original Text</th><th>Replacement Text</th><th>Replacements Made</th></tr></thead><tbody>';
+                                    let summaryHTML = '<table aria-label="Replacement Results Summary"><caption>Text Replacement Summary</caption><thead><tr><th scope="col">Original Text</th><th scope="col">Replacement Text</th><th scope="col">Replacements Made</th></tr></thead><tbody>';
                                     
                                     replacements.forEach(([original, replacement]) => {
                                         summaryHTML += `<tr><td>${original}</td><td>${replacement}</td><td>${replacementCounts[original] || 0}</td></tr>`;
