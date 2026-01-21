@@ -6,7 +6,13 @@
         <a href="/" class="home-link">Zach Hunter</a>
         <div class="nav-links">
             <a href="/">Home</a>
-            <a href="/tools/xliff-swapper">XLIFF Tool</a>
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle">Tools</a>
+                <div class="dropdown-menu">
+                    <!-- SmartAudit temporarily removed - being reworked separately -->
+                    <a href="/tools/xliff-swapper">XLIFF Swapper</a>
+                </div>
+            </div>
         </div>
     </div>
 </nav>
@@ -50,6 +56,37 @@
 
     .nav-links a:hover {
         color: #111827;
+    }
+    
+    /* Dropdown styles */
+    .dropdown {
+        position: relative;
+    }
+    
+    .dropdown-toggle {
+        cursor: pointer;
+    }
+    
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background-color: white;
+        min-width: 160px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        z-index: 1;
+        border-radius: 4px;
+        padding: 0.5rem 0;
+    }
+    
+    .dropdown-menu a {
+        display: block;
+        padding: 0.5rem 1rem;
+    }
+    
+    .dropdown:hover .dropdown-menu {
+        display: block;
     }
 
     @media screen and (max-width: 768px) {
