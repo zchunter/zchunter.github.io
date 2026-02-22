@@ -23,3 +23,6 @@ jobs:
 
       - name: Build site
         run: npm run build
+
+      - name: Run Astro checks
+        run: npx astro check
