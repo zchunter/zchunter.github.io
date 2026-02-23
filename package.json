@@ -6,9 +6,41 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "jest --runInBand --coverage=false src/scripts/xliff-tool.test.js netlify/functions/send-xapi.test.js",
+    "test:watch": "jest --watch src/scripts/xliff-tool.test.js netlify/functions/send-xapi.test.js",
+    "test:coverage": "jest --coverage src/scripts/xliff-tool.test.js netlify/functions/send-xapi.test.js",
+    "test:xliff-regression": "jest --runInBand --coverage=false src/scripts/xliff-tool.test.js netlify/functions/send-xapi.test.js",
+    "test:smart-audit": "node -e \"console.log('SmartAudit is paused and separated from the live site.')\"",
+    "test:ui": "node -e \"console.log('SmartAudit is paused and separated from the live site.')\"",
+    "test:integration": "node -e \"console.log('SmartAudit is paused and separated from the live site.')\"",
+    "audit:zip": "node -e \"console.log('SmartAudit is paused and separated from the live site.')\"",
+    "audit:sample": "node -e \"console.log('SmartAudit is paused and separated from the live site.')\""
   },
   "dependencies": {
-    "astro": "^5.9.0"
+    "alex": "^11.0.1",
+    "astro": "^5.17.3",
+    "cheerio": "^1.1.2",
+    "jszip": "^3.10.1",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "retext-passive": "^5.0.0",
+    "retext-readability": "^8.0.0",
+    "syllables": "^2.2.0",
+    "unified": "^11.0.4"
+  },
+  "devDependencies": {
+    "@astrojs/tailwind": "^6.0.2",
+    "@babel/core": "^7.27.7",
+    "@babel/preset-env": "^7.27.2",
+    "@tailwindcss/typography": "^0.5.16",
+    "adm-zip": "^0.5.12",
+    "babel-jest": "^30.0.2",
+    "daisyui": "^4.12.24",
+    "express": "^4.19.2",
+    "jest": "^30.0.3",
+    "jest-environment-jsdom": "^30.0.2",
+    "playwright": "^1.47.0",
+    "tailwindcss": "^3.4.17"
   }
 }

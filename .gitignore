@@ -25,3 +25,18 @@ pnpm-debug.log*
 
 # Local Netlify folder
 .netlify
+
+# generated reports/temp artifacts
+coverage/
+temp-course-analysis/
+reports/report.json
+
+# SmartAudit remains local while paused from live site
+smart-audit/
+samples/
+public/test-data/
+src/ui/
+src/types/
+src/scripts/view-toggle.js
+src/styles/toggle.css
+src/styles/view-toggle.css

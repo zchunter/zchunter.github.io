@@ -1,6 +1,6 @@
 # Zach Hunter - Technical Tools
 
-This repository contains various tools for technical content development and accessibility.
+This repository contains tools for learning performance, instructional content operations, and accessibility quality.
 
 ## Available Tools
 
@@ -17,16 +17,19 @@ A tool for analyzing Articulate Rise courses for accessibility, content structur
 - Analyzes reading level with industry-standard formulas and reliability indicators
 - Provides audience-specific readability thresholds (General, Technical, Executive)
 
-**Status**: Currently using data extraction approach (rendering approach temporarily disabled due to technical issues)
+**Status**: Active development continues, but SmartAudit is currently separated from live site workflows (routing, default tests, and release validation) until the next implementation pass.
 
-### [XLIFF Swapper](src/pages/tools/xliff-swapper.astro)
+### [Rise Global Text Update](src/pages/tools/xliff-swapper.astro)
 
-Process XLIFF files from Articulate Rise with text replacements and Unicode corrections.
+A deterministic rename and text-governance workflow for Articulate Rise exports. It was designed for high-volume rename cycles and also supports routine one-off text updates that are tedious and error-prone in manual review.
 
-- Lints and corrects common Unicode substitutions (quotes, hyphens)
-- Replaces specified text pairs throughout the file
-- Replaces "source>" tags with "target>" tags
-- Properly handles XML formatting and escaping
+- Finds and replaces exact strings in exported XLIFF files
+- Supports CSV import to apply many known rename pairs in one pass
+- Updates course text and image alt text that can be slow to review manually
+- Handles both high-volume rename campaigns and small single-word updates
+- Exports replacement counts and report output for QA verification
+- Preserves XML integrity with proper escaping and source-to-target conversion
+- Includes targeted regression tests for CSV parsing, XML transformation, and xAPI payload validation
 
 ## Third-Party Libraries and Tools
 
@@ -75,7 +78,7 @@ All tools in this repository:
 - Do not send your file content to external servers
 - Work offline once loaded
 - Collect minimal anonymous usage metrics via xAPI
-  - XLIFF Swapper: Tracks number of replacements checked and applied
+  - Rise Global Text Update: Tracks number of replacements checked and applied
   - SmartAudit: Will track similar anonymous usage statistics
 
 ## Implementation Status
@@ -101,12 +104,21 @@ All tools in this repository:
 - **UX Regression Tests**: Prevents undefined values and layout issues
 - **Layout Regression Tests**: Snapshot testing for HTML structure consistency
 - **Component Tests**: Issue card rendering and lesson issues display
+- **Live site default test flow**: intentionally scoped to `xliff-tool` and `send-xapi` while SmartAudit is paused from production workflows
 
 ### Regression Prevention Strategy
 - **Jest-based UX testing**: Catches common UI regressions without complex test suites
 - **Snapshot testing**: Prevents unexpected HTML structure changes
 - **Error boundary testing**: Graceful handling of edge cases
 - **Data structure validation**: Ensures consistent issue reporting
+
+### Rise Global Text Update Regression Tests
+- Run targeted regression tests for the XLIFF tool and xAPI function with:
+  - `npm run test:xliff-regression`
+- Coverage includes:
+  - CSV parsing (quoted commas and escaped quotes)
+  - XML transformation behavior (including no-op when replacement list is empty)
+  - Netlify xAPI endpoint method and payload validation paths
 
 ### Future Testing Improvements
 - Automate tests using Continuous Integration (e.g., GitHub Actions)
