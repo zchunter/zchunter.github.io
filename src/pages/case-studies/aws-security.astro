@@ -1,0 +1,572 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Contact from '../../components/Contact.astro';
+import Footer from '../../components/Footer.astro';
+import background from '../../assets/background.svg';
+import courseNav from '../../assets/case-studies/course-navigation.png';
+import iamTab from '../../assets/case-studies/iam-tab-interaction.png';
+import knowledgeCheck from '../../assets/case-studies/knowledge-check.png';
+import videoTranscript from '../../assets/case-studies/video-transcript.png';
+---
+
+<Layout
+	title="AWS Security: Converting Instructor-Led Training to Async — Zach Hunter"
+	description="Case study: Converting four AWS Security VILT/ILT courses into scalable async Rise courses as part of the Digital Classroom initiative."
+>
+	<img id="background" src={background.src} alt="" fetchpriority="high" />
+	<main>
+		<div class="container">
+		<header class="case-header">
+			<h1>AWS Security: Converting Instructor-Led Training to Async</h1>
+			<p class="lead">
+				Translating instructor-led AWS security training into scalable async learning while protecting
+				applied performance and maintaining strong learner outcomes under enterprise constraints.
+			</p>
+		</header>
+
+		<!-- Section 1: At a Glance -->
+		<section>
+			<h2>At a Glance</h2>
+			<div class="at-a-glance-card">
+				<ul class="at-a-glance">
+					<li><strong>Role:</strong> Technical Curriculum Developer (Conversion Lead)</li>
+					<li>
+						<strong>Scope:</strong> 4 AWS Security courses converted from VILT/ILT to async digital
+						classroom format
+					</li>
+					<li><strong>Core Challenge:</strong> Preserve applied security capability without live instructor mediation</li>
+					<li>
+						<strong>Current Learner Ratings:</strong> 4.4-4.6 stars across 300+ combined reviews
+						(February 2026)
+					</li>
+				</ul>
+			</div>
+		</section>
+
+		<hr class="section-divider" />
+
+		<!-- Section 2: Why This Mattered -->
+		<section>
+			<h2>Why This Mattered</h2>
+			<p>
+				This initiative focused on converting four instructor-led AWS Security courses into scalable async experiences while protecting applied capability. The objective was not content migration, but performance preservation in the absence of live instructor mediation.
+			</p>
+			<p>
+				In live sessions, instructors close comprehension gaps in real time. In async environments, the learning design has to assume that responsibility.
+			</p>
+		</section>
+
+		<hr class="section-divider" />
+
+		<!-- Section 3: Business Context -->
+		<section>
+			<h2>Business Context</h2>
+			<p>
+				AWS needed four live, instructor-led security courses converted into scalable asynchronous
+				Digital Classroom experiences in AWS Skill Builder.
+			</p>
+			<p>
+				The original courses relied on instructor mediation, live demos, and real-time clarification.
+				The objective was not only to increase access and scalability, but to maintain practical security
+				decision-making in an environment without a facilitator.
+			</p>
+			<p>Courses included:</p>
+			<ul>
+				<li>AWS Security Essentials</li>
+				<li>AWS Security Best Practices</li>
+				<li>Security Engineering on AWS</li>
+				<li>AWS Security Governance at Scale</li>
+			</ul>
+		</section>
+
+		<hr class="section-divider" />
+
+		<!-- Section: Domain Sensitivity -->
+		<section>
+			<h2>Domain Sensitivity</h2>
+			<p>
+				Security training carries real operational consequences. Misapplied configuration decisions or misunderstood governance models can introduce production risk. The async format therefore needed to preserve applied reasoning, not just conceptual familiarity.
+			</p>
+		</section>
+
+		<hr class="section-divider" />
+
+		<!-- Section 4: Role and Ownership -->
+		<section>
+			<h2>Role and Ownership</h2>
+			<p>
+				I led the async conversion design for all four courses. While overall course flow and lab
+				infrastructure were inherited from the original VILT sessions and lab engineering teams, I owned:
+			</p>
+			<ul>
+				<li>Segmentation of multi-hour recordings into modular lessons</li>
+				<li>Removal of redundant lab walkthrough demonstrations</li>
+				<li>Conversion of lecture-heavy content into interactive learning blocks</li>
+				<li>Integration and modification of formative assessments</li>
+				<li>Accessibility implementation aligned with enterprise standards</li>
+			</ul>
+			<p>
+				Across the four-course series, I established a consistent async structure pattern to reduce cognitive friction and support learner familiarity between courses. Lab environments and core technical source material were developed by subject matter experts and the lab engineering team.
+			</p>
+		</section>
+
+		<hr class="section-divider" />
+
+		<!-- Section 5: Constraints and Design Requirements -->
+		<section>
+			<h2>Constraints and Design Requirements</h2>
+			<p>Converting technical security training from VILT to async introduced clear design risks:</p>
+			<div class="callout">
+				<ul>
+					<li>Loss of real-time clarification</li>
+					<li>Increased passive video consumption</li>
+					<li>Reduced hands-on participation</li>
+					<li>Dense, high-cognitive-load technical content</li>
+					<li>Limited post-launch performance telemetry</li>
+				</ul>
+			</div>
+			<p>
+				Security misconfiguration has real operational impact. A direct lift-and-shift of source content
+				would have weakened the applied nature of the training, so each conversion choice was treated as
+				a design decision rather than a formatting step.
+			</p>
+		</section>
+
+		<hr class="section-divider" />
+
+		<!-- Section 6: Design Decisions -->
+		<section>
+			<h2>Design Decisions</h2>
+
+			<article class="decision-block">
+				<h3>1) Segment multi-hour sessions into focused lessons</h3>
+				<p><strong>Problem:</strong> Long live sessions are difficult to revisit and cognitively heavy in async format.</p>
+				<p>
+					<strong>Decision:</strong> Break modules into focused 10–15 minute lessons, each with a clear
+					objective and takeaway.
+				</p>
+				<p>
+					<strong>Intended Effect:</strong> Improve navigability, reduce fatigue, and support both
+					continuous and return-and-resume study behavior.
+				</p>
+			</article>
+
+			<article class="decision-block">
+				<h3>2) Remove redundant demonstration videos when labs already scaffolded practice</h3>
+				<p>
+					<strong>Problem:</strong> Full walkthrough videos duplicated guided lab support and encouraged
+					passive observation.
+				</p>
+				<p>
+					<strong>Decision:</strong> Remove segments that repeated lab instructions and prioritize learner
+					execution in sandbox environments.
+				</p>
+				<p><strong>Intended Effect:</strong> Reinforce hands-on behavior as the primary learning mechanism.</p>
+			</article>
+
+			<article class="decision-block">
+				<h3>3) Convert slide-heavy lecture segments into interactive learning blocks</h3>
+				<p>
+					<strong>Problem:</strong> Instructor-led slide narration does not translate effectively to
+					self-paced engagement.
+				</p>
+				<p>
+					<strong>Decision:</strong> Replace passive content blocks with structured interactions where
+					learners process and apply concepts.
+				</p>
+				<p><strong>Intended Effect:</strong> Increase active participation and improve conceptual processing.</p>
+			</article>
+
+			<article class="decision-block">
+				<h3>4) Integrate formative checks at transition points</h3>
+				<p><strong>Problem:</strong> End-of-module checks identify misunderstandings too late.</p>
+				<p>
+					<strong>Decision:</strong> Embed knowledge checks at decision points and provide feedback
+					targeted to specific misconceptions.
+				</p>
+				<p>
+					<strong>Intended Effect:</strong> Surface and correct errors before learners enter applied lab
+					activities.
+				</p>
+			</article>
+		</section>
+
+		<hr class="section-divider" />
+
+		<!-- Section 7: Accessibility Integration -->
+		<section>
+			<h2>Accessibility Integration</h2>
+			<p>Accessibility was treated as a core design constraint, not a post-production QA step.</p>
+			<p>
+				All content aligned with enterprise accessibility expectations grounded in WCAG principles. This
+				included accurate captions and transcripts for video content, meaningful alt text, readable
+				structure, accessible contrast, and hierarchy patterns that supported screen reader navigation.
+			</p>
+			<p>
+				My participation in AWS's internal accessibility advocacy group (TCA11y) informed this approach.
+				In practice, I paired self-review with peer feedback to ensure design quality and inclusivity held
+				up in the absence of instructor mediation.
+			</p>
+		</section>
+
+		<hr class="section-divider" />
+
+		<!-- Section 8: Representative Examples -->
+		<section>
+			<h2>Representative Examples</h2>
+			<p class="gallery-hint">Click any screenshot to view details.</p>
+
+			<div class="gallery">
+				<figure class="gallery-item">
+					<img
+						src={courseNav.src}
+						alt="AWS Security course navigation showing module progression and lesson structure"
+						class="screenshot"
+						data-title="Course Navigation + Content View"
+						data-caption="Converted live pacing into structured, progress-driven modules and labs. Supports flexible, self-directed completion while preserving structured advancement toward applied work."
+					/>
+					<figcaption>Course Navigation + Content View</figcaption>
+				</figure>
+
+				<figure class="gallery-item">
+					<img
+						src={iamTab.src}
+						alt="IAM Identities lesson with tabbed interaction for IAM User, IAM Group, and IAM Role"
+						class="screenshot"
+						data-title="IAM Tab Interaction"
+						data-caption="Replaced slide-dense narration with learner-controlled concept segmentation. Clarifies distinctions between users, groups, and roles before applied configuration."
+					/>
+					<figcaption>IAM Tab Interaction</figcaption>
+				</figure>
+
+				<figure class="gallery-item">
+					<img
+						src={knowledgeCheck.src}
+						alt="Knowledge check question with correct answer selected and explanatory feedback displayed"
+						class="screenshot"
+						data-title="Knowledge Check with Feedback"
+						data-caption="Embedded misconception-specific feedback directly into formative checks. Surfaces and corrects conceptual errors before learners transition into hands-on lab execution."
+					/>
+					<figcaption>Knowledge Check with Feedback</figcaption>
+				</figure>
+
+				<figure class="gallery-item">
+					<img
+						src={videoTranscript.src}
+						alt="Video lesson with expandable transcript section for Security in the AWS Cloud"
+						class="screenshot"
+						data-title="Accessible Video + Transcript"
+						data-caption="Maintained structured transcript access and consistent media formatting across lessons. Preserves clarity and accessibility standards without reliance on instructor mediation."
+					/>
+					<figcaption>Accessible Video + Transcript</figcaption>
+				</figure>
+			</div>
+		</section>
+
+		<hr class="section-divider" />
+
+		<!-- Section 9: Outcomes and Gaps -->
+		<section>
+			<h2>Outcomes and Gaps</h2>
+			<p>At launch, available measurement was limited to completion and learner satisfaction.</p>
+			<p>
+				As of February 2026, the four courses hold learner ratings between 4.4 and 4.6 stars, with over 300 combined reviews across the series. Both the async versions and the original ILT offerings remain active, supporting flexible access across modalities.
+			</p>
+			<p>
+				While satisfaction does not measure applied security transfer, maintaining strong learner perception during a high-risk modality shift suggests the redesign did not degrade learner experience.
+			</p>
+			<p>Stronger validation in future efforts would include behavioral signals such as:</p>
+			<ul>
+				<li>Lab initiation and completion patterns</li>
+				<li>Assessment performance tied to applied decision-making</li>
+				<li>Lesson-level drop-off analysis</li>
+			</ul>
+			<p>
+				Defining observable performance indicators earlier in the conversion lifecycle would allow modality decisions to be evaluated beyond perception metrics.
+			</p>
+		</section>
+
+		<hr class="section-divider" />
+
+		<!-- Section 10: Reflection -->
+		<section class="reflection">
+			<h2>Reflection</h2>
+			<p>
+				This initiative reinforced that ILT-to-async conversion is a design challenge, not a formatting workflow. When instructor mediation is removed, content structure, feedback timing, interaction design, and accessibility quality become the mechanism of instruction.
+			</p>
+			<p>
+				This work reflects my broader approach to technical curriculum design: protecting applied performance while increasing accessibility and scalability under constraint.
+			</p>
+		</section>
+		</div>
+
+		<Contact />
+		<Footer />
+	</main>
+
+	<div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged screenshot">
+		<div class="lightbox-content">
+			<img src="" alt="" />
+			<div class="lightbox-caption">
+				<h3 class="lightbox-title"></h3>
+				<p class="lightbox-text"></p>
+			</div>
+		</div>
+	</div>
+</Layout>
+
+<script>
+	const overlay = document.getElementById('lightbox');
+	const overlayImg = overlay?.querySelector('img');
+	const titleEl = overlay?.querySelector('.lightbox-title');
+	const textEl = overlay?.querySelector('.lightbox-text');
+
+	document.querySelectorAll('.screenshot').forEach((img) => {
+		img.addEventListener('click', () => {
+			if (overlayImg && overlay && titleEl && textEl) {
+				overlayImg.src = img.src;
+				overlayImg.alt = img.alt;
+				titleEl.textContent = img.dataset.title || '';
+				textEl.textContent = img.dataset.caption || '';
+				overlay.classList.add('active');
+			}
+		});
+	});
+
+	function closeLightbox() {
+		overlay?.classList.remove('active');
+	}
+
+	overlay?.addEventListener('click', (e) => {
+		if (e.target === overlay) closeLightbox();
+	});
+
+	overlay?.querySelector('.lightbox-content')?.addEventListener('click', (e) => {
+		e.stopPropagation();
+	});
+
+	overlay?.querySelector('img')?.addEventListener('click', closeLightbox);
+
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape') closeLightbox();
+	});
+</script>
+
+<style>
+	main {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 2rem 1rem;
+	}
+
+	.case-header {
+		margin-bottom: 2.5rem;
+	}
+
+	.lead {
+		font-size: 1.1rem;
+		color: #6b7280;
+		margin-top: -0.35rem;
+	}
+
+	section {
+		margin-bottom: 1rem;
+	}
+
+	.section-divider {
+		border: none;
+		border-top: 1px solid rgba(0, 0, 0, 0.08);
+		margin: 2.5rem 0;
+	}
+
+	.at-a-glance {
+		list-style-type: disc;
+		list-style-position: outside;
+		padding-left: 1.25rem;
+		margin: 0;
+	}
+
+	.at-a-glance-card {
+		background: rgba(0, 0, 0, 0.02);
+		border: 1px solid rgba(0, 0, 0, 0.08);
+		border-radius: 8px;
+		padding: 1rem 1rem 1rem 1.1rem;
+	}
+
+	.at-a-glance li {
+		padding: 0;
+		line-height: 1.55;
+	}
+
+	/* Constraints callout */
+	.callout {
+		border-left: 3px solid #4f46e5;
+		background: rgba(79, 70, 229, 0.03);
+		border-radius: 0 6px 6px 0;
+		padding: 1rem 1.25rem;
+	}
+
+	.callout ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.callout li {
+		margin-bottom: 0.75rem;
+		line-height: 1.6;
+		color: #4b5563;
+	}
+
+	.callout li:last-child {
+		margin-bottom: 0;
+	}
+
+	.callout strong {
+		color: #111827;
+	}
+
+	.decision-block {
+		margin: 0 0 2rem;
+	}
+
+	.decision-block:last-child {
+		margin-bottom: 0;
+	}
+
+	.decision-block h3 {
+		margin-top: 0;
+	}
+
+	.decision-block p {
+		margin-bottom: 0.8rem;
+	}
+
+	.decision-block p:last-child {
+		margin-bottom: 0;
+	}
+
+	/* Gallery */
+	.gallery {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1.25rem;
+		margin-top: 1rem;
+	}
+
+	.gallery-item {
+		margin: 0;
+	}
+
+	.screenshot {
+		width: 100%;
+		height: auto;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+		object-position: top left;
+		border: 1px solid rgba(0, 0, 0, 0.15);
+		border-radius: 6px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+		cursor: zoom-in;
+		transition: box-shadow 0.2s;
+	}
+
+	.screenshot:hover {
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+	}
+
+	.gallery-item figcaption {
+		font-size: 0.9rem;
+		font-weight: 500;
+		color: #374151;
+		margin-top: 0.5rem;
+		line-height: 1.5;
+	}
+
+	.gallery-hint {
+		font-size: 0.88rem;
+		color: #6b7280;
+		margin: -0.25rem 0 0.9rem;
+	}
+
+	@media screen and (max-width: 768px) {
+		.gallery {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	/* Lightbox */
+	.lightbox-overlay {
+		position: fixed;
+		inset: 0;
+		z-index: 1000;
+		background: rgba(0, 0, 0, 0.88);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: zoom-out;
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 0.25s ease, visibility 0.25s ease;
+		padding: 2rem;
+	}
+
+	.lightbox-overlay.active {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	.lightbox-content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		max-width: 90vw;
+		max-height: 90vh;
+		cursor: default;
+	}
+
+	.lightbox-content img {
+		max-width: 100%;
+		max-height: 75vh;
+		border-radius: 6px;
+		box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+		cursor: zoom-out;
+	}
+
+	.lightbox-caption {
+		text-align: center;
+		margin-top: 1rem;
+		max-width: 600px;
+	}
+
+	.lightbox-title {
+		font-size: 1.1rem;
+		font-weight: 600;
+		color: #fff;
+		margin: 0 0 0.4rem;
+	}
+
+	.lightbox-text {
+		font-size: 0.9rem;
+		line-height: 1.6;
+		color: rgba(255, 255, 255, 0.75);
+		margin: 0;
+	}
+
+	/* Measurement lists */
+	section ul {
+		list-style-type: disc;
+		list-style-position: outside;
+		padding-left: 1.25rem;
+		color: #4b5563;
+	}
+
+	section ul li {
+		line-height: 1.6;
+	}
+
+	/* Reflection */
+	.reflection {
+		margin-bottom: 2rem;
+	}
+</style>
