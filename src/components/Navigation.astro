@@ -7,10 +7,19 @@
         <div class="nav-links">
             <a href="/">Home</a>
             <div class="dropdown">
-                <a href="#" class="dropdown-toggle">Tools</a>
-                <div class="dropdown-menu">
+                <button
+                    type="button"
+                    class="dropdown-toggle"
+                    id="toolsMenuButton"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    aria-controls="toolsMenu"
+                >
+                    Tools
+                </button>
+                <div class="dropdown-menu" id="toolsMenu">
                     <!-- SmartAudit temporarily removed - being reworked separately -->
-                    <a href="/tools/xliff-swapper">XLIFF Swapper</a>
+                    <a href="/tools/xliff-swapper">Global Text Update</a>
                 </div>
             </div>
         </div>
@@ -65,6 +74,11 @@
     
     .dropdown-toggle {
         cursor: pointer;
+        background: transparent;
+        border: 0;
+        color: #4b5563;
+        font: inherit;
+        padding: 0;
     }
     
     .dropdown-menu {
@@ -85,7 +99,9 @@
         padding: 0.5rem 1rem;
     }
     
-    .dropdown:hover .dropdown-menu {
+    .dropdown:hover .dropdown-menu,
+    .dropdown:focus-within .dropdown-menu,
+    .dropdown.open .dropdown-menu {
         display: block;
     }
 
@@ -96,3 +112,33 @@
         }
     }
 </style>
+
+<script>
+    const dropdown = document.querySelector('.dropdown');
+    const toggle = document.getElementById('toolsMenuButton');
+
+    if (dropdown && toggle) {
+        const setOpen = (isOpen) => {
+            dropdown.classList.toggle('open', isOpen);
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        };
+
+        toggle.addEventListener('click', () => {
+            const isOpen = dropdown.classList.contains('open');
+            setOpen(!isOpen);
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!dropdown.contains(event.target)) {
+                setOpen(false);
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                setOpen(false);
+                toggle.focus();
+            }
+        });
+    }
+</script>

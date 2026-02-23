@@ -1,4 +1,4 @@
-/* Global styles for the entire site */
+/* Global styles for the active site pages */
 
 /* Base styles */
 html,
@@ -6,7 +6,7 @@ body {
     margin: 0;
     width: 100%;
     height: 100%;
-    font-family: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
+    font-family: 'Inter', 'Roboto', 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
 }
 
 /* Background */
@@ -33,6 +33,8 @@ main {
     padding: 2rem;
     margin-bottom: 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /* Typography */
@@ -43,7 +45,7 @@ h1 {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    color: #3245ff; /* Fallback for browsers that don't support background-clip */
+    color: #3245ff;
 }
 
 h2 {
@@ -55,6 +57,12 @@ h2 {
 h3 {
     font-size: 1.5rem;
     margin: 1.5rem 0 1rem;
+    color: #111827;
+}
+
+h4 {
+    font-size: 1.2rem;
+    margin: 1.2rem 0 0.8rem;
     color: #111827;
 }
 
@@ -78,94 +86,13 @@ p {
     margin-bottom: 1.5rem;
 }
 
-/* Accordion styling */
-.accordion-body h5,
-.accordion-body ul,
-.accordion-body ol,
-.accordion-body li,
-.accordion-body strong {
-    font-family: inherit;
-}
-
-/* List item spacing for accessibility */
+/* List item spacing for readability */
 li {
     margin-bottom: 0.5rem;
 }
 
-/* Remove margin from last list item */
 li:last-child {
     margin-bottom: 0;
-}
-
-/* Accordion Styles */
-.accordion-content {
-    display: none;
-}
-
-.accordion-item {
-    background-color: white;
-    border-radius: 4px;
-}
-
-.accordion-header {
-    background-color: white;
-    margin: 0;
-}
-
-.accordion-button {
-    padding: 1rem;
-    background-color: white;
-    cursor: pointer;
-    width: 100%;
-    text-align: left;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-}
-
-.accordion-body {
-    padding: 1rem;
-}
-
-/* Results Section */
-#results {
-    display: none;
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-#replacementSummary table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1rem;
-}
-
-#replacementSummary th, 
-#replacementSummary td {
-    padding: 0.5rem;
-    text-align: left;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-#replacementSummary th {
-    background-color: #f0f0f0;
-    color: #333;
-}
-
-#replacementSummary .total-row {
-    background-color: #f8f8f8;
-}
-
-/* File input styling */
-input[type="file"] {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-/* Hide CSV file input */
-#csvFile {
-    display: none;
 }
 
 /* Responsive adjustments */

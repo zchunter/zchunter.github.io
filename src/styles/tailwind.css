@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Inventory Cloud Styles */
+@layer components {
+  .inventory-cloud {
+    @apply flex flex-wrap gap-2 p-3 bg-base-100 border border-base-300 rounded-lg;
+    @apply min-h-[60px] flex-shrink-0;
+  }
+
+  .check-bubble {
+    @apply px-3 py-2 rounded-full text-sm font-medium;
+    @apply min-h-[44px] min-w-[44px] flex items-center gap-2;
+    @apply hover:scale-105 transition-all duration-200;
+    @apply cursor-pointer select-none;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+  }
+
+  .check-bubble-error {
+    @apply bg-error/20 text-error;
+    @apply hover:bg-error/30;
+  }
+
+  .check-bubble-warning {
+    @apply bg-warning/20 text-warning;
+    @apply hover:bg-warning/30;
+  }
+
+  .check-bubble-info {
+    @apply bg-info/20 text-info;
+    @apply hover:bg-info/30;
+  }
+
+  .check-bubble-pass {
+    @apply bg-success/20 text-success;
+    @apply hover:bg-success/30;
+  }
+
+  .check-bubble-passed {
+    @apply bg-base-200 text-base-content/60;
+    @apply hover:bg-base-300 hover:text-base-content/80;
+    @apply opacity-75;
+  }
+
+  .check-icon {
+    @apply text-sm flex-shrink-0;
+  }
+
+  .check-name {
+    @apply text-xs font-medium truncate;
+    @apply max-w-[120px];
+  }
+
+  .check-count {
+    @apply text-xs font-bold ml-1;
+    @apply bg-base-content/20 rounded-full px-1.5 py-0.5;
+  }
+
+  .check-card {
+    @apply card border p-3;
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .check-content {
+    @apply space-y-2;
+  }
+}

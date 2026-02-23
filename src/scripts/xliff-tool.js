@@ -1,246 +1,129 @@
-// XLIFF processing functions
+// Shared XLIFF processing utilities for Rise Global Text Update.
 
-// Function to fix Unicode characters
 export function fixUnicodeChars(text) {
-    // Replace smart quotes with straight quotes
-    text = text.replace(/[""]/g, '"');
-    text = text.replace(/['']/g, "'");
-    
-    // Replace em-dash and en-dash with regular hyphen
-    text = text.replace(/[—–]/g, '-');
-    
-    // Replace other common unicode substitutions
-    text = text.replace(/…/g, '...');
-    text = text.replace(/•/g, '*');
-    
-    return text;
+  return text
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u2014\u2013]/g, "-")
+    .replace(/\u2026/g, "...")
+    .replace(/\u2022/g, "*");
 }
 
-// Function to escape special characters in XML
 export function escapeSpecialChars(text) {
-    // First, temporarily replace existing XML entities to protect them
-    const placeholders = {
-        '&lt;': '___LT___',
-        '&gt;': '___GT___',
-        '&amp;': '___AMP___',
-        '&quot;': '___QUOT___',
-        '&apos;': '___APOS___',
-    };
-    
-    // Replace entities with placeholders
-    for (const [entity, placeholder] of Object.entries(placeholders)) {
-        text = text.replace(new RegExp(entity, 'g'), placeholder);
-    }
-    
-    // Now escape the special characters
-    text = text.replace(/&/g, '&amp;');  // Must be first
-    text = text.replace(/</g, '&lt;');
-    text = text.replace(/>/g, '&gt;');
-    text = text.replace(/"/g, '&quot;');
-    text = text.replace(/'/g, '&apos;');
-    
-    // Handle square brackets
-    text = text.replace(/\[/g, '&#91;');
-    text = text.replace(/\]/g, '&#93;');
-    
-    // Restore the original XML entities
-    for (const [entity, placeholder] of Object.entries(placeholders)) {
-        text = text.replace(new RegExp(placeholder, 'g'), entity);
-    }
-    
-    return text;
+  const placeholders = {
+    "&lt;": "___LT___",
+    "&gt;": "___GT___",
+    "&amp;": "___AMP___",
+    "&quot;": "___QUOT___",
+    "&apos;": "___APOS___",
+  };
+
+  for (const [entity, placeholder] of Object.entries(placeholders)) {
+    text = text.replace(new RegExp(entity, "g"), placeholder);
+  }
+
+  text = text.replace(/&/g, "&amp;");
+  text = text.replace(/</g, "&lt;");
+  text = text.replace(/>/g, "&gt;");
+  text = text.replace(/"/g, "&quot;");
+  text = text.replace(/'/g, "&apos;");
+  text = text.replace(/\[/g, "&#91;");
+  text = text.replace(/\]/g, "&#93;");
+
+  for (const [entity, placeholder] of Object.entries(placeholders)) {
+    text = text.replace(new RegExp(placeholder, "g"), entity);
+  }
+
+  return text;
 }
 
-// Function to process XLIFF content
-export function processXliff(content, replacements) {
-    // Fix unicode characters in the entire content first
-    content = fixUnicodeChars(content);
-    
-    // Track replacement counts
-    const replacementCounts = {};
-    replacements.forEach(([original]) => {
-        replacementCounts[original] = 0;
-    });
-    
-    // Process source elements
-    const sourcePattern = /(<source[^>]*>)(.*?)(<\/source>)/gs;
-    let sourceMatches = 0;
-    
-    content = content.replace(sourcePattern, (match, sourceTag, sourceContent, closingTag) => {
-        sourceMatches++;
-        // Apply replacements to the content and count them
-        let processedContent = sourceContent;
-        
-        replacements.forEach(([original, replacement]) => {
-            // Escape special regex characters in the original string
-            const escapedOriginal = original.replace(/[.*+?^${}()|[\]\\]/g, '\\// XLIFF processing functions
+export function parseCSVLine(text) {
+  const result = [];
+  let current = "";
+  let inQuotes = false;
 
-// Function to fix Unicode characters
-export function fixUnicodeChars(text) {
-    // Replace smart quotes with straight quotes
-    text = text.replace(/[""]/g, '"');
-    text = text.replace(/['']/g, "'");
-    
-    // Replace em-dash and en-dash with regular hyphen
-    text = text.replace(/[—–]/g, '-');
-    
-    // Replace other common unicode substitutions
-    text = text.replace(/…/g, '...');
-    text = text.replace(/•/g, '*');
-    
-    return text;
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const nextChar = text[i + 1];
+
+    if (char === '"') {
+      if (inQuotes && nextChar === '"') {
+        current += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (char === "," && !inQuotes) {
+      result.push(current.trim());
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+
+  result.push(current.trim());
+  return result;
 }
 
-// Function to escape special characters in XML
-export function escapeSpecialChars(text) {
-    // First, temporarily replace existing XML entities to protect them
-    const placeholders = {
-        '&lt;': '___LT___',
-        '&gt;': '___GT___',
-        '&amp;': '___AMP___',
-        '&quot;': '___QUOT___',
-        '&apos;': '___APOS___',
-    };
-    
-    // Replace entities with placeholders
-    for (const [entity, placeholder] of Object.entries(placeholders)) {
-        text = text.replace(new RegExp(entity, 'g'), placeholder);
-    }
-    
-    // Now escape the special characters
-    text = text.replace(/&/g, '&amp;');  // Must be first
-    text = text.replace(/</g, '&lt;');
-    text = text.replace(/>/g, '&gt;');
-    text = text.replace(/"/g, '&quot;');
-    text = text.replace(/'/g, '&apos;');
-    
-    // Handle square brackets
-    text = text.replace(/\[/g, '&#91;');
-    text = text.replace(/\]/g, '&#93;');
-    
-    // Restore the original XML entities
-    for (const [entity, placeholder] of Object.entries(placeholders)) {
-        text = text.replace(new RegExp(placeholder, 'g'), entity);
-    }
-    
-    return text;
+export function toCsvField(value) {
+  return `"${String(value).replace(/"/g, '""')}"`;
 }
 
-// Function to process XLIFF content
 export function processXliff(content, replacements) {
-    // Fix unicode characters in the entire content first
-    content = fixUnicodeChars(content);
-    
-    // Track replacement counts
-    const replacementCounts = {};
-    replacements.forEach(([original]) => {
-        replacementCounts[original] = 0;
-    });
-    
-    // Process source elements
-    const sourcePattern = /(<source[^>]*>)(.*?)(<\/source>)/gs;
-    let sourceMatches = 0;
-    
-    content = content.replace(sourcePattern, (match, sourceTag, sourceContent, closingTag) => {
-        sourceMatches++;
-        // Apply replacements to the content and count them
-        let processedContent = sourceContent;
-        
-        replacements.forEach(([original, replacement]) => {
-            // Escape special regex characters in the original string
-            const escapedOriginal = original.replace(/[.*+?^${}()|[\]\\]/g, '\\// Function to process XLIFF content
-export function processXliff(content, replacements) {
-    // Fix unicode characters in the entire content first
-    content = fixUnicodeChars(content);
-    
-    // Track replacement counts
-    const replacementCounts = {};
-    replacements.forEach(([original]) => {
-        replacementCounts[original] = 0;
-    });
-    
-    // Process source elements
-    const sourcePattern = /(<source[^>]*>)(.*?)(<\/source>)/gs;
-    
-    content = content.replace(sourcePattern, (match, sourceTag, sourceContent, closingTag) => {
-        // Apply replacements to the content and count them
-        let processedContent = sourceContent;
-        
-        replacements.forEach(([original, replacement]) => {
-            // Escape special regex characters in the original string
-            const escapedOriginal = original.replace(/[.*+?^${}()|[\]\\]/g, '\\        replacements.forEach(([original, replacement]) => {
-            // Count occurrences before replacement
-            const count = (processedContent.match(new RegExp(original, 'g')) || []).length;
-            replacementCounts[original] += count;
-            
-            // Perform the replacement
-            processedContent = processedContent.replace(new RegExp(original, 'g'), replacement);
-        });');
-            
-            // Count occurrences before replacement
-            const regex = new RegExp(escapedOriginal, 'g');
-            const count = (processedContent.match(regex) || []).length;
-            replacementCounts[original] += count;
-            
-            // Perform the replacement
-            processedContent = processedContent.replace(regex, replacement);
-        });
-        
-        // Escape special characters in the processed content
-        processedContent = escapeSpecialChars(processedContent);
-        
-        // Replace source with target
-        const targetTag = sourceTag.replace('source', 'target');
-        
-        return targetTag + processedContent + closingTag.replace('source', 'target');
-    });
-    
-    return { content, replacementCounts };');
-            
-            // Count occurrences in this specific source element
-            const regex = new RegExp(escapedOriginal, 'g');
-            const matches = processedContent.match(regex);
-            const count = matches ? matches.length : 0;
-            
-            if (count > 0) {
-                replacementCounts[original] += count;
-                // Perform the replacement
-                processedContent = processedContent.replace(regex, replacement);
-            }
-        });
-        
-        // Escape special characters in the processed content
-        processedContent = escapeSpecialChars(processedContent);
-        
-        // Replace source with target
-        const targetTag = sourceTag.replace('source', 'target');
-        
-        return targetTag + processedContent + closingTag.replace('source', 'target');
-    });
-    
+  const replacementCounts = {};
+
+  replacements.forEach(([original]) => {
+    replacementCounts[original] = 0;
+  });
+
+  if (!replacements.length) {
     return { content, replacementCounts };
-}');
-            
-            // Count occurrences in this specific source element
-            const regex = new RegExp(escapedOriginal, 'g');
-            const matches = processedContent.match(regex);
-            const count = matches ? matches.length : 0;
-            
-            if (count > 0) {
-                replacementCounts[original] += count;
-                // Perform the replacement
-                processedContent = processedContent.replace(regex, replacement);
-            }
-        });
-        
-        // Escape special characters in the processed content
-        processedContent = escapeSpecialChars(processedContent);
-        
-        // Replace source with target
-        const targetTag = sourceTag.replace('source', 'target');
-        
-        return targetTag + processedContent + closingTag.replace('source', 'target');
-    });
-    
-    return { content, replacementCounts };
+  }
+
+  let processed = fixUnicodeChars(content);
+  const sourcePattern = /(<source[^>]*>)(.*?)(<\/source>)/gs;
+
+  processed = processed.replace(
+    sourcePattern,
+    (match, sourceTag, sourceContent, closingTag) => {
+      let processedContent = sourceContent;
+      const tagPlaceholders = [];
+
+      processedContent = processedContent.replace(/<[^>]+>/g, (tag) => {
+        const placeholder = `__TAG_${tagPlaceholders.length}__`;
+        tagPlaceholders.push(tag);
+        return placeholder;
+      });
+
+      replacements.forEach(([original, replacement]) => {
+        const escapedOriginal = original.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const regex = new RegExp(escapedOriginal, "g");
+        const matches = processedContent.match(regex);
+        const count = matches ? matches.length : 0;
+
+        if (count > 0) {
+          replacementCounts[original] += count;
+          processedContent = processedContent.replace(regex, replacement);
+        }
+      });
+
+      processedContent = processedContent.replace(
+        /(__TAG_\d+__)|([^_]+)/g,
+        (part, placeholder, textPart) => {
+          if (placeholder) return placeholder;
+          if (textPart) return escapeSpecialChars(textPart);
+          return part;
+        }
+      );
+
+      processedContent = processedContent.replace(/__TAG_(\d+)__/g, (part, index) => {
+        return tagPlaceholders[parseInt(index, 10)];
+      });
+
+      const targetTag = sourceTag.replace("source", "target");
+      return targetTag + processedContent + closingTag.replace("source", "target");
+    }
+  );
+
+  return { content: processed, replacementCounts };
 }

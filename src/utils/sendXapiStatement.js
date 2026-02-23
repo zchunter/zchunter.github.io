@@ -6,8 +6,8 @@ export async function sendXapiStatement({
   auth 
 }) {
   const toolName = tool === "xliff-swapper"
-    ? "XLIFF Swapper"
-    : tool; // fallback if you expand later
+    ? "Rise Global Text Update"
+    : tool;
 
   const statement = {
     actor: {

@@ -67,16 +67,117 @@
     text-align: right;
 }
 
-.font-bold {
-    font-weight: bold;
+/* Accessible Font Scale - WCAG AA Compliant */
+.text-xs {
+    font-size: 0.875rem; /* 14px - minimum readable size */
 }
 
 .text-sm {
-    font-size: 0.875rem;
+    font-size: 1rem; /* 16px - standard body text */
+}
+
+.text-base {
+    font-size: 1rem; /* 16px - base size */
 }
 
 .text-lg {
-    font-size: 1.125rem;
+    font-size: 1.125rem; /* 18px - emphasis/subheadings */
+}
+
+.text-xl {
+    font-size: 1.25rem; /* 20px - card titles */
+}
+
+.text-2xl {
+    font-size: 1.5rem; /* 24px - main headings */
+}
+
+/* Accessible Font Families - WCAG AA Compliant */
+.font-sans {
+    font-family: 'Inter', 'Roboto', 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
+}
+
+.font-serif {
+    font-family: 'Georgia', 'Times New Roman', 'Times', serif;
+}
+
+.font-mono {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+.font-display {
+    font-family: 'Inter', 'Roboto', 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+}
+
+/* Typography Utilities */
+.font-medium {
+    font-weight: 500;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.leading-tight {
+    line-height: 1.25;
+}
+
+.leading-normal {
+    line-height: 1.5;
+}
+
+.leading-relaxed {
+    line-height: 1.625;
+}
+
+/* Accessible Badge Sizes - Override DaisyUI defaults */
+.badge-sm {
+    font-size: 0.875rem !important; /* 14px - accessible minimum */
+    padding: 0.25rem 0.7rem !important; /* Better visual balance */
+    line-height: 1.25 !important;
+}
+
+.badge-xs {
+    font-size: 0.75rem !important; /* 12px - only for very small indicators */
+    padding: 0.125rem 0.5rem !important; /* Proportional to badge-sm */
+    line-height: 1.25 !important;
+}
+
+/* Enhanced Badge Color Contrast - WCAG AA Compliant */
+.badge-error {
+    background-color: #dc2626 !important; /* Red-600 - better contrast */
+    color: #ffffff !important; /* White text for maximum contrast */
+    border: 1px solid #b91c1c !important; /* Red-700 border */
+}
+
+.badge-warning {
+    background-color: #d97706 !important; /* Amber-600 - better contrast */
+    color: #ffffff !important; /* White text for maximum contrast */
+    border: 1px solid #b45309 !important; /* Amber-700 border */
+}
+
+.badge-info {
+    background-color: #2563eb !important; /* Blue-600 - better contrast */
+    color: #ffffff !important; /* White text for maximum contrast */
+    border: 1px solid #1d4ed8 !important; /* Blue-700 border */
+}
+
+.badge-success {
+    background-color: #059669 !important; /* Emerald-600 - better contrast */
+    color: #ffffff !important; /* White text for maximum contrast */
+    border: 1px solid #047857 !important; /* Emerald-700 border */
+}
+
+.badge-ghost {
+    background-color: #f3f4f6 !important; /* Gray-100 background */
+    color: #374151 !important; /* Gray-700 text - high contrast */
+    border: 1px solid #d1d5db !important; /* Gray-300 border */
 }
 
 .italic {

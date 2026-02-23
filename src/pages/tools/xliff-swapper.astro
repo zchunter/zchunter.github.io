@@ -5,89 +5,82 @@ import Footer from '../../components/Footer.astro';
 import background from '../../assets/background.svg';
 ---
 
-<Layout>
+<Layout
+    title="Rise Global Text Update | Zach Hunter"
+    description="Deterministic rename and text-governance workflow for Rise courses, including alt text updates, batch CSV replacement, and QA reporting."
+>
     <img id="background" src={background.src} alt="" fetchpriority="high" />
     <main>
         <div class="container">
-            <h1>XLIFF Text Swapper</h1>
-            <p class="lead">Process XLIFF files from Articulate Rise with text replacements and Unicode corrections.</p>
-            
+            <h1>Rise Global Text Update</h1>
+            <p class="lead">Apply exact-match global text updates across exported Rise courses, including image alt text, and generate replacement reports to support reliable, consistent QA review.</p>
+            <input type="hidden" id="xapiFunctionUrl" value={import.meta.env.PUBLIC_XAPI_FUNCTION_URL ?? ''} />
+
             <div class="accordion">
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" id="accordionToggle">
-                            About This Tool & Privacy Information
+                        <button class="accordion-button collapsed" type="button" id="caseStudyToggle">
+                            Design Approach
                         </button>
                     </h2>
-                    <div id="collapseInfo" class="accordion-content">
+                    <div id="collapseCaseStudy" class="accordion-content">
                         <div class="accordion-body">
-                            <h5>What This Tool Does</h5>
-                            <ul>
-                                <li>Lints and corrects common Unicode substitutions (quotes, hyphens)</li>
-                                <li>Replaces specified text pairs throughout the file</li>
-                                <li>Replaces "source>" tags with "target>" tags</li>
-                                <li>Properly handles XML formatting and escaping</li>
-                                <li>Preserves special characters like &lt;, &gt;, &amp;, ", ', [, and ]</li>
-                            </ul>
-                            
-                            <h5>Privacy Information</h5>
-                            <ul>
-                                <li><strong>Complete File Privacy:</strong> Your XLIFF files never leave your computer</li>
-                                <li><strong>No Server Processing:</strong> All file processing happens in your browser</li>
-                                <li><strong>Works Offline:</strong> Once loaded, the tool works without internet connection</li>
-                                <li><strong>Minimal Usage Data:</strong> Only anonymous usage metrics are collected (number of items checked and replacements made)</li>
-                            </ul>
-                            
-                            <h5>How It Works</h5>
-                            <p>This tool uses JavaScript to process your XLIFF files directly in your browser. When you upload a file, it's read locally by your browser, processed according to your specifications, and then made available for download - all without sending any data to external servers.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" id="usageToggle">
-                            How To Use This Tool
-                        </button>
-                    </h2>
-                    <div id="collapseUsage" class="accordion-content">
-                        <div class="accordion-body">
-                            <h5>Important Notes:</h5>
-                                <p>This tool modifies the text content of your Rise course by applying replacements directly within an exported XLIFF file. It does not edit published versions of the course, so you'll need to re-import the updated file and publish the course again for changes to take effect.</p>
-                                <p>To preserve your original content, it's strongly recommended that you either use Rise's Snapshots feature or duplicate the course before making any changes with this tool.</p>
+                            <h5>Overview</h5>
+                            <p>This tool was designed as a scalable content update workflow for Rise courses. It enables exact-match global text replacement using exported XLIFF files, including both visible content and image alt text, and generates replacement reports to support review before republishing.</p>
 
-                                <h5>Step-by-Step Instructions</h5>
-                                <ol>
-                                    <li>
-                                    Open your course in Articulate Rise, go to <strong>Settings &gt; Translations</strong>, and select <strong>Export XLIFF file</strong>.
-                                    </li>
-                                    <li>
-                                    Open this tool and upload the exported <code>.xlf</code> file.
-                                    </li>
-                                    <li>
-                                    Add pairs of <em>original text</em> and <em>replacement text</em> to apply across the course.
-                                    </li>
-                                    <li>
-                                    Choose <strong>Process XLIFF</strong>. The tool will apply your changes and show a summary of which replacements were made.
-                                    </li>
-                                    <li>
-                                    Download the processed XLIFF file. Optionally, download a CSV log of the results for your own records or reporting.
-                                    </li>
-                                    <li>
-                                    Go to <strong>Settings &gt; Translations</strong> in your Rise course and click <strong>Import translated text</strong>. Upload your modified file.
-                                    </li>
-                                    <li>
-                                    Review your updated course content and re-publish to make the changes live.
-                                    </li>
-                                </ol>
+                            <h5>The Operational Challenge</h5>
+                            <p>Coordinated text updates across dozens or hundreds of courses are time-consuming and error-prone when handled manually. Hidden blocks such as accordions and accessibility fields make it easy to miss instances. During high-change release cycles, teams also need reliable counts to validate that updates were applied consistently.</p>
+                            <p>AI-assisted discovery can help surface content, but it does not guarantee predictable counts or exact control when precision matters.</p>
+
+                            <h5>Design Decisions</h5>
+                            <p><strong>Exact-Match Replacement</strong><br>The workflow prioritizes exact-match updates over probabilistic or AI-driven approaches. The same input produces the same output, enabling predictable results and confident QA validation.</p>
+                            <p><strong>Accessibility Awareness</strong><br>Image alt text is included in the replacement process to prevent terminology drift in accessibility fields, an area often overlooked during manual review.</p>
+                            <p><strong>Local-First Processing</strong><br>All file processing occurs in the browser. Course content never leaves the user's machine. This reduces privacy risk and allows the tool to function offline once loaded.</p>
+
+                            <h5>Performance Impact</h5>
+                            <p>Manual updates that might otherwise require hours of repetitive editing are converted into a structured export-scan-import process that can be completed in minutes per course. Replacement counts provide visibility before republishing, reducing QA risk during release cycles.</p>
+
+                            <h5>Implementation Details</h5>
+                            <ul>
+                                <li>Applies exact-match global replacement across exported Rise content</li>
+                                <li>Updates both visible text and image alt text</li>
+                                <li>Supports bulk update pairs via CSV import</li>
+                                <li>Lints common Unicode substitutions such as quotes and hyphens</li>
+                                <li>Preserves XML structure and special characters</li>
+                                <li>Safely replaces <code>&lt;source&gt;</code> tags with <code>&lt;target&gt;</code> tags</li>
+                                <li>Generates downloadable replacement reports</li>
+                            </ul>
+
+                            <h5>Privacy and Data Handling</h5>
+                            <ul>
+                                <li>All file processing occurs entirely in the browser</li>
+                                <li>No course data is transmitted to a server</li>
+                                <li>Works offline after initial load</li>
+                                <li>Only anonymous usage metrics are collected</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="quick-start">
+                <h2 class="quick-start-heading">Quick Start</h2>
+                <p class="quick-start-note">This tool edits an exported XLIFF file. You will need to re-import it into Rise and republish for changes to take effect. Back up your course first using Snapshots or Duplicate.</p>
+                <ol>
+                    <li>Open your course in Articulate Rise, go to <strong>Settings &gt; Translations</strong>, and select <strong>Export XLIFF file</strong>.</li>
+                    <li>Open this tool and upload the exported <code>.xlf</code> file.</li>
+                    <li>Add pairs of <em>original text</em> and <em>replacement text</em> to apply across the course.</li>
+                    <li>Choose <strong>Process XLIFF</strong>. The tool will apply your changes and show a summary of which replacements were made.</li>
+                    <li>Download the processed XLIFF file. Optionally, download a CSV log of the results for your own records or reporting.</li>
+                    <li>Go to <strong>Settings &gt; Translations</strong> in your Rise course and click <strong>Import translated text</strong>. Upload your modified file.</li>
+                    <li>Review your updated course content and re-publish to make the changes live.</li>
+                </ol>
             </div>
             
             <form id="xliffForm">
                 <div class="form-group">
                     <label for="xliffFile">Select XLIFF File:</label>
-                    <input type="file" id="xliffFile" accept=".xlf">
+                    <input type="file" id="xliffFile" accept=".xlf,.xliff">
                 </div>
                 
                 <div class="form-group">
@@ -99,23 +92,25 @@ import background from '../../assets/background.svg';
                             <button type="button" class="btn-remove" aria-label="Remove this replacement pair">×</button>
                         </div>
                     </div>
-                    <div class="button-group">
+                    <div class="button-group compact">
                         <button type="button" class="btn secondary" id="addReplacement">Add Replacement</button>
                         <button type="button" class="btn outline" id="importCSV">Import CSV</button>
-                        <input type="file" id="csvFile" accept=".csv,.txt" aria-label="Import replacements from CSV file">
+                        <input type="file" id="csvFile" accept=".csv,.txt" aria-label="Import replacements from CSV file" style="display: none;">
                     </div>
+                    <p class="csv-hint">CSV format: <code>original text, replacement text</code> (one pair per line). Use quotes for values containing commas. <a href="/sample-replacements.csv" download>Download sample CSV</a></p>
                 </div>
                 
                 <button type="submit" class="btn primary">
                     Process XLIFF
                     <span class="spinner" id="spinner"></span>
                 </button>
+                <p id="statusMessage" role="status" aria-live="polite"></p>
             </form>
             
             <div id="results">
                 <h3>Processing Results</h3>
                 <div id="replacementSummary"></div>
-                <div class="button-group">
+                <div class="button-group compact">
                     <a id="downloadLink" class="btn success" download="processed.xlf">Download Processed File</a>
                     <a id="downloadReportLink" class="btn outline" download="report.csv">Download Report CSV</a>
                 </div>
@@ -128,22 +123,22 @@ import background from '../../assets/background.svg';
 </Layout>
 
 <script>
-    // @ts-nocheck
-    
+    import { parseCSVLine, processXliff, toCsvField } from '../../scripts/xliff-tool.js';
+
     // Function to log xAPI usage data
     async function logXapiUsage(replacementsChecked, totalReplacements) {
         try {
             const payload = {
-                replacements: new Array(replacementsChecked),
+                replacementsChecked,
                 totalReplacements
             };
-            console.log("xAPI payload:", payload);
             
             // Use relative URL in development to avoid CORS issues
             const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+            const configuredApiUrl = document.getElementById('xapiFunctionUrl')?.value;
             const apiUrl = isLocalhost 
                 ? "/.netlify/functions/send-xapi"  // Use relative URL for local development
-                : "https://astroresumeconnect.netlify.app/.netlify/functions/send-xapi";
+                : (configuredApiUrl || "/.netlify/functions/send-xapi");
                 
             const response = await fetch(apiUrl, {
                 method: "POST",
@@ -154,7 +149,6 @@ import background from '../../assets/background.svg';
             });
             
             if (response.ok) {
-                console.log("xAPI usage statement sent successfully.");
             } else {
                 console.warn("xAPI request failed with status:", response.status);
             }
@@ -166,8 +160,8 @@ import background from '../../assets/background.svg';
     document.addEventListener('DOMContentLoaded', () => {
         try {
             // Initialize UI elements
-            const accordionToggle = document.getElementById('accordionToggle');
-            const collapseInfo = document.getElementById('collapseInfo');
+            const caseStudyToggle = document.getElementById('caseStudyToggle');
+            const collapseCaseStudy = document.getElementById('collapseCaseStudy');
             const resultsSection = document.getElementById('results');
             const spinner = document.getElementById('spinner');
             const addReplacementBtn = document.getElementById('addReplacement');
@@ -175,6 +169,22 @@ import background from '../../assets/background.svg';
             const csvFileInput = document.getElementById('csvFile');
             const xliffForm = document.getElementById('xliffForm');
             const replacementsContainer = document.getElementById('replacements');
+            const statusMessage = document.getElementById('statusMessage');
+
+            function setStatus(message, isError = false) {
+                if (!statusMessage) return;
+                statusMessage.textContent = message;
+                statusMessage.style.color = isError ? '#b91c1c' : '#047857';
+            }
+
+            function escapeHtml(value) {
+                return value
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+            }
             
             // Hide results initially
             if (resultsSection) resultsSection.style.display = 'none';
@@ -267,22 +277,12 @@ import background from '../../assets/background.svg';
                 objectUrls.forEach(url => URL.revokeObjectURL(url));
             });
             
-            // Initialize accordions
-            if (accordionToggle && collapseInfo) {
-                accordionToggle.addEventListener('click', () => {
-                    const isCollapsed = accordionToggle.classList.contains('collapsed');
-                    accordionToggle.classList.toggle('collapsed');
-                    collapseInfo.style.display = isCollapsed ? 'block' : 'none';
-                });
-            }
-            
-            const usageToggle = document.getElementById('usageToggle');
-            const collapseUsage = document.getElementById('collapseUsage');
-            if (usageToggle && collapseUsage) {
-                usageToggle.addEventListener('click', () => {
-                    const isCollapsed = usageToggle.classList.contains('collapsed');
-                    usageToggle.classList.toggle('collapsed');
-                    collapseUsage.style.display = isCollapsed ? 'block' : 'none';
+            // Initialize accordion
+            if (caseStudyToggle && collapseCaseStudy) {
+                caseStudyToggle.addEventListener('click', () => {
+                    const isCollapsed = caseStudyToggle.classList.contains('collapsed');
+                    caseStudyToggle.classList.toggle('collapsed');
+                    collapseCaseStudy.style.display = isCollapsed ? 'block' : 'none';
                 });
             }
             
@@ -315,57 +315,32 @@ import background from '../../assets/background.svg';
                                 
                                 replacementsContainer.innerHTML = '';
                                 
-                                lines.forEach(line => {
+                                lines.forEach((line, index) => {
                                     if (!line.trim()) return;
-                                    
-                                    // Parse CSV line properly handling quoted fields with commas
-                                    const parseCSVLine = (text) => {
-                                        const result = [];
-                                        let current = '';
-                                        let inQuotes = false;
-                                        
-                                        for (let i = 0; i < text.length; i++) {
-                                            const char = text[i];
-                                            
-                                            if (char === '"') {
-                                                inQuotes = !inQuotes;
-                                            } else if (char === ',' && !inQuotes) {
-                                                result.push(current.trim());
-                                                current = '';
-                                            } else {
-                                                current += char;
-                                            }
-                                        }
-                                        
-                                        result.push(current.trim());
-                                        return result;
-                                    };
-                                    
+
                                     const parts = parseCSVLine(line);
                                     if (parts.length < 2) return;
-                                    
-                                    let original = parts[0];
-                                    let replacement = parts[1];
-                                    
-                                    // Remove surrounding quotes if present
-                                    if (original.startsWith('"') && original.endsWith('"')) {
-                                        original = original.substring(1, original.length - 1);
-                                    }
-                                    
-                                    if (replacement.startsWith('"') && replacement.endsWith('"')) {
-                                        replacement = replacement.substring(1, replacement.length - 1);
-                                    }
-                                    
+
+                                    // Allow a conventional header row.
+                                    if (index === 0 && parts[0].toLowerCase() === 'original text' && parts[1].toLowerCase() === 'replacement text') return;
+
+                                    const original = parts[0];
+                                    const replacement = parts[1];
+
                                     if (original && replacement) {
                                         replacementsContainer.appendChild(createReplacementRow(original, replacement));
                                     }
                                 });
+
+                                if (!replacementsContainer.querySelector('.replacement-row')) {
+                                    replacementsContainer.appendChild(createEmptyRow());
+                                }
                             } catch (error) {
                                 console.error('Error processing CSV:', error);
-                                alert('Error processing CSV file. Please check the format.');
+                                setStatus('Error processing CSV file. Please check the format.', true);
                             }
                         };
-                        reader.onerror = () => alert('Error reading the CSV file.');
+                        reader.onerror = () => setStatus('Error reading the CSV file.', true);
                         reader.readAsText(file);
                     } catch (error) {
                         console.error('Error handling CSV file:', error);
@@ -384,7 +359,7 @@ import background from '../../assets/background.svg';
                         
                         const file = fileInput.files && fileInput.files[0];
                         if (!file) {
-                            alert('Please select an XLIFF file.');
+                            setStatus('Please select an XLIFF file.', true);
                             return;
                         }
                         
@@ -393,6 +368,12 @@ import background from '../../assets/background.svg';
                         
                         // Collect replacements
                         const replacements = collectReplacements();
+
+                        if (!replacements.length) {
+                            setStatus('Add at least one valid replacement pair before processing.', true);
+                            if (spinner) spinner.style.display = 'none';
+                            return;
+                        }
                         
                         // Read and process the file
                         const reader = new FileReader();
@@ -401,117 +382,6 @@ import background from '../../assets/background.svg';
                                 const fileReader = e.target;
                                 const content = fileReader.result;
                                 if (!content) throw new Error('Could not read file content');
-                                
-                                // Function to fix Unicode characters
-                                function fixUnicodeChars(text) {
-                                    // Replace smart quotes with straight quotes
-                                    text = text.replace(/[""]/g, '"');
-                                    text = text.replace(/['']/g, "'");
-                                    
-                                    // Replace em-dash and en-dash with regular hyphen
-                                    text = text.replace(/[—–]/g, '-');
-                                    
-                                    // Replace other common unicode substitutions
-                                    text = text.replace(/…/g, '...');
-                                    text = text.replace(/•/g, '*');
-                                    
-                                    return text;
-                                }
-
-                                // Function to escape special characters in XML
-                                function escapeSpecialChars(text) {
-                                    // Only escape characters that aren't already part of XML tags
-                                    // This function is only applied to text content, not tags
-                                    
-                                    // First, temporarily replace existing XML entities to protect them
-                                    const placeholders = {
-                                        '&lt;': '___LT___',
-                                        '&gt;': '___GT___',
-                                        '&amp;': '___AMP___',
-                                        '&quot;': '___QUOT___',
-                                        '&apos;': '___APOS___',
-                                    };
-                                    
-                                    // Replace entities with placeholders
-                                    for (const [entity, placeholder] of Object.entries(placeholders)) {
-                                        text = text.replace(new RegExp(entity, 'g'), placeholder);
-                                    }
-                                    
-                                    // Now escape the special characters
-                                    text = text.replace(/&/g, '&amp;');  // Must be first
-                                    text = text.replace(/</g, '&lt;');
-                                    text = text.replace(/>/g, '&gt;');
-                                    text = text.replace(/"/g, '&quot;');
-                                    text = text.replace(/'/g, '&apos;');
-                                    
-                                    // Handle square brackets
-                                    text = text.replace(/\[/g, '&#91;');
-                                    text = text.replace(/\]/g, '&#93;');
-                                    
-                                    // Restore the original XML entities
-                                    for (const [entity, placeholder] of Object.entries(placeholders)) {
-                                        text = text.replace(new RegExp(placeholder, 'g'), entity);
-                                    }
-                                    
-                                    return text;
-                                }
-
-                                // Function to process XLIFF content
-                                function processXliff(content, replacements) {
-                                    // Fix unicode characters in the entire content first
-                                    content = fixUnicodeChars(content);
-                                    
-                                    // Track replacement counts
-                                    const replacementCounts = {};
-                                    replacements.forEach(([original]) => {
-                                        replacementCounts[original] = 0;
-                                    });
-                                    
-                                    // Process source elements
-                                    const sourcePattern = /(<source[^>]*>)(.*?)(<\/source>)/gs;
-                                    
-                                    content = content.replace(sourcePattern, (match, sourceTag, sourceContent, closingTag) => {
-                                        // 1. Protect XML tags in content
-                                        let processedContent = sourceContent;
-                                        const tagPlaceholders = [];
-                                        processedContent = processedContent.replace(/<[^>]+>/g, (tag) => {
-                                            const placeholder = `__TAG_${tagPlaceholders.length}__`;
-                                            tagPlaceholders.push(tag);
-                                            return placeholder;
-                                        });
-                                        
-                                        // 2. Apply replacements and count them
-                                        replacements.forEach(([original, replacement]) => {
-                                            const escapedOriginal = original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                                            const regex = new RegExp(escapedOriginal, 'g');
-                                            const matches = processedContent.match(regex);
-                                            const count = matches ? matches.length : 0;
-                                            
-                                            if (count > 0) {
-                                                replacementCounts[original] += count;
-                                                processedContent = processedContent.replace(regex, replacement);
-                                            }
-                                        });
-                                        
-                                        // 3. Escape special characters (text only, not placeholders)
-                                        processedContent = processedContent.replace(/(__TAG_\d+__)|([^_]+)/g, (match, placeholder, text) => {
-                                            if (placeholder) return placeholder;
-                                            if (text) return escapeSpecialChars(text);
-                                            return match;
-                                        });
-                                        
-                                        // 4. Restore XML tags
-                                        processedContent = processedContent.replace(/__TAG_(\d+)__/g, (match, index) => {
-                                            return tagPlaceholders[parseInt(index)];
-                                        });
-                                        
-                                        // 5. Replace source with target
-                                        const targetTag = sourceTag.replace('source', 'target');
-                                        return targetTag + processedContent + closingTag.replace('source', 'target');
-                                    });
-                                    
-                                    return { content, replacementCounts };
-                                }
                                 
                                 const result = processXliff(content.toString(), replacements);
                                 const processedContent = result.content;
@@ -530,16 +400,14 @@ import background from '../../assets/background.svg';
                                 replacements.forEach(([original]) => {
                                     const count = replacementCounts[original] || 0;
                                     totalReplacements += count;
-                                    console.log(`Pattern: "${original}" - Count: ${count}`);
                                 });
-                                console.log(`Total patterns: ${replacements.length}, Total replacements: ${totalReplacements}`);
                                 
                                 // Create report CSV
                                 let reportCSV = 'Original Text,Replacement Text,Replacements Made\n';
                                 replacements.forEach(([original, replacement]) => {
-                                    reportCSV += `"${original}","${replacement}",${replacementCounts[original] || 0}\n`;
+                                    reportCSV += `${toCsvField(original)},${toCsvField(replacement)},${replacementCounts[original] || 0}\n`;
                                 });
-                                reportCSV += `"TOTAL","${replacements.length} patterns",${totalReplacements}\n`;
+                                reportCSV += `${toCsvField('TOTAL')},${toCsvField(`${replacements.length} patterns`)},${totalReplacements}\n`;
                                 
                                 const downloadReportLink = document.getElementById('downloadReportLink');
                                 if (downloadReportLink) {
@@ -554,7 +422,7 @@ import background from '../../assets/background.svg';
                                     let summaryHTML = '<table aria-label="Replacement Results Summary"><caption>Text Replacement Summary</caption><thead><tr><th scope="col">Original Text</th><th scope="col">Replacement Text</th><th scope="col">Replacements Made</th></tr></thead><tbody>';
                                     
                                     replacements.forEach(([original, replacement]) => {
-                                        summaryHTML += `<tr><td>${original}</td><td>${replacement}</td><td>${replacementCounts[original] || 0}</td></tr>`;
+                                        summaryHTML += `<tr><td>${escapeHtml(original)}</td><td>${escapeHtml(replacement)}</td><td>${replacementCounts[original] || 0}</td></tr>`;
                                     });
                                     
                                     // Add total row
@@ -566,13 +434,12 @@ import background from '../../assets/background.svg';
                                 
                                 // Show results
                                 if (resultsSection) resultsSection.style.display = 'block';
+                                setStatus('XLIFF processed successfully.');
                                 
-                                // Log xAPI usage with debug info
-                                console.log(`Sending xAPI data: patterns=${replacements.length}, replacements=${totalReplacements}`);
                                 logXapiUsage(replacements.length, totalReplacements);
                             } catch (error) {
                                 console.error('Error processing XLIFF:', error);
-                                alert('Error processing XLIFF file. Please check the file format.');
+                                setStatus('Error processing XLIFF file. Please check the file format.', true);
                             } finally {
                                 // Hide spinner
                                 if (spinner) spinner.style.display = 'none';
@@ -580,14 +447,14 @@ import background from '../../assets/background.svg';
                         };
                         
                         reader.onerror = () => {
-                            alert('Error reading the XLIFF file.');
+                            setStatus('Error reading the XLIFF file.', true);
                             if (spinner) spinner.style.display = 'none';
                         };
                         
                         reader.readAsText(file);
                     } catch (error) {
                         console.error('Error submitting form:', error);
-                        alert('An error occurred. Please try again.');
+                        setStatus('An error occurred. Please try again.', true);
                         if (spinner) spinner.style.display = 'none';
                     }
                 });

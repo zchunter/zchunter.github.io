@@ -3,6 +3,16 @@ import Navigation from '../components/Navigation.astro';
 import '../styles/global.css';
 import '../styles/components.css';
 import '../styles/utilities.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = 'Zach Hunter - Technical Curriculum Developer',
+	description = 'Technical Curriculum Developer specializing in digital learning tools, XLIFF localization, and xAPI implementation.'
+} = Astro.props as Props;
 ---
 
 <!doctype html>
@@ -12,8 +22,8 @@ import '../styles/utilities.css';
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Zach Hunter - Technical Curriculum Developer</title>
-		<meta name="description" content="Technical Curriculum Developer specializing in digital learning tools, XLIFF localization, and xAPI implementation." />
+		<title>{title}</title>
+		<meta name="description" content={description} />
 		<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "4aa119cace1e45c49d3389268b9fd35f"}'></script><!-- End Cloudflare Web Analytics -->
 	</head>
 	<body>
