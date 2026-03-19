@@ -1,0 +1,606 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Contact from '../../components/Contact.astro';
+import Footer from '../../components/Footer.astro';
+import DecisionCard from '../../components/DecisionCard.astro';
+import PullQuote from '../../components/PullQuote.astro';
+import PortfolioNote from '../../components/PortfolioNote.astro';
+import background from '../../assets/background.svg';
+import importingPaydata from '../../assets/case-studies/ADP/1-Importing_Paydata.mp4';
+import importingEmployeeAndTime from '../../assets/case-studies/ADP/2-Importing_Emp_and_Time.mp4';
+import importingValidationTable from '../../assets/case-studies/ADP/3-Importing_Validation_Table.mp4';
+import adpKnowledgeCheck from '../../assets/case-studies/ADP/Knowledge Check.png';
+---
+
+<Layout
+    title="ADP: Teaching Support Reps to Use the Guide | Zach Hunter"
+    description="Case study: An ADP performance-support course designed to build guide fluency under live-call pressure through scenario videos, knowledge checks, and an open-book assessment."
+>
+    <img id="background" src={background.src} alt="" fetchpriority="high" />
+    <main>
+        <div class="container">
+            <header class="case-header">
+                <p class="eyebrow">Case Study / Performance Support / ADP</p>
+                <h1>Teaching Support Reps to Use the Guide, Not Memorize the Answer</h1>
+                <p class="lead">
+                    A three-part Vyond video series built to help support reps use a troubleshooting guide during live calls, using a light game show frame to keep technically dense material watchable.
+                </p>
+            </header>
+
+            <PortfolioNote>
+                <p>
+                    This sample shows how I handled needs analysis, learning objectives, assessment alignment,
+                    performance-support strategy, and reflection in a workplace learning project.
+                </p>
+            </PortfolioNote>
+
+            <section>
+                <h2>At a Glance</h2>
+                <div class="at-a-glance-card at-a-glance-grid">
+                    <div><span class="meta-label">Role</span><span>Instructional Designer</span></div>
+                    <div><span class="meta-label">Client</span><span>ADP</span></div>
+                    <div><span class="meta-label">Audience</span><span>Client Support Specialists</span></div>
+                    <div><span class="meta-label">Format</span><span>Support/upskilling course</span></div>
+                    <div><span class="meta-label">Format</span><span>Self-directed asynchronous</span></div>
+                    <div><span class="meta-label">Duration</span><span>About 20 minutes</span></div>
+                    <div><span class="meta-label">Scope</span><span>3-part Vyond video series + open-book assessment</span></div>
+                    <div><span class="meta-label">Tools</span><span>Vyond, Articulate Rise, Audacity</span></div>
+                </div>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>Why This Mattered</h2>
+                <p>
+                    The guide existed. The reps were not using it. This project was about building fluency with a
+                    job aid under live-call pressure, not teaching content from scratch.
+                </p>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>Business Context</h2>
+                <p>
+                    ADP's Client Support Specialists handled inbound calls from clients experiencing errors importing
+                    payroll and employee data into Workforce Now. A detailed troubleshooting guide was available on
+                    ADPworks, the internal resource platform, but reps were not consulting it reliably under live-call
+                    pressure.
+                </p>
+                <p>
+                    They attempted to resolve errors from memory, misidentified error types, gave incomplete
+                    explanations, and generated callbacks that could have been avoided. The course therefore needed to
+                    accomplish something specific: make the guide feel usable in the moment, not like a document to
+                    study beforehand.
+                </p>
+                <p>
+                    This module sat within a broader support curriculum in which learners could earn a badge toward an
+                    overall Gold achievement. That broader pathway created room for targeted upskilling interventions,
+                    but the instructional requirement for this course remained narrow and performance-based: improve
+                    guide use during live troubleshooting rather than add more content exposure.
+                </p>
+                <p>
+                    The final course included orientation to the guide's location on ADPworks, three scenario-based
+                    videos, inline knowledge checks reinforcing each video's troubleshooting logic, and an open-book
+                    final assessment requiring learners to use the guide to score 100%.
+                </p>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>Role and Ownership</h2>
+                <p>
+                    I owned the full instructional design for this project: needs analysis, solution design, script
+                    writing, storyboard development, Vyond animation direction, knowledge check development, and
+                    assessment design in Rise.
+                </p>
+                <p>
+                    SMEs supplied the common error patterns that grounded the scenarios and checks. That working
+                    model is close to the faculty-partnership dynamic common in academic instructional design. I originated the
+                    <em>Troubleshooting Trials</em> game show concept as a strategic response to stakeholder interest
+                    in gamification at a time when full gamification mechanics were not feasible to implement.
+                </p>
+                <p>
+                    Stakeholder engagement extended through review and approval of all course materials before launch,
+                    providing content validation for the troubleshooting logic learners were expected to apply.
+                </p>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>Constraints and Design Requirements</h2>
+                <ul>
+                    <li>Content was procedural and technically dense, creating high disengagement risk.</li>
+                    <li>Stakeholders wanted a gamified learner experience, but infrastructure for full mechanics was not available.</li>
+                    <li>No live training environment was available, so assessment had to support guide use rather than simulate system interaction.</li>
+                    <li>Success depended on on-call performance, not post-training recall.</li>
+                    <li>Validation needed to reinforce guide fluency under realistic conditions.</li>
+                </ul>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>Design Decisions</h2>
+
+                <DecisionCard
+                    title="1) Use a narrative frame instead of full gamification mechanics"
+                    challenge="Stakeholders wanted gamification, but points systems, branching rewards, and leaderboards were not feasible within the project constraints."
+                    decision="I proposed Troubleshooting Trials, a game show narrative frame with humor woven throughout. An animated host introduces each challenge while two support-rep characters work through it together. The format delivered the feel of gamification without requiring supporting infrastructure, kept stakeholders on board, and sustained attention without competing with the instructional content."
+                />
+
+                <DecisionCard
+                    title="2) Model expert reasoning rather than only present answers"
+                    challenge="Video is a passive medium, but the target skill was active guide fluency under live-call conditions."
+                    decision="The rep characters narrate their reasoning aloud as they troubleshoot, modeling how an experienced support rep thinks through the guide in real time. This think-aloud approach draws on cognitive apprenticeship: learners observe expert process, not just expert output. The open-book assessment then requires them to replicate that process independently."
+                />
+
+                <DecisionCard
+                    title="3) Keep lesson structure parallel across import types"
+                    challenge="The three import types had overlapping but distinct error patterns, creating a risk of confusion if the lessons were presented inconsistently."
+                    decision="I used one video per import type and kept the same sequence in each: host frames the scenario, reps troubleshoot together, and the logic is narrated step by step. That parallel structure reduces cognitive load across lessons so learners can focus on content differences rather than format changes."
+                />
+
+                <DecisionCard
+                    title="4) Validate guide use rather than recall"
+                    challenge="Validation needed to reinforce guide fluency, not content recall, but a full simulation was cut for time."
+                    decision="The final Rise assessment explicitly permitted and required learners to use the ADPworks guides to answer correctly. Three attempts were allowed and 100% was required. That kept the assessment aligned with the core objective: using the guide accurately under pressure rather than memorizing its contents. Inline knowledge checks after each video provided lower-stakes retrieval practice before the final assessment."
+                />
+
+                <DecisionCard
+                    title="5) Treat guide access as a prerequisite behavior"
+                    challenge="Guide fluency assumes guide access, so scenario-based learning would fail if learners did not first know where the guide lived."
+                    decision="The course opened with explicit instruction on locating the guide on ADPworks, and that location was reinforced again after the first video. Access was treated as a prerequisite behavior to establish, not as assumed prior knowledge."
+                />
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>Representative Examples</h2>
+                <p class="gallery-hint">Selected production artifacts from the course, including one inline knowledge check.</p>
+                <div class="video-grid">
+                    <article class="video-card">
+                        <video controls preload="metadata" class="case-video">
+                            <source src={importingPaydata} type="video/mp4" />
+                            Your browser does not support embedded video.
+                        </video>
+                        <h3>Importing Paydata</h3>
+                    </article>
+                    <article class="video-card">
+                        <video controls preload="metadata" class="case-video">
+                            <source src={importingEmployeeAndTime} type="video/mp4" />
+                            Your browser does not support embedded video.
+                        </video>
+                        <h3>Importing Employee and Time Off Data</h3>
+                    </article>
+                    <article class="video-card">
+                        <video controls preload="metadata" class="case-video">
+                            <source src={importingValidationTable} type="video/mp4" />
+                            Your browser does not support embedded video.
+                        </video>
+                        <h3>Importing Validation Table Data</h3>
+                    </article>
+                    <article class="video-card">
+                        <img
+                            src={adpKnowledgeCheck.src}
+                            alt="Knowledge check screen from the ADP troubleshooting course asking learners to interpret import guidance and choose valid answers."
+                            class="artifact-image"
+                        />
+                        <h3>Inline Knowledge Check</h3>
+                    </article>
+                </div>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section class="design-document">
+                <h2>Design Document</h2>
+                <p class="doc-intro">
+                    The following design specification was developed before production and guided decisions across
+                    the course. It is included here to show the design process behind the deliverables above.
+                </p>
+
+                <section class="doc-section">
+                    <h3>Needs Analysis</h3>
+                    <p><strong>Performance Gap:</strong> Client Support Specialists were not using the available Troubleshooting Import Guide during live client calls. The guide existed and was accessible on ADPworks, but its length and navigational complexity made real-time reference feel impractical under call pressure. Reps defaulted to memory, leading to error misclassification, incomplete client explanations, and preventable callbacks.</p>
+                    <p><strong>Root Cause:</strong> This was a fluency gap, not a knowledge gap. Reps were not unfamiliar with the guide's existence; they lacked the speed and confidence to navigate it effectively while managing a live call. Training about import errors alone would not have solved the problem. The design applied adult learning principles, specifically the value of authentic context and immediate applicability, by grounding all scenarios in real call conditions that matched the environment where performance was expected.</p>
+                    <p><strong>Solution Rationale:</strong> A self-directed e-learning course combining modeled practice through video with applied practice through an open-book assessment was selected. The modeled practice needed to demonstrate expert guide navigation in realistic scenarios. The applied practice needed to require guide use under assessment conditions, not recall of memorized steps.</p>
+                </section>
+
+                <section class="doc-section">
+                    <h3>Audience Analysis</h3>
+                    <ul>
+                        <li><strong>Role:</strong> Client Support Specialists supporting ADP Workforce Now clients</li>
+                        <li><strong>Context of performance:</strong> live inbound calls, time pressure, client present on the line</li>
+                        <li><strong>Prior knowledge:</strong> familiarity with the import process; limited fluency with the troubleshooting guide</li>
+                        <li><strong>Risk factor:</strong> errors and callbacks directly affect client satisfaction and rep performance metrics</li>
+                        <li><strong>Delivery constraint:</strong> self-directed; no instructor available during or after training</li>
+                    </ul>
+                </section>
+
+                <section class="doc-section">
+                    <h3>Learning Objectives</h3>
+                    <p>The following performance-based learning outcomes were developed to target observable on-call behavior, not content familiarity.</p>
+                    <ul class="objective-list">
+                        <li>Locate the Troubleshooting Import Guide on ADPworks <span>Remember</span></li>
+                        <li>Navigate the guide in real time while supporting a live client call <span>Apply</span></li>
+                        <li>Identify the error type from an import error report <span>Analyze</span></li>
+                        <li>Select the correct resolution path from the guide for a given error <span>Evaluate</span></li>
+                        <li>Explain the error and resolution steps to a client in plain language <span>Apply</span></li>
+                    </ul>
+                </section>
+
+                <section class="doc-section">
+                    <h3>Course Architecture</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Component</th>
+                                <th scope="col">Format</th>
+                                <th scope="col">Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Guide orientation</td>
+                                <td>Instructional content</td>
+                                <td>Establish prerequisite behavior: locating the guide on ADPworks</td>
+                            </tr>
+                            <tr>
+                                <td>Lesson 1: Paydata</td>
+                                <td>Vyond video</td>
+                                <td>Model expert think-aloud for Paydata error types</td>
+                            </tr>
+                            <tr>
+                                <td>Knowledge check 1</td>
+                                <td>Inline questions</td>
+                                <td>Retrieval practice on Lesson 1 error logic</td>
+                            </tr>
+                            <tr>
+                                <td>Lesson 2: Employee Information</td>
+                                <td>Vyond video</td>
+                                <td>Model expert think-aloud for Employee Information error types</td>
+                            </tr>
+                            <tr>
+                                <td>Knowledge check 2</td>
+                                <td>Inline questions</td>
+                                <td>Retrieval practice on Lesson 2 error logic</td>
+                            </tr>
+                            <tr>
+                                <td>Lesson 3: Validation Table Data</td>
+                                <td>Vyond video</td>
+                                <td>Model expert think-aloud for Validation Table error types</td>
+                            </tr>
+                            <tr>
+                                <td>Knowledge check 3</td>
+                                <td>Inline questions</td>
+                                <td>Retrieval practice on Lesson 3 error logic</td>
+                            </tr>
+                            <tr>
+                                <td>Final assessment</td>
+                                <td>Open-book Rise assessment</td>
+                                <td>Applied guide use under assessment conditions; 100% required, 3 attempts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="table-note">
+                        <strong>Rationale for parallel lesson structure:</strong> Each video follows an identical
+                        narrative frame: host introduces the scenario, reps troubleshoot together, and the logic is
+                        narrated aloud. Consistent structure reduces cognitive overhead when comparing error types
+                        across lessons, allowing learners to focus on content differences rather than format
+                        differences.
+                    </p>
+                </section>
+
+                <section class="doc-section">
+                    <h3>Assessment Strategy</h3>
+                    <p>
+                        Inline knowledge checks following each video served a formative function, surfacing
+                        misunderstandings before learners reached the final assessment.
+                    </p>
+                    <p>
+                        The final assessment required 100%, with three attempts permitted. Learners were explicitly
+                        directed to use the ADPworks guides to complete it, so guide use was required, not merely
+                        permitted.
+                    </p>
+                </section>
+
+                <section class="doc-section">
+                    <h3>Accessibility Considerations</h3>
+                    <p>
+                        The videos in this course did not include captions or transcripts. Captions are a WCAG 2.1
+                        Level AA requirement for prerecorded audio content and would be a non-negotiable inclusion on
+                        any equivalent project today.
+                    </p>
+                    <p>
+                        Transcripts add a second layer of value for performance-support material because learners who
+                        need to revisit troubleshooting steps after training benefit from a scannable text version of
+                        the content. Both gaps reflect the standards applied at the time of production and are
+                        documented here because acknowledging them accurately is part of sound instructional design
+                        practice.
+                    </p>
+                </section>
+
+                <section class="doc-section">
+                    <h3>Measurement Plan</h3>
+                    <div class="measurement-note">
+                        <strong>Note:</strong> Post-launch performance data was not available for this project. The
+                        following represents the measurement framework I would apply to an equivalent project today.
+                    </div>
+                    <p>Indicators this course was designed to move:</p>
+                    <ul>
+                        <li>Guide adoption rate during live calls</li>
+                        <li>First-call resolution rate on import-related calls</li>
+                        <li>Client callback frequency attributable to import errors</li>
+                        <li>Error classification accuracy in the assessment</li>
+                    </ul>
+                    <p>
+                        A fully instrumented version would correlate assessment performance with post-training call
+                        metrics such as first-call resolution, callback rate, and handle time on import-related calls.
+                        On a similar project today, I would define those indicators in the brief before design begins
+                        instead of treating measurement as a post-launch question.
+                    </p>
+                </section>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>Outcomes and Gaps</h2>
+                <p>
+                    At launch, available measurement was limited to completion data. No post-training performance
+                    metrics were collected for this project. The measurement framework I would apply today is detailed
+                    in the Design Document above.
+                </p>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section class="reflection">
+                <h2>Reflection</h2>
+                <p>
+                    This project reinforced that gamification is a design constraint, not a feature. The stakeholder
+                    brief asked for engagement; the instructional challenge was making engagement serve the learning
+                    goal rather than compete with it. The <em>Troubleshooting Trials</em> frame solved that problem by
+                    giving learners a reason to stay in technically dense material long enough for the think-aloud
+                    modeling to do its work, without requiring mechanics the project could not support. The result was
+                    a learner-centered experience that kept engagement in service of the performance goal rather than
+                    as an end in itself.
+                </p>
+                <p>
+                    Looking at the course now, two gaps are clear: the videos lack captions and transcripts. Captions
+                    are a WCAG requirement for prerecorded audio content, not a nice-to-have, and their absence would
+                    be a blocker in any accessibility-conscious organization today. Transcripts extend the value
+                    further by making video-based job aid content easier to reference after training. Both would be
+                    non-negotiable inclusions on a comparable project now.
+                </p>
+            </section>
+        </div>
+
+        <Contact />
+        <Footer />
+    </main>
+</Layout>
+
+<style>
+    main {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .case-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .eyebrow {
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #3245ff;
+        margin: 0 0 0.5rem;
+    }
+
+    .lead {
+        font-size: 1.1rem;
+        color: #6b7280;
+        margin-top: -0.35rem;
+    }
+
+    section {
+        margin-bottom: 1rem;
+    }
+
+    .section-divider {
+        border: none;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        margin: 2.5rem 0;
+    }
+
+    .at-a-glance-card {
+        background: rgba(0, 0, 0, 0.02);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 8px;
+        padding: 1rem 1.1rem;
+    }
+
+    .at-a-glance-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem 1.25rem;
+    }
+
+    .at-a-glance-grid div {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+    .meta-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #6b7280;
+    }
+
+    .video-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+    }
+
+    .gallery-hint {
+        font-size: 0.88rem;
+        color: #6b7280;
+        margin: -0.25rem 0 0.9rem;
+    }
+
+    .video-card {
+        margin: 0;
+        padding: 1rem;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.72);
+    }
+
+    .video-card h3 {
+        margin: 0 0 0.35rem;
+        font-size: 1rem;
+    }
+
+    .video-card p {
+        margin: 0;
+        color: #4b5563;
+        line-height: 1.6;
+    }
+
+    .case-video {
+        width: 100%;
+        display: block;
+        margin-bottom: 0.85rem;
+        border-radius: 8px;
+        background: #111827;
+        aspect-ratio: 16 / 9;
+    }
+
+    .artifact-image {
+        width: 100%;
+        display: block;
+        margin-bottom: 0.85rem;
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .design-document {
+        padding: 1.5rem;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 12px;
+        background: rgba(248, 250, 252, 0.88);
+    }
+
+    .doc-intro {
+        margin-top: 0;
+    }
+
+    .doc-section {
+        margin: 1.75rem 0 0;
+    }
+
+    .doc-section h3 {
+        margin-bottom: 0.75rem;
+    }
+
+    .objective-list li {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: baseline;
+    }
+
+    .objective-list span {
+        flex-shrink: 0;
+        padding: 0.15rem 0.45rem;
+        border-radius: 999px;
+        background: rgba(50, 69, 255, 0.08);
+        color: #3245ff;
+        font-size: 0.78rem;
+        font-weight: 600;
+    }
+
+    .table-note,
+    .measurement-note,
+    section p {
+        line-height: 1.7;
+        color: #4b5563;
+    }
+
+    .measurement-note {
+        margin: 0 0 1rem;
+        padding: 0.9rem 1rem;
+        border-left: 3px solid #3245ff;
+        border-radius: 0 6px 6px 0;
+        background: rgba(50, 69, 255, 0.04);
+    }
+
+    section ul {
+        list-style-type: disc;
+        list-style-position: outside;
+        padding-left: 1.25rem;
+        color: #4b5563;
+    }
+
+    section ul li {
+        line-height: 1.6;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+    }
+
+    th,
+    td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        vertical-align: top;
+    }
+
+    th {
+        background-color: rgba(50, 69, 255, 0.05);
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .reflection {
+        margin-bottom: 2rem;
+    }
+
+    @media screen and (max-width: 768px) {
+        .at-a-glance-grid,
+        .video-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .design-document {
+            padding: 1rem;
+        }
+
+        .objective-list li {
+            display: block;
+        }
+
+        .objective-list span {
+            display: inline-block;
+            margin-top: 0.35rem;
+        }
+    }
+</style>

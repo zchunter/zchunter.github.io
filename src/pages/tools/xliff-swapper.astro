@@ -125,8 +125,11 @@ import background from '../../assets/background.svg';
 <script>
     import { parseCSVLine, processXliff, toCsvField } from '../../scripts/xliff-tool.js';
 
+    type ReplacementPair = [string, string];
+    type ReplacementCounts = Record<string, number>;
+
     // Function to log xAPI usage data
-    async function logXapiUsage(replacementsChecked, totalReplacements) {
+    async function logXapiUsage(replacementsChecked: number, totalReplacements: number) {
         try {
             const payload = {
                 replacementsChecked,
@@ -135,7 +138,7 @@ import background from '../../assets/background.svg';
             
             // Use relative URL in development to avoid CORS issues
             const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-            const configuredApiUrl = document.getElementById('xapiFunctionUrl')?.value;
+            const configuredApiUrl = (document.getElementById('xapiFunctionUrl') as HTMLInputElement | null)?.value;
             const apiUrl = isLocalhost 
                 ? "/.netlify/functions/send-xapi"  // Use relative URL for local development
                 : (configuredApiUrl || "/.netlify/functions/send-xapi");
@@ -166,18 +169,18 @@ import background from '../../assets/background.svg';
             const spinner = document.getElementById('spinner');
             const addReplacementBtn = document.getElementById('addReplacement');
             const importCSVBtn = document.getElementById('importCSV');
-            const csvFileInput = document.getElementById('csvFile');
+            const csvFileInput = document.getElementById('csvFile') as HTMLInputElement | null;
             const xliffForm = document.getElementById('xliffForm');
             const replacementsContainer = document.getElementById('replacements');
             const statusMessage = document.getElementById('statusMessage');
 
-            function setStatus(message, isError = false) {
+            function setStatus(message: string, isError = false) {
                 if (!statusMessage) return;
                 statusMessage.textContent = message;
                 statusMessage.style.color = isError ? '#b91c1c' : '#047857';
             }
 
-            function escapeHtml(value) {
+            function escapeHtml(value: string) {
                 return value
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
@@ -213,6 +216,7 @@ import background from '../../assets/background.svg';
                 removeBtn.setAttribute('aria-label', 'Remove this replacement pair');
                 
                 removeBtn.addEventListener('click', () => {
+                    if (!replacementsContainer) return;
                     if (replacementsContainer.querySelectorAll('.replacement-row').length > 1) {
                         row.remove();
                     } else {
@@ -229,16 +233,16 @@ import background from '../../assets/background.svg';
             }
             
             // Helper function to create a replacement row with values
-            function createReplacementRow(original, replacement) {
+            function createReplacementRow(original: string, replacement: string) {
                 const row = createEmptyRow();
                 
                 if (original) {
-                    const originalInput = row.querySelector('.original');
+                    const originalInput = row.querySelector<HTMLInputElement>('.original');
                     if (originalInput) originalInput.value = original;
                 }
                 
                 if (replacement) {
-                    const replacementInput = row.querySelector('.replacement');
+                    const replacementInput = row.querySelector<HTMLInputElement>('.replacement');
                     if (replacementInput) replacementInput.value = replacement;
                 }
                 
@@ -247,10 +251,10 @@ import background from '../../assets/background.svg';
             
             // Helper function to collect replacements from the form
             function collectReplacements() {
-                const replacements = [];
+                const replacements: ReplacementPair[] = [];
                 document.querySelectorAll('.replacement-row').forEach(row => {
-                    const originalInput = row.querySelector('.original');
-                    const replacementInput = row.querySelector('.replacement');
+                    const originalInput = row.querySelector<HTMLInputElement>('.original');
+                    const replacementInput = row.querySelector<HTMLInputElement>('.replacement');
                     
                     if (originalInput && replacementInput) {
                         const original = originalInput.value ? originalInput.value.trim() : '';
@@ -265,8 +269,8 @@ import background from '../../assets/background.svg';
             }
             
             // Helper function to create object URLs and track them for cleanup
-            const objectUrls = [];
-            function createObjectURL(blob) {
+            const objectUrls: string[] = [];
+            function createObjectURL(blob: Blob) {
                 const url = URL.createObjectURL(blob);
                 objectUrls.push(url);
                 return url;
@@ -299,14 +303,16 @@ import background from '../../assets/background.svg';
                 
                 csvFileInput.addEventListener('change', (event) => {
                     try {
-                        const input = event.target;
+                        const input = event.target as HTMLInputElement | null;
+                        if (!input) return;
                         const file = input.files && input.files[0];
                         if (!file) return;
                         
                         const reader = new FileReader();
                         reader.onload = (e) => {
                             try {
-                                const fileReader = e.target;
+                                const fileReader = e.target as FileReader | null;
+                                if (!fileReader) return;
                                 const content = fileReader.result;
                                 if (!content) return;
                                 
@@ -354,7 +360,7 @@ import background from '../../assets/background.svg';
                     event.preventDefault();
                     
                     try {
-                        const fileInput = document.getElementById('xliffFile');
+                        const fileInput = document.getElementById('xliffFile') as HTMLInputElement | null;
                         if (!fileInput) return;
                         
                         const file = fileInput.files && fileInput.files[0];
@@ -379,16 +385,17 @@ import background from '../../assets/background.svg';
                         const reader = new FileReader();
                         reader.onload = (e) => {
                             try {
-                                const fileReader = e.target;
+                                const fileReader = e.target as FileReader | null;
+                                if (!fileReader) throw new Error('Could not read file content');
                                 const content = fileReader.result;
                                 if (!content) throw new Error('Could not read file content');
                                 
                                 const result = processXliff(content.toString(), replacements);
                                 const processedContent = result.content;
-                                const replacementCounts = result.replacementCounts || {};
+                                const replacementCounts = (result.replacementCounts || {}) as ReplacementCounts;
                                 
                                 // Create download links
-                                const downloadLink = document.getElementById('downloadLink');
+                                const downloadLink = document.getElementById('downloadLink') as HTMLAnchorElement | null;
                                 if (downloadLink) {
                                     const blob = new Blob([processedContent], { type: 'application/xml' });
                                     downloadLink.href = createObjectURL(blob);
@@ -409,7 +416,7 @@ import background from '../../assets/background.svg';
                                 });
                                 reportCSV += `${toCsvField('TOTAL')},${toCsvField(`${replacements.length} patterns`)},${totalReplacements}\n`;
                                 
-                                const downloadReportLink = document.getElementById('downloadReportLink');
+                                const downloadReportLink = document.getElementById('downloadReportLink') as HTMLAnchorElement | null;
                                 if (downloadReportLink) {
                                     const reportBlob = new Blob([reportCSV], { type: 'text/csv' });
                                     downloadReportLink.href = createObjectURL(reportBlob);

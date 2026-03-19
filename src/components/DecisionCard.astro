@@ -1,0 +1,82 @@
+---
+interface Props {
+    title?: string;
+    challenge: string;
+    decision: string;
+}
+
+const { title, challenge, decision } = Astro.props as Props;
+---
+
+<article class="decision-card">
+    {title && <h3 class="decision-title">{title}</h3>}
+    <div class="decision-grid">
+        <div class="decision-panel challenge-panel">
+            <p class="decision-label">Challenge</p>
+            <p>{challenge}</p>
+        </div>
+        <div class="decision-panel effect-panel">
+            <p class="decision-label">Decision + Intended Effect</p>
+            <p>{decision}</p>
+        </div>
+    </div>
+</article>
+
+<style>
+    .decision-card {
+        margin: 0 0 1.5rem;
+    }
+
+    .decision-title {
+        margin: 0 0 0.7rem;
+        font-size: 1.05rem;
+    }
+
+    .decision-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 10px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.72);
+    }
+
+    .decision-panel {
+        padding: 1rem 1.1rem;
+    }
+
+    .challenge-panel {
+        background: rgba(0, 0, 0, 0.02);
+        border-right: 1px solid rgba(0, 0, 0, 0.07);
+    }
+
+    .effect-panel {
+        background: rgba(50, 69, 255, 0.03);
+    }
+
+    .decision-label {
+        margin: 0 0 0.45rem;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #4b5563;
+    }
+
+    .decision-panel p:last-child {
+        margin: 0;
+        line-height: 1.65;
+        color: #374151;
+    }
+
+    @media screen and (max-width: 768px) {
+        .decision-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .challenge-panel {
+            border-right: 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+        }
+    }
+</style>

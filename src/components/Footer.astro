@@ -2,13 +2,33 @@
 ---
 
 <footer>
-    <p class="note">Nothing says "learner-centered" like five paragraphs of intro text before the first interaction.</p>
+	<p class="note" id="footer-quip"></p>
+	<script is:inline>
+		const quips = [
+			"Nothing says 'learner-centered' like five paragraphs of intro text before the first interaction.",
+			"A knowledge check is not an assessment. A knowledge check is not an assessment. A knowledge check is not an assessment.",
+			"The most dangerous phrase in instructional design: 'can you just make it a video?'",
+			"Somewhere, a course is being scoped without a needs analysis because someone already knows what they want.",
+			"A subject matter expert is currently preparing a 300-slide deck for a 30-minute content review.",
+			"Asynchronous (adj.): self-paced, except for the hard deadline.",
+			"Somewhere, a learning objective is being written that starts with 'understand.'",
+			"Somewhere, a Bloom's taxonomy poster is hanging in a room where a knowledge dump is being planned.",
+			"The LMS will track it. What it tracks is a different conversation.",
+			"If nobody reads the evaluation data, was it worth collecting?",
+			"Somewhere, a course is being designed for every possible learner, which means it was designed for no one in particular.",
+			"If the learning objective cannot be observed, is it a learning objective?",
+		];
+		const el = document.getElementById("footer-quip");
+		if (el) {
+			el.textContent = quips[Math.floor(Math.random() * quips.length)];
+		}
+	</script>
 </footer>
 
 <style>
-    footer {
-        margin-top: 4rem;
-        padding-top: 1rem;
-        border-top: 1px solid rgba(0, 0, 0, 0.1);
-    }
+	footer {
+		margin-top: 4rem;
+		padding-top: 1rem;
+		border-top: 1px solid rgba(0, 0, 0, 0.1);
+	}
 </style>

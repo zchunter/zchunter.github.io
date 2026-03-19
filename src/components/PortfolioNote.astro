@@ -1,0 +1,38 @@
+---
+interface Props {
+    title?: string;
+}
+
+const { title = 'Portfolio Note' } = Astro.props as Props;
+---
+
+<aside class="portfolio-note">
+    <p class="portfolio-note-label">{title}</p>
+    <div class="portfolio-note-body">
+        <slot />
+    </div>
+</aside>
+
+<style>
+    .portfolio-note {
+        margin: 1.5rem 0 2rem;
+        padding: 1rem 1.15rem;
+        border: 1px solid rgba(50, 69, 255, 0.12);
+        border-left: 4px solid #3245ff;
+        border-radius: 8px;
+        background: rgba(50, 69, 255, 0.04);
+    }
+
+    .portfolio-note-label {
+        margin: 0 0 0.4rem;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #3245ff;
+    }
+
+    .portfolio-note-body :global(p:last-child) {
+        margin-bottom: 0;
+    }
+</style>

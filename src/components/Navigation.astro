@@ -6,7 +6,22 @@
         <a href="/" class="home-link">Zach Hunter</a>
         <div class="nav-links">
             <a href="/">Home</a>
-            <a href="/case-studies/aws-security">Case Study</a>
+            <div class="dropdown">
+                <button
+                    type="button"
+                    class="dropdown-toggle"
+                    id="caseStudiesMenuButton"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    aria-controls="caseStudiesMenu"
+                >
+                    Case Studies
+                </button>
+                <div class="dropdown-menu" id="caseStudiesMenu">
+                    <a href="/case-studies/adp-guide-fluency">ADP Guide Fluency</a>
+                    <a href="/case-studies/aws-security">AWS Security</a>
+                </div>
+            </div>
             <div class="dropdown">
                 <button
                     type="button"
@@ -19,7 +34,6 @@
                     Tools
                 </button>
                 <div class="dropdown-menu" id="toolsMenu">
-                    <!-- SmartAudit temporarily removed - being reworked separately -->
                     <a href="/tools/xliff-swapper">Global Text Update</a>
                 </div>
             </div>
@@ -115,22 +129,33 @@
 </style>
 
 <script>
-    const dropdown = document.querySelector('.dropdown');
-    const toggle = document.getElementById('toolsMenuButton');
+    const dropdowns = document.querySelectorAll<HTMLElement>('.dropdown');
 
-    if (dropdown && toggle) {
-        const setOpen = (isOpen) => {
+    dropdowns.forEach((dropdown) => {
+        const toggle = dropdown.querySelector<HTMLButtonElement>('.dropdown-toggle');
+        if (!toggle) return;
+
+        const setOpen = (isOpen: boolean) => {
             dropdown.classList.toggle('open', isOpen);
             toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         };
 
         toggle.addEventListener('click', () => {
             const isOpen = dropdown.classList.contains('open');
+
+            dropdowns.forEach((otherDropdown) => {
+                if (otherDropdown !== dropdown) {
+                    otherDropdown.classList.remove('open');
+                    otherDropdown.querySelector('.dropdown-toggle')?.setAttribute('aria-expanded', 'false');
+                }
+            });
+
             setOpen(!isOpen);
         });
 
         document.addEventListener('click', (event) => {
-            if (!dropdown.contains(event.target)) {
+            const target = event.target;
+            if (!(target instanceof Node) || !dropdown.contains(target)) {
                 setOpen(false);
             }
         });
@@ -141,6 +166,6 @@
                 toggle.focus();
             }
         });
-    }
+    });
 </script>
 

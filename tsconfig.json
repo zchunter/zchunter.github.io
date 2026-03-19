@@ -1,5 +1,16 @@
 {
   "extends": "astro/tsconfigs/strict",
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "exclude": [
+    "dist",
+    "coverage",
+    "reports",
+    "node_modules",
+    ".netlify",
+    "smart-audit/workspace",
+    "smart-audit/archive",
+    "public/test-data",
+    "decode.js",
+    "tailwind.config.js"
+  ]
 }
