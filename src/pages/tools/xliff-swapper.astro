@@ -136,12 +136,16 @@ import background from '../../assets/background.svg';
                 totalReplacements
             };
             
-            // Use relative URL in development to avoid CORS issues
             const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
             const configuredApiUrl = (document.getElementById('xapiFunctionUrl') as HTMLInputElement | null)?.value;
-            const apiUrl = isLocalhost 
-                ? "/.netlify/functions/send-xapi"  // Use relative URL for local development
-                : (configuredApiUrl || "/.netlify/functions/send-xapi");
+            const apiUrl = isLocalhost
+                ? "/.netlify/functions/send-xapi"
+                : configuredApiUrl;
+
+            if (!apiUrl) {
+                console.warn("xAPI logging skipped: PUBLIC_XAPI_FUNCTION_URL is not configured for production.");
+                return;
+            }
                 
             const response = await fetch(apiUrl, {
                 method: "POST",
@@ -180,15 +184,6 @@ import background from '../../assets/background.svg';
                 statusMessage.style.color = isError ? '#b91c1c' : '#047857';
             }
 
-            function escapeHtml(value: string) {
-                return value
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/'/g, '&#39;');
-            }
-            
             // Hide results initially
             if (resultsSection) resultsSection.style.display = 'none';
             
@@ -319,7 +314,7 @@ import background from '../../assets/background.svg';
                                 const lines = content.toString().split(/\r?\n/);
                                 if (!replacementsContainer) return;
                                 
-                                replacementsContainer.innerHTML = '';
+                                replacementsContainer.replaceChildren();
                                 
                                 lines.forEach((line, index) => {
                                     if (!line.trim()) return;
@@ -426,17 +421,56 @@ import background from '../../assets/background.svg';
                                 // Display summary
                                 const replacementSummary = document.getElementById('replacementSummary');
                                 if (replacementSummary) {
-                                    let summaryHTML = '<table aria-label="Replacement Results Summary"><caption>Text Replacement Summary</caption><thead><tr><th scope="col">Original Text</th><th scope="col">Replacement Text</th><th scope="col">Replacements Made</th></tr></thead><tbody>';
-                                    
-                                    replacements.forEach(([original, replacement]) => {
-                                        summaryHTML += `<tr><td>${escapeHtml(original)}</td><td>${escapeHtml(replacement)}</td><td>${replacementCounts[original] || 0}</td></tr>`;
+                                    const table = document.createElement('table');
+                                    table.setAttribute('aria-label', 'Replacement Results Summary');
+
+                                    const caption = document.createElement('caption');
+                                    caption.textContent = 'Text Replacement Summary';
+                                    table.appendChild(caption);
+
+                                    const thead = document.createElement('thead');
+                                    const headRow = document.createElement('tr');
+                                    ['Original Text', 'Replacement Text', 'Replacements Made'].forEach((label) => {
+                                        const th = document.createElement('th');
+                                        th.scope = 'col';
+                                        th.textContent = label;
+                                        headRow.appendChild(th);
                                     });
-                                    
-                                    // Add total row
-                                    summaryHTML += `<tr class="total-row"><td colspan="2"><strong>TOTAL (${replacements.length} patterns)</strong></td><td><strong>${totalReplacements}</strong></td></tr>`;
-                                    
-                                    summaryHTML += '</tbody></table>';
-                                    replacementSummary.innerHTML = summaryHTML;
+                                    thead.appendChild(headRow);
+                                    table.appendChild(thead);
+
+                                    const tbody = document.createElement('tbody');
+                                    replacements.forEach(([original, replacement]) => {
+                                        const row = document.createElement('tr');
+                                        const originalCell = document.createElement('td');
+                                        originalCell.textContent = original;
+                                        const replacementCell = document.createElement('td');
+                                        replacementCell.textContent = replacement;
+                                        const countCell = document.createElement('td');
+                                        countCell.textContent = String(replacementCounts[original] || 0);
+                                        row.appendChild(originalCell);
+                                        row.appendChild(replacementCell);
+                                        row.appendChild(countCell);
+                                        tbody.appendChild(row);
+                                    });
+
+                                    const totalRow = document.createElement('tr');
+                                    totalRow.className = 'total-row';
+                                    const totalLabel = document.createElement('td');
+                                    totalLabel.colSpan = 2;
+                                    const totalStrong = document.createElement('strong');
+                                    totalStrong.textContent = `TOTAL (${replacements.length} patterns)`;
+                                    totalLabel.appendChild(totalStrong);
+                                    const totalValue = document.createElement('td');
+                                    const totalValueStrong = document.createElement('strong');
+                                    totalValueStrong.textContent = String(totalReplacements);
+                                    totalValue.appendChild(totalValueStrong);
+                                    totalRow.appendChild(totalLabel);
+                                    totalRow.appendChild(totalValue);
+                                    tbody.appendChild(totalRow);
+
+                                    table.appendChild(tbody);
+                                    replacementSummary.replaceChildren(table);
                                 }
                                 
                                 // Show results

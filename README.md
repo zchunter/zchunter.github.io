@@ -1,43 +1,46 @@
-# Zach Hunter - Technical Tools
+# Zach Hunter Site and Tools
 
-This repository currently publishes one live tool for Articulate Rise content operations.
+This repository publishes the `zchunter.github.io` Astro site and its active browser-based content operations tool.
+
+## Active Site Areas
+
+- The public site lives in `src/` and is built as a static Astro site.
+- The live tool is [Rise Global Text Update](src/pages/tools/xliff-swapper.astro).
+- Netlify serverless code is limited to `netlify/functions/` for xAPI telemetry forwarding.
+- `workspaces/` contains local-only workspace material, including SmartAudit and non-public fixtures. It is not part of the published site.
+
+The concrete file-placement plan for future growth lives in [docs/repo-map.md](docs/repo-map.md).
 
 ## Live Tool
 
 ### [Rise Global Text Update](src/pages/tools/xliff-swapper.astro)
 
-A deterministic rename and text-governance workflow for Articulate Rise exports. It was designed for high-volume rename cycles and also supports routine one-off text updates that are tedious and error-prone in manual review.
+A deterministic rename and text-governance workflow for Articulate Rise exports. It supports both large rename campaigns and smaller one-off text updates that are tedious to verify manually.
 
-This tool was built by me, based on a Python script and manual workflow developed by [Scott Stewart](https://www.linkedin.com/in/scottwstewart/). I expanded that original approach into a browser-based tool with broader replacement support and reporting.
+This tool was built from a Python script and manual workflow originally developed by [Scott Stewart](https://www.linkedin.com/in/scottwstewart/), then expanded into a browser-based workflow with reporting and telemetry.
 
 - Finds and replaces exact strings in exported XLIFF files
-- Supports CSV import to apply many known rename pairs in one pass
-- Updates course text and image alt text that can be slow to review manually
-- Handles both high-volume rename campaigns and small single-word updates
+- Supports CSV import for bulk replacement pairs
+- Updates course text and image alt text without uploading course files to a server
 - Exports replacement counts and report output for QA verification
-- Preserves XML integrity with proper escaping and source-to-target conversion
-- Includes targeted regression tests for CSV parsing, XML transformation, and xAPI payload validation
+- Preserves XML integrity with escaping and source-to-target conversion
 
-## Shared Dependencies
+## Security and Privacy
 
-- **Astro** - MIT License - Static site generator and build tool
-- **Vite** - MIT License - Frontend build tool and development server
+- XLIFF processing happens entirely in the browser
+- The site does not send uploaded file contents to the telemetry endpoint
+- The Netlify xAPI function only accepts aggregate counts, not source text or file payloads
+- LRS credentials stay server-side in Netlify environment variables
+- The telemetry function only accepts requests from the production site origin and approved localhost origins for development
 
-## Privacy
+Additional notes live in [SECURITY.md](SECURITY.md).
 
-The live tool in this repository:
+## Development
 
-- Processes files entirely in your browser
-- Does not send your file content to external servers
-- Works offline once loaded
-- Collects minimal anonymous usage metrics via xAPI for replacement activity
+- `npm run dev` starts the Astro dev server
+- `npm run build` builds the static site
+- `npm run check` runs Astro checks
+- `npm test` runs the XLIFF and xAPI regression tests
+- `npm run smart-audit:workspace` starts the local SmartAudit workspace in `workspaces/smart-audit/`
 
-## Testing
-
-Run targeted regression tests for the live tool and xAPI function with `npm run test:xliff-regression`.
-
-Coverage includes:
-
-- CSV parsing (quoted commas and escaped quotes)
-- XML transformation behavior (including no-op when replacement list is empty)
-- Netlify xAPI endpoint method and payload validation paths
+CI runs `npm test`, `npm run build`, and `npm run check` on pushes and pull requests.

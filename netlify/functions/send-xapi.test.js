@@ -35,6 +35,7 @@ describe('send-xapi netlify function', () => {
   test('returns 400 for invalid payload', async () => {
     const res = await handler({
       httpMethod: 'POST',
+      headers: { origin: 'https://zchunter.github.io' },
       body: JSON.stringify({ replacementsChecked: -1, totalReplacements: 2 }),
     });
 
@@ -45,6 +46,7 @@ describe('send-xapi netlify function', () => {
   test('accepts legacy replacements array payload and sends statement', async () => {
     const res = await handler({
       httpMethod: 'POST',
+      headers: { origin: 'https://zchunter.github.io' },
       body: JSON.stringify({ replacements: [{}, {}, {}], totalReplacements: 7 }),
     });
 
@@ -63,10 +65,38 @@ describe('send-xapi netlify function', () => {
 
     const res = await handler({
       httpMethod: 'POST',
+      headers: { origin: 'https://zchunter.github.io' },
       body: JSON.stringify({ replacementsChecked: 1, totalReplacements: 1 }),
     });
 
     expect(res.statusCode).toBe(500);
     expect(sendXapiStatement).not.toHaveBeenCalled();
+  });
+
+  test('returns 403 for disallowed origins', async () => {
+    const res = await handler({
+      httpMethod: 'POST',
+      headers: { origin: 'https://example.com' },
+      body: JSON.stringify({ replacementsChecked: 1, totalReplacements: 1 }),
+    });
+
+    expect(res.statusCode).toBe(403);
+    expect(sendXapiStatement).not.toHaveBeenCalled();
+  });
+
+  test('accepts localhost origins for local development', async () => {
+    const res = await handler({
+      httpMethod: 'POST',
+      headers: { origin: 'http://localhost:4321' },
+      body: JSON.stringify({ replacementsChecked: 1, totalReplacements: 2 }),
+    });
+
+    expect(res.statusCode).toBe(200);
+    expect(sendXapiStatement).toHaveBeenCalledWith(
+      expect.objectContaining({
+        replacementsChecked: 1,
+        totalReplacements: 2,
+      })
+    );
   });
 });

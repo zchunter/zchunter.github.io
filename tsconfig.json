@@ -7,9 +7,9 @@
     "reports",
     "node_modules",
     ".netlify",
-    "smart-audit/workspace",
-    "smart-audit/archive",
-    "public/test-data",
+    "workspaces/smart-audit/workspace",
+    "workspaces/smart-audit/archive",
+    "workspaces/fixtures",
     "decode.js",
     "tailwind.config.js"
   ]

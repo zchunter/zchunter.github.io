@@ -6,4 +6,4 @@
   [headers.values]
     Access-Control-Allow-Origin = "https://zchunter.github.io"
     Access-Control-Allow-Headers = "Content-Type"
-    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Methods = "POST, OPTIONS"

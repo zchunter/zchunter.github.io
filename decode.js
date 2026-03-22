@@ -2,7 +2,7 @@ const lzwCompress = require('lzwcompress');
 const fs = require('fs');
 
 // Path to the und.js file
-const undPath = 'public/test-data/big-tincan/locales/und.js';
+const undPath = 'workspaces/fixtures/test-data/big-tincan/locales/und.js';
 
 // Read the und.js file
 const js = fs.readFileSync(undPath, 'utf8');

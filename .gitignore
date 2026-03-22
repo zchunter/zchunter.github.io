@@ -29,14 +29,11 @@ pnpm-debug.log*
 # generated reports/temp artifacts
 coverage/
 temp-course-analysis/
-reports/report.json
+reports/
 
-# SmartAudit remains local while paused from live site
-smart-audit/
-samples/
-public/test-data/
+# Local-only workspaces and prototype artifacts
+workspaces/
 src/ui/
 src/types/
-src/scripts/view-toggle.js
 src/styles/toggle.css
 src/styles/view-toggle.css

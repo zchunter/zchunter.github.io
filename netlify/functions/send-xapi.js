@@ -1,10 +1,24 @@
 import { sendXapiStatement } from "../../src/utils/sendXapiStatement.js";
 
+const PRIMARY_SITE_ORIGIN = "https://zchunter.github.io";
+
 const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "https://zchunter.github.io",
+  "Access-Control-Allow-Origin": PRIMARY_SITE_ORIGIN,
   "Access-Control-Allow-Headers": "Content-Type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
+
+function isAllowedOrigin(origin) {
+  if (!origin || typeof origin !== "string") {
+    return false;
+  }
+
+  if (origin === PRIMARY_SITE_ORIGIN) {
+    return true;
+  }
+
+  return /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin);
+}
 
 export const handler = async (event) => {
   if (event.httpMethod === "OPTIONS") {
@@ -24,6 +38,16 @@ export const handler = async (event) => {
   }
 
   try {
+    const origin = event.headers?.origin || event.headers?.Origin || "";
+
+    if (!isAllowedOrigin(origin)) {
+      return {
+        statusCode: 403,
+        headers: CORS_HEADERS,
+        body: JSON.stringify({ error: "Forbidden" }),
+      };
+    }
+
     const payload = JSON.parse(event.body || "{}");
     const rawChecked = payload.replacementsChecked ?? (Array.isArray(payload.replacements) ? payload.replacements.length : undefined);
     const replacementsChecked = Number(rawChecked);
