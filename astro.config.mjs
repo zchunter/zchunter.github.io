@@ -5,7 +5,6 @@ import tailwind from '@astrojs/tailwind';
 // https://astro.build/config
 export default defineConfig({
     site: 'https://zchunter.github.io',
+    output: 'static',
     integrations: [tailwind()],
-    // SmartAudit is separated into smart-audit/ directory and excluded from site builds
-    // (The page is no longer in src/pages, so it won't be included automatically)
 });

@@ -31,8 +31,13 @@ coverage/
 temp-course-analysis/
 reports/
 
-# Local-only workspaces and prototype artifacts
-workspaces/
+# Local-only workspaces and prototype artifacts.
+# Everything under workspaces/ is ignored EXCEPT the active SmartAudit project,
+# which is version-controlled. It is still NOT published — it has no route under
+# src/pages/, so the Astro build never includes it.
+workspaces/*
+!workspaces/smart-audit/
+workspaces/smart-audit/node_modules/
 src/ui/
 src/types/
 src/styles/toggle.css
