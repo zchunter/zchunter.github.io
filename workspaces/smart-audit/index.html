@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartAudit — Course Dump</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: ui-monospace, 'Cascadia Code', 'Fira Mono', monospace;
+      font-size: 13px;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    h1 { font-size: 1.1rem; color: #94a3b8; margin-bottom: 1.5rem; font-weight: 400; }
+    h2 { font-size: 0.85rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem; }
+
+    #drop-zone {
+      border: 1px dashed #334155;
+      border-radius: 8px;
+      padding: 3rem 2rem;
+      text-align: center;
+      color: #475569;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+      margin-bottom: 2rem;
+    }
+    #drop-zone.drag-over { border-color: #6366f1; color: #818cf8; }
+    #drop-zone input { display: none; }
+    #drop-zone p { margin-bottom: 0.5rem; }
+    #drop-zone span { font-size: 0.8rem; }
+
+    #error {
+      display: none;
+      background: #450a0a;
+      color: #fca5a5;
+      border: 1px solid #7f1d1d;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    #output { display: none; }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    .stat {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+    }
+    .stat-label { color: #64748b; font-size: 0.75rem; margin-bottom: 0.25rem; }
+    .stat-value { color: #e2e8f0; font-size: 1.1rem; }
+    .stat-value.warn { color: #fb923c; }
+    .stat-value.ok   { color: #4ade80; }
+
+    .issues-list {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    .issue-item {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid #0f172a;
+      display: flex;
+      gap: 0.75rem;
+      align-items: baseline;
+    }
+    .issue-item:last-child { border-bottom: none; }
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .badge-error   { background: #7f1d1d; color: #fca5a5; }
+    .badge-warn    { background: #431407; color: #fb923c; }
+    .badge-unknown { background: #1e1b4b; color: #a5b4fc; }
+    .issue-path  { color: #64748b; font-size: 0.75rem; }
+
+    details { margin-bottom: 0.5rem; }
+    summary {
+      cursor: pointer;
+      padding: 0.5rem 0.75rem;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      color: #94a3b8;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover { background: #263248; }
+    details[open] summary { border-radius: 6px 6px 0 0; border-bottom-color: #0f172a; }
+    .summary-arrow { transition: transform 0.15s; }
+    details[open] .summary-arrow { transform: rotate(90deg); }
+    .summary-meta { color: #475569; font-size: 0.75rem; }
+
+    .detail-body {
+      background: #131820;
+      border: 1px solid #334155;
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      padding: 1rem;
+    }
+
+    .block-list { display: flex; flex-direction: column; gap: 0.35rem; }
+
+    .block {
+      background: #1a2030;
+      border: 1px solid #263248;
+      border-radius: 4px;
+      padding: 0.5rem 0.75rem;
+    }
+    .block-identity { color: #6366f1; font-size: 0.75rem; margin-bottom: 0.35rem; }
+
+    .field { color: #94a3b8; margin-bottom: 0.2rem; padding-left: 0.5rem; }
+    .field-name  { color: #64748b; }
+    .field-value { color: #cbd5e1; }
+    .text-preview {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 560px;
+      display: inline-block;
+      vertical-align: bottom;
+    }
+    .missing { color: #f87171; }
+    .present { color: #4ade80; }
+    .warn-val { color: #fb923c; }
+    .muted   { color: #475569; }
+
+    .nested { margin-left: 1rem; border-left: 1px solid #263248; padding-left: 0.5rem; margin-top: 0.25rem; }
+
+    .raw-section { margin-top: 2rem; }
+    .raw-section pre {
+      background: #0a0e17;
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+      padding: 1rem;
+      overflow: auto;
+      max-height: 600px;
+      color: #64748b;
+      font-size: 0.75rem;
+      line-height: 1.6;
+    }
+    .no-issues { color: #4ade80; padding: 0.75rem 1rem; }
+
+    .img-thumb-wrap { display: inline-flex; align-items: center; gap: 0.5rem; vertical-align: middle; }
+    .img-thumb {
+      height: 56px;
+      width: auto;
+      max-width: 120px;
+      object-fit: contain;
+      border-radius: 3px;
+      border: 1px solid #334155;
+      background: #0f172a;
+      cursor: zoom-in;
+      transition: opacity 0.15s;
+      vertical-align: middle;
+    }
+    .img-thumb:hover { opacity: 0.85; }
+
+    .text-expand-full { display: none; }
+    .expand-btn {
+      background: none; border: none; cursor: pointer;
+      color: #475569; font-size: 0.75rem; font-family: inherit; padding: 0;
+    }
+    .expand-btn:hover { color: #94a3b8; }
+
+    /* Lightbox */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<h1>SmartAudit — Course Dump</h1>
+
+<div id="drop-zone">
+  <input type="file" id="file-input" accept=".zip">
+  <p>Drop a Rise xAPI export ZIP here</p>
+  <span>or click to select a file</span>
+</div>
+
+<div id="error"></div>
+<div id="output"></div>
+
+<!-- Lightbox -->
+<div id="lightbox" onclick="this.classList.remove('open')">
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script type="module">
+// index.html is a thin shell. All logic lives in src/*.js and is loaded here as
+// ES modules — which is why the workspace must be served over local HTTP
+// (npm run smart-audit:workspace), not opened via file://.
+
+import { extractCourse } from './src/extract.js';
+import { buildImageMap, revokeBlobUrls, attachDisplayUrls } from './src/images.js';
+import { dumpCourse } from './src/dump.js';
+import { collectIssues } from './src/issues.js';
+import { renderOutput, toggleExpand, openLightbox } from './src/render.js';
+
+// The rendered markup uses inline onclick= handlers, so these need to be global.
+window.toggleExpand = toggleExpand;
+window.openLightbox = openLightbox;
+
+async function handleFile(file) {
+  const errorEl  = document.getElementById('error');
+  const outputEl = document.getElementById('output');
+  errorEl.style.display = 'none';
+  outputEl.style.display = 'none';
+  outputEl.innerHTML = '<span style="color:#475569">Extracting…</span>';
+  outputEl.style.display = 'block';
+
+  try {
+    const { courseData, meta, zip } = await extractCourse(file);
+    await buildImageMap(zip);
+    const dump   = attachDisplayUrls(dumpCourse(courseData, meta));
+    const issues = collectIssues(dump);
+    outputEl.innerHTML = renderOutput(dump, issues);
+
+    // Wire the copy button in the unknowns report (rendered into the DOM above)
+    const copyBtn = document.getElementById('copy-unknowns-btn');
+    const copyPre = document.getElementById('unknowns-json');
+    if (copyBtn && copyPre) {
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(copyPre.textContent)
+          .then(() => { copyBtn.textContent = 'Copied!'; setTimeout(() => { copyBtn.textContent = 'Copy to clipboard'; }, 2000); })
+          .catch(() => { copyBtn.textContent = 'Failed — select and copy manually'; });
+      });
+    }
+  } catch (err) {
+    outputEl.style.display = 'none';
+    errorEl.textContent   = err.message;
+    errorEl.style.display = 'block';
+    console.error(err);
+  }
+}
+
+const dropZone  = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+
+dropZone.addEventListener('click',     () => fileInput.click());
+dropZone.addEventListener('dragover',  e  => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) handleFile(file);
+});
+fileInput.addEventListener('change', e => {
+  if (e.target.files[0]) handleFile(e.target.files[0]);
+});
+
+window.addEventListener('beforeunload', revokeBlobUrls);
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('open');
+});
+</script>
+</body>
+</html>

@@ -10,9 +10,6 @@ module.exports = {
   testEnvironment: "jsdom",
   testPathIgnorePatterns: [
     "/node_modules/",
-    "/smart-audit/"
-  ],
-  transformIgnorePatterns: [
-    "node_modules/(?!(unified|retext-.*|vfile.*|syllables|bail|trough|vfile|unist-.*|micromark.*|mdast.*|hast.*|rehype.*|remark.*|devlop|extend|is-plain-obj|yoast|zwitch|cheerio)/)"
+    "/workspaces/"
   ]
 }; 
