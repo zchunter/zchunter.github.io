@@ -29,7 +29,8 @@ Use these directories for anything that ships to the public site:
 
 Use these directories for work that is intentionally not published:
 
-- `workspaces/smart-audit/` for the active SmartAudit local workspace
+- `workspaces/smart-audit/` for the active SmartAudit v2 local workspace
+- `workspaces/smart-audit-oldref/` for the prior implementation (reference only — do not import)
 - `workspaces/samples/` for local sample inputs or reference payloads
 - `workspaces/fixtures/` for local test data, extracted courses, and other non-public fixtures
 
