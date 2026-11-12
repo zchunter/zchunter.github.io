@@ -5,7 +5,6 @@ import Footer from '../../components/Footer.astro';
 import DecisionCard from '../../components/DecisionCard.astro';
 import PullQuote from '../../components/PullQuote.astro';
 import PortfolioNote from '../../components/PortfolioNote.astro';
-import background from '../../assets/background.svg';
 import courseNav from '../../assets/case-studies/course-navigation.png';
 import iamTab from '../../assets/case-studies/iam-tab-interaction.png';
 import knowledgeCheck from '../../assets/case-studies/knowledge-check.png';
@@ -16,7 +15,6 @@ import videoTranscript from '../../assets/case-studies/video-transcript.png';
 	title="AWS Security: Converting Instructor-Led Training to Async - Zach Hunter"
 	description="Case study: Converting four AWS Security VILT/ILT courses into scalable async Rise courses as part of the Digital Classroom initiative."
 >
-	<img id="background" src={background.src} alt="" fetchpriority="high" />
 	<main>
 		<div class="container">
 		<header class="case-header">
@@ -367,7 +365,7 @@ import videoTranscript from '../../assets/case-studies/video-transcript.png';
 		font-weight: 700;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		color: #3245ff;
+		color: #0f766e;
 		margin: 0 0 0.5rem;
 	}
 
@@ -383,13 +381,13 @@ import videoTranscript from '../../assets/case-studies/video-transcript.png';
 
 	.section-divider {
 		border: none;
-		border-top: 1px solid rgba(0, 0, 0, 0.08);
+		border-top: 1px solid #d8e0e0;
 		margin: 2.5rem 0;
 	}
 
 	.at-a-glance-card {
-		background: rgba(0, 0, 0, 0.02);
-		border: 1px solid rgba(0, 0, 0, 0.08);
+		background: #ffffff;
+		border: 1px solid #d8e0e0;
 		border-radius: 8px;
 		padding: 1rem 1.1rem;
 	}
@@ -416,8 +414,8 @@ import videoTranscript from '../../assets/case-studies/video-transcript.png';
 
 	/* Constraints callout */
 	.callout {
-		border-left: 3px solid #4f46e5;
-		background: rgba(79, 70, 229, 0.03);
+		border-left: 3px solid #0f766e;
+		background: #ffffff;
 		border-radius: 0 6px 6px 0;
 		padding: 1rem 1.25rem;
 	}
@@ -431,7 +429,7 @@ import videoTranscript from '../../assets/case-studies/video-transcript.png';
 	.callout li {
 		margin-bottom: 0.75rem;
 		line-height: 1.6;
-		color: #4b5563;
+		color: #14201f;
 	}
 
 	.callout li:last-child {
@@ -439,7 +437,7 @@ import videoTranscript from '../../assets/case-studies/video-transcript.png';
 	}
 
 	.callout strong {
-		color: #111827;
+		color: #12212b;
 	}
 
 	/* Gallery */
@@ -453,9 +451,9 @@ import videoTranscript from '../../assets/case-studies/video-transcript.png';
 	.gallery-item {
 		margin: 0;
 		padding: 1rem;
-		border: 1px solid rgba(0, 0, 0, 0.08);
+		border: 1px solid #d8e0e0;
 		border-radius: 10px;
-		background: rgba(255, 255, 255, 0.72);
+		background: #ffffff;
 	}
 
 	.screenshot {
@@ -464,7 +462,7 @@ import videoTranscript from '../../assets/case-studies/video-transcript.png';
 		aspect-ratio: 4 / 3;
 		object-fit: cover;
 		object-position: top left;
-		border: 1px solid rgba(0, 0, 0, 0.15);
+		border: 1px solid #d8e0e0;
 		border-radius: 6px;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 		cursor: zoom-in;
@@ -478,7 +476,7 @@ import videoTranscript from '../../assets/case-studies/video-transcript.png';
 	.gallery-item figcaption {
 		font-size: 0.9rem;
 		font-weight: 500;
-		color: #374151;
+		color: #14201f;
 		margin-top: 0.5rem;
 		line-height: 1.5;
 	}
@@ -562,7 +560,7 @@ import videoTranscript from '../../assets/case-studies/video-transcript.png';
 		list-style-type: disc;
 		list-style-position: outside;
 		padding-left: 1.25rem;
-		color: #4b5563;
+		color: #14201f;
 	}
 
 	section ul li {

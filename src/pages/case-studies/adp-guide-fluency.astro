@@ -5,7 +5,6 @@ import Footer from '../../components/Footer.astro';
 import DecisionCard from '../../components/DecisionCard.astro';
 import PullQuote from '../../components/PullQuote.astro';
 import PortfolioNote from '../../components/PortfolioNote.astro';
-import background from '../../assets/background.svg';
 import importingPaydata from '../../assets/case-studies/ADP/1-Importing_Paydata.mp4';
 import importingEmployeeAndTime from '../../assets/case-studies/ADP/2-Importing_Emp_and_Time.mp4';
 import importingValidationTable from '../../assets/case-studies/ADP/3-Importing_Validation_Table.mp4';
@@ -16,7 +15,6 @@ import adpKnowledgeCheck from '../../assets/case-studies/ADP/Knowledge Check.png
     title="ADP: Teaching Support Reps to Use the Guide | Zach Hunter"
     description="Case study: An ADP performance-support course designed to build guide fluency under live-call pressure through scenario videos, knowledge checks, and an open-book assessment."
 >
-    <img id="background" src={background.src} alt="" fetchpriority="high" />
     <main>
         <div class="container">
             <header class="case-header">
@@ -401,7 +399,7 @@ import adpKnowledgeCheck from '../../assets/case-studies/ADP/Knowledge Check.png
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: #3245ff;
+        color: #0f766e;
         margin: 0 0 0.5rem;
     }
 
@@ -417,13 +415,13 @@ import adpKnowledgeCheck from '../../assets/case-studies/ADP/Knowledge Check.png
 
     .section-divider {
         border: none;
-        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        border-top: 1px solid #d8e0e0;
         margin: 2.5rem 0;
     }
 
     .at-a-glance-card {
-        background: rgba(0, 0, 0, 0.02);
-        border: 1px solid rgba(0, 0, 0, 0.08);
+        background: #ffffff;
+        border: 1px solid #d8e0e0;
         border-radius: 8px;
         padding: 1rem 1.1rem;
     }
@@ -463,9 +461,9 @@ import adpKnowledgeCheck from '../../assets/case-studies/ADP/Knowledge Check.png
     .video-card {
         margin: 0;
         padding: 1rem;
-        border: 1px solid rgba(0, 0, 0, 0.08);
+        border: 1px solid #d8e0e0;
         border-radius: 10px;
-        background: rgba(255, 255, 255, 0.72);
+        background: #ffffff;
     }
 
     .video-card h3 {
@@ -475,7 +473,7 @@ import adpKnowledgeCheck from '../../assets/case-studies/ADP/Knowledge Check.png
 
     .video-card p {
         margin: 0;
-        color: #4b5563;
+        color: #14201f;
         line-height: 1.6;
     }
 
@@ -484,7 +482,7 @@ import adpKnowledgeCheck from '../../assets/case-studies/ADP/Knowledge Check.png
         display: block;
         margin-bottom: 0.85rem;
         border-radius: 8px;
-        background: #111827;
+        background: #12212b;
         aspect-ratio: 16 / 9;
     }
 
@@ -493,15 +491,15 @@ import adpKnowledgeCheck from '../../assets/case-studies/ADP/Knowledge Check.png
         display: block;
         margin-bottom: 0.85rem;
         border-radius: 8px;
-        border: 1px solid rgba(0, 0, 0, 0.12);
+        border: 1px solid #d8e0e0;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
     .design-document {
         padding: 1.5rem;
-        border: 1px solid rgba(0, 0, 0, 0.08);
+        border: 1px solid #d8e0e0;
         border-radius: 12px;
-        background: rgba(248, 250, 252, 0.88);
+        background: #ffffff;
     }
 
     .doc-intro {
@@ -527,8 +525,8 @@ import adpKnowledgeCheck from '../../assets/case-studies/ADP/Knowledge Check.png
         flex-shrink: 0;
         padding: 0.15rem 0.45rem;
         border-radius: 999px;
-        background: rgba(50, 69, 255, 0.08);
-        color: #3245ff;
+        background: #d9efec;
+        color: #0b5a54;
         font-size: 0.78rem;
         font-weight: 600;
     }
@@ -537,22 +535,22 @@ import adpKnowledgeCheck from '../../assets/case-studies/ADP/Knowledge Check.png
     .measurement-note,
     section p {
         line-height: 1.7;
-        color: #4b5563;
+        color: #14201f;
     }
 
     .measurement-note {
         margin: 0 0 1rem;
         padding: 0.9rem 1rem;
-        border-left: 3px solid #3245ff;
+        border-left: 3px solid #0f766e;
         border-radius: 0 6px 6px 0;
-        background: rgba(50, 69, 255, 0.04);
+        background: #ffffff;
     }
 
     section ul {
         list-style-type: disc;
         list-style-position: outside;
         padding-left: 1.25rem;
-        color: #4b5563;
+        color: #14201f;
     }
 
     section ul li {
@@ -569,14 +567,14 @@ import adpKnowledgeCheck from '../../assets/case-studies/ADP/Knowledge Check.png
     td {
         padding: 0.75rem;
         text-align: left;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid #d8e0e0;
         vertical-align: top;
     }
 
     th {
-        background-color: rgba(50, 69, 255, 0.05);
+        background-color: #d9efec;
         font-weight: 600;
-        color: #111827;
+        color: #12212b;
     }
 
     .reflection {

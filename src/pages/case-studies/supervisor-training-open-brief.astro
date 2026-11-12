@@ -4,7 +4,6 @@ import Contact from '../../components/Contact.astro';
 import Footer from '../../components/Footer.astro';
 import DecisionCard from '../../components/DecisionCard.astro';
 import PortfolioNote from '../../components/PortfolioNote.astro';
-import background from '../../assets/background.svg';
 import deckTwoPlants from '../../assets/case-studies/supervisor-training/deck-two-plants.png';
 import deckFairProcess from '../../assets/case-studies/supervisor-training/deck-fair-process.png';
 import deckWhichOneIsMissing from '../../assets/case-studies/supervisor-training/deck-which-one-is-missing.png';
@@ -17,7 +16,6 @@ import facilitatorGuidePart6 from '../../assets/case-studies/supervisor-training
     title="Supervisor Training: Designing from an Open Brief | Zach Hunter"
     description="Case study: a 10-minute supervisor session, facilitator guide and job aid designed from a one-line brief with no stated need, using an AI-assisted workflow with every claim checked against its source."
 >
-    <img id="background" src={background.src} alt="" fetchpriority="high" />
     <main>
         <div class="container">
             <header class="case-header">
@@ -389,7 +387,7 @@ import facilitatorGuidePart6 from '../../assets/case-studies/supervisor-training
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: #3245ff;
+        color: #0f766e;
         margin: 0 0 0.5rem;
     }
 
@@ -405,13 +403,13 @@ import facilitatorGuidePart6 from '../../assets/case-studies/supervisor-training
 
     .section-divider {
         border: none;
-        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        border-top: 1px solid #d8e0e0;
         margin: 2.5rem 0;
     }
 
     .at-a-glance-card {
-        background: rgba(0, 0, 0, 0.02);
-        border: 1px solid rgba(0, 0, 0, 0.08);
+        background: #ffffff;
+        border: 1px solid #d8e0e0;
         border-radius: 8px;
         padding: 1rem 1.1rem;
     }
@@ -451,9 +449,9 @@ import facilitatorGuidePart6 from '../../assets/case-studies/supervisor-training
     .video-card {
         margin: 0;
         padding: 1rem;
-        border: 1px solid rgba(0, 0, 0, 0.08);
+        border: 1px solid #d8e0e0;
         border-radius: 10px;
-        background: rgba(255, 255, 255, 0.72);
+        background: #ffffff;
     }
 
     .video-card h3 {
@@ -463,7 +461,7 @@ import facilitatorGuidePart6 from '../../assets/case-studies/supervisor-training
 
     .video-card p {
         margin: 0;
-        color: #4b5563;
+        color: #14201f;
         line-height: 1.6;
     }
 
@@ -473,7 +471,7 @@ import facilitatorGuidePart6 from '../../assets/case-studies/supervisor-training
         display: block;
         margin-bottom: 0.85rem;
         border-radius: 8px;
-        border: 1px solid rgba(0, 0, 0, 0.12);
+        border: 1px solid #d8e0e0;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
@@ -484,29 +482,29 @@ import facilitatorGuidePart6 from '../../assets/case-studies/supervisor-training
     .measurement-note,
     section p {
         line-height: 1.7;
-        color: #4b5563;
+        color: #14201f;
     }
 
     .measurement-note {
         margin: 0 0 1rem;
         padding: 0.9rem 1rem;
-        border-left: 3px solid #3245ff;
+        border-left: 3px solid #0f766e;
         border-radius: 0 6px 6px 0;
-        background: rgba(50, 69, 255, 0.04);
+        background: #ffffff;
     }
 
     section ul {
         list-style-type: disc;
         list-style-position: outside;
         padding-left: 1.25rem;
-        color: #4b5563;
+        color: #14201f;
     }
 
     section ol {
         list-style-type: decimal;
         list-style-position: outside;
         padding-left: 1.25rem;
-        color: #4b5563;
+        color: #14201f;
     }
 
     section ul li,
@@ -541,14 +539,14 @@ import facilitatorGuidePart6 from '../../assets/case-studies/supervisor-training
     td {
         padding: 0.75rem;
         text-align: left;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid #d8e0e0;
         vertical-align: top;
     }
 
     th {
-        background-color: rgba(50, 69, 255, 0.05);
+        background-color: #d9efec;
         font-weight: 600;
-        color: #111827;
+        color: #12212b;
     }
 
     .reflection {

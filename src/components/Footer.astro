@@ -27,26 +27,45 @@
 </footer>
 
 <style>
-	footer {
-		margin-top: 4rem;
-		padding-top: 1rem;
-		border-top: 1px solid rgba(0, 0, 0, 0.1);
-	}
+    footer {
+        margin-top: 4rem;
+        padding: 1.5rem 1rem 1.5rem;
+        background-color: var(--ink);
+        /* Extend the dark band to the screen edges without changing the page layout */
+        box-shadow: 0 0 0 100vmax var(--ink);
+        clip-path: inset(0 -100vmax -2rem -100vmax);
+    }
 
-	.coffee-note {
-		font-size: 0.85rem;
-		font-style: normal;
-	}
+    footer p {
+        color: var(--ink-text-muted);
+        margin: 0 0 0.5rem;
+    }
 
-	.coffee-note a {
-		color: #4b5563;
-		text-decoration: none;
-		transition: color 0.2s;
-	}
+    footer .note {
+        opacity: 1;
+    }
 
-	.coffee-note a:hover,
-	.coffee-note a:focus-visible {
-		color: #111827;
-		text-decoration: underline;
-	}
+    .coffee-note {
+        font-size: 0.85rem;
+        font-style: normal;
+        margin-bottom: 0;
+    }
+
+    .coffee-note a {
+        color: var(--ink-text-muted);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .coffee-note a:hover {
+        color: var(--ink-text);
+        text-decoration: underline;
+    }
+
+    .coffee-note a:focus-visible {
+        outline: 2px solid var(--ink-text);
+        outline-offset: 2px;
+        color: var(--ink-text);
+        text-decoration: underline;
+    }
 </style>

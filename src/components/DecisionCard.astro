@@ -35,10 +35,10 @@ const { title, challenge, decision } = Astro.props as Props;
     .decision-grid {
         display: grid;
         grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-        border: 1px solid rgba(0, 0, 0, 0.08);
+        border: 1px solid #d8e0e0;
         border-radius: 10px;
         overflow: hidden;
-        background: rgba(255, 255, 255, 0.72);
+        background: #ffffff;
     }
 
     .decision-panel {
@@ -46,12 +46,12 @@ const { title, challenge, decision } = Astro.props as Props;
     }
 
     .challenge-panel {
-        background: rgba(0, 0, 0, 0.02);
-        border-right: 1px solid rgba(0, 0, 0, 0.07);
+        background: #ffffff;
+        border-right: 1px solid #d8e0e0;
     }
 
     .effect-panel {
-        background: rgba(50, 69, 255, 0.03);
+        background: #ffffff;
     }
 
     .decision-label {
@@ -60,13 +60,13 @@ const { title, challenge, decision } = Astro.props as Props;
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: #4b5563;
+        color: #14201f;
     }
 
     .decision-panel p:last-child {
         margin: 0;
         line-height: 1.65;
-        color: #374151;
+        color: #14201f;
     }
 
     @media screen and (max-width: 768px) {
@@ -76,7 +76,7 @@ const { title, challenge, decision } = Astro.props as Props;
 
         .challenge-panel {
             border-right: 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+            border-bottom: 1px solid #d8e0e0;
         }
     }
 </style>
