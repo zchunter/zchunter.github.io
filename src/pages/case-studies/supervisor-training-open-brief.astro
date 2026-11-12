@@ -1,0 +1,564 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Contact from '../../components/Contact.astro';
+import Footer from '../../components/Footer.astro';
+import DecisionCard from '../../components/DecisionCard.astro';
+import PortfolioNote from '../../components/PortfolioNote.astro';
+import background from '../../assets/background.svg';
+import deckTwoPlants from '../../assets/case-studies/supervisor-training/deck-two-plants.png';
+import deckFairProcess from '../../assets/case-studies/supervisor-training/deck-fair-process.png';
+import deckWhichOneIsMissing from '../../assets/case-studies/supervisor-training/deck-which-one-is-missing.png';
+import jobAidFront from '../../assets/case-studies/supervisor-training/job-aid-front.png';
+import jobAidBack from '../../assets/case-studies/supervisor-training/job-aid-back.png';
+import facilitatorGuidePart6 from '../../assets/case-studies/supervisor-training/facilitator-guide-part-6.png';
+---
+
+<Layout
+    title="Supervisor Training: Designing from an Open Brief | Zach Hunter"
+    description="Case study: a 10-minute supervisor session, facilitator guide and job aid designed from a one-line brief with no stated need, using an AI-assisted workflow with every claim checked against its source."
+>
+    <img id="background" src={background.src} alt="" fetchpriority="high" />
+    <main>
+        <div class="container">
+            <header class="case-header">
+                <p class="eyebrow">Case Study / Supervisor Development / Design Sample</p>
+                <h1>Training Supervisors When the Brief Names a Topic, Not a Problem</h1>
+                <p class="lead">
+                    A 10-minute supervisor session, facilitator guide and job aid built from a one-line brief with no stated need, using an AI-assisted workflow in which every claim was checked against its source.
+                </p>
+            </header>
+
+            <PortfolioNote>
+                <p>
+                    This sample shows how I handled an open brief, a needs analysis without local data, facilitator-ready materials, evaluation planning, and an AI-assisted workflow with verification built in.
+                </p>
+            </PortfolioNote>
+
+            <section>
+                <h2>At a Glance</h2>
+                <div class="at-a-glance-card at-a-glance-grid">
+                    <div><span class="meta-label">Role</span><span>Instructional Designer (sole designer)</span></div>
+                    <div><span class="meta-label">Brief</span><span>Hiring-panel design assignment from a Virginia community college HR team (anonymized)</span></div>
+                    <div><span class="meta-label">Audience</span><span>Supervisors, in a mixed room of supervisors and staff</span></div>
+                    <div><span class="meta-label">Format</span><span>In-person, 10 minutes including questions; built so any facilitator can run it</span></div>
+                    <div><span class="meta-label">Scope</span><span>22-slide deck, facilitator guide, two-sided job aid, design document and rationale, sample evaluation instruments</span></div>
+                    <div><span class="meta-label">Timeline</span><span>11 days from brief to final deck</span></div>
+                    <div><span class="meta-label">Tools</span><span>Claude (research, drafting, file builds), ChatGPT (independent claim review), PowerPoint for web (accessibility check), Colour Contrast Analyser, LibreOffice</span></div>
+                </div>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>Why This Mattered</h2>
+                <p>
+                    The brief gave a topic and nothing else. When I asked what problem the session should address, the answer was "No goal, just general session." The easy move was to invent a problem. The work was designing something useful without claiming to know a need that nobody had shown.
+                </p>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>Context: An Open Brief</h2>
+                <p>
+                    The brief came from the HR office of a Virginia community college hiring a training and development specialist. Candidates were to facilitate a 10-minute session titled "Supervisor Training: Building Trust and Engagement with Your Team," with a three-person panel acting as the audience.
+                </p>
+                <p>Before designing anything, I sent six scoping questions:</p>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Question</th>
+                                <th scope="col">Answer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>New supervisors, experienced ones, or a mix?</td>
+                                <td>A mixed group of supervisors and employees, all types of staff</td>
+                            </tr>
+                            <tr>
+                                <td>Staff supervisors only, or academic supervisors too?</td>
+                                <td>Covered by the answer above</td>
+                            </tr>
+                            <tr>
+                                <td>Standalone, or one segment of a longer program?</td>
+                                <td>Standalone</td>
+                            </tr>
+                            <tr>
+                                <td>Do the 10 minutes include questions?</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <td>How many on the panel?</td>
+                                <td>Three</td>
+                            </tr>
+                            <tr>
+                                <td>Is there a challenge or goal behind the topic?</td>
+                                <td>"No goal, just general session."</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    The last answer set the real design problem. A topic like trust and engagement invites a diagnosis: low morale, poor communication, turnover. None of that had been established for this college, so none of it could be presented as fact. The session had to be useful to any supervisor while being honest that the local need was unknown.
+                </p>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>Role and Ownership</h2>
+                <p>
+                    I was the only designer on this project, and every design decision was mine: the framework, the objectives, the activity, the scope cuts, and the wording learners would see. I logged about 70 of those decisions, each with who made it and why.
+                </p>
+                <p>
+                    I used Claude as a research and production partner. It gathered and summarized sources, drafted text for my review, and generated the slide deck, facilitator guide and job aid files from the content I approved. I reviewed every artifact, rejected or rewrote drafts that did not work, and signed off on everything before it left my hands. The next section describes how that division of labor worked, because it is as much a part of this sample as the materials themselves.
+                </p>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>How I Worked with AI</h2>
+                <p>
+                    AI made it possible to produce a full set of materials in 11 days. I treated it as a fast collaborator that would sometimes be confidently wrong, and built the process around catching that.
+                </p>
+                <ol>
+                    <li><strong>Set the ground rules first.</strong> Before any drafting: every factual claim needs a source I can open, no invented numbers, decisions stay with me, push back instead of agreeing, and flag anything low-confidence.</li>
+                    <li><strong>Log every decision.</strong> About 70 decisions went into a running log with the reasoning behind each. When a choice was questioned later, the reasoning was already on record.</li>
+                    <li><strong>Get an independent second opinion.</strong> I exported the research as a claim register: 40 factual claims and 7 inferences, each with its source. I had ChatGPT check each one against its source, independently of Claude. It confirmed most and named the real weakness: national and state data were being stretched into a local need. I rebuilt the needs analysis as a labeled hypothesis with a plan to test it.</li>
+                    <li><strong>Audit again before anything ships.</strong> Before the materials went to the hiring team, every citation was re-checked against its source. That pass caught a survey finding attributed to the wrong group, incorrect slide numbers in one citation, policy language stated more strongly than the policy, and two links to unofficial copies of articles. All were fixed before sending.</li>
+                    <li><strong>Treat accuracy as the floor.</strong> A claim could be correct and still be wrong for the room. Every slide and line had to pass my own test: is it clear, does it include everyone, and how will this audience hear it? I reworded, rebuilt or cut anything that fell short.</li>
+                </ol>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>Constraints and Design Requirements</h2>
+                <ul>
+                    <li><strong>No stated problem and no local data.</strong> The college offered no goal, survey results or turnover figures to design from.</li>
+                    <li><strong>Ten minutes, questions included.</strong> Every activity had to earn its time, with a rule for what to cut if the session ran long.</li>
+                    <li><strong>A mixed room.</strong> Supervisors and non-supervisors, staff and faculty, who are evaluated through different systems. Examples had to fit any office.</li>
+                    <li><strong>Three participants.</strong> Too few for meaningful percentages, so in-room checks could demonstrate the method but not produce data.</li>
+                    <li><strong>Runnable by someone else.</strong> The materials had to let any facilitator deliver the session, not depend on me.</li>
+                    <li><strong>An unknown computer.</strong> The deck had to survive a different machine and a PDF fallback, so builds were made as copied slides rather than animations.</li>
+                </ul>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>Design Decisions</h2>
+
+                <DecisionCard
+                    title="1) Treat the need as a hypothesis, and say so"
+                    challenge={`With no local data, any claim that the college had a trust or engagement problem would be invented.`}
+                    decision={`I used the closest public data, from Virginia where it existed and national where it did not, and labeled its limits. In a national community college climate survey, only 56% of employees agreed that information is shared within their institution, and 47% that they can influence its direction (PACE, 2021). Virginia state workforce turnover and higher education retention research filled in the picture. The design document calls this a hypothesis and includes a plan to test it with the college's own data before any rollout.`}
+                />
+
+                <DecisionCard
+                    title="2) Teach one framework, not a list of tips"
+                    challenge={`Trust and engagement is a broad topic, and ten minutes covers very little of it.`}
+                    decision={`I rated nine common supervisor problem areas by impact and by effort for a supervisor. Three came out high impact and low effort: explaining the why behind decisions, closing the loop on input, and setting clear expectations. Fair process (Kim and Mauborgne, 1997) covers all three as engagement, explanation and expectation clarity, and it comes with a memorable two-plant case. The other problem areas became later modules on a course map rather than being crammed in.`}
+                />
+
+                <DecisionCard
+                    title="3) Spend about half the session on practice"
+                    challenge={`A ten-minute session easily turns into a lecture.`}
+                    decision={`Using Gagne's nine events as the structure, participants spend about half the time doing something. They identify which principle is missing from a supervisor's message with a vote on a count of three, so no one copies the first hand up. One answer option is a deliberate near-miss: "swap requests come to me" sounds like asking for input but comes after the decision. Participants then write one sentence that supplies the missing piece, and one shares it.`}
+                />
+
+                <DecisionCard
+                    title="4) Build it so anyone can facilitate it"
+                    challenge={`A session that only works when its designer delivers it does not scale into a program.`}
+                    decision={`The facilitator guide gives each part a slide thumbnail, timing, and color-coded cues for what to say, do, note and transition. It includes a rule for what to cut when running behind and answer points for likely questions. A facilitator can study it and run the session without me.`}
+                />
+
+                <DecisionCard
+                    title="5) Make the job aid the bridge to the job"
+                    challenge={`A short session is forgotten quickly unless something goes back to work with participants.`}
+                    decision={`The front of the job aid is a checklist of the three principles with a sentence starter for each, meant to be pinned up and used before the next decision or change. The back holds the practice line and a template for a real change the participant has coming up. Each instruction sits directly above its task, and the practice message stays on the slide so the handout does not give away the answer.`}
+                />
+
+                <DecisionCard
+                    title="6) Check accessibility rather than assume it"
+                    challenge={`Accessibility problems are easy to miss in a fast build.`}
+                    decision={`Text contrast was calculated against WCAG AA and confirmed with Colour Contrast Analyser, and no meaning is carried by color alone: each principle has a color, an icon and a label. Decorative icons are marked so screen readers do not repeat their labels, slide titles come first in reading order, and the deck passed PowerPoint's accessibility checker.`}
+                />
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>Representative Examples</h2>
+                <p class="gallery-hint">Selected slides and pages from the session materials. The full files are linked below.</p>
+                <div class="video-grid">
+                    <article class="video-card">
+                        <img
+                            src={deckTwoPlants.src}
+                            width={deckTwoPlants.width}
+                            height={deckTwoPlants.height}
+                            loading="lazy"
+                            alt={`Slide titled "Same change. Two plants." showing two factory icons labeled Chester, a model workforce, and High Park, with a history of resisting change.`}
+                            class="artifact-image"
+                        />
+                        <h3>Same Change, Two Plants</h3>
+                        <p>The opening case: one change, two very different results.</p>
+                    </article>
+                    <article class="video-card">
+                        <img
+                            src={deckFairProcess.src}
+                            width={deckFairProcess.width}
+                            height={deckFairProcess.height}
+                            loading="lazy"
+                            alt={`Slide titled "Fair process" stating that people trust and cooperate when the process feels fair, even when the outcome is not what they wanted, with the note "Not consensus. You still make the call."`}
+                            class="artifact-image"
+                        />
+                        <h3>Fair Process</h3>
+                        <p>Three principles, and a reminder that fair process is not consensus.</p>
+                    </article>
+                    <article class="video-card">
+                        <img
+                            src={deckWhichOneIsMissing.src}
+                            width={deckWhichOneIsMissing.width}
+                            height={deckWhichOneIsMissing.height}
+                            loading="lazy"
+                            alt={`Slide titled "Which one is missing?" showing a fictional supervisor message about a rotating front desk schedule and three numbered options: engagement, explanation, and expectation clarity.`}
+                            class="artifact-image"
+                        />
+                        <h3>Which One Is Missing?</h3>
+                        <p>The practice message and the count-of-three vote.</p>
+                    </article>
+                    <article class="video-card">
+                        <img
+                            src={jobAidFront.src}
+                            width={jobAidFront.width}
+                            height={jobAidFront.height}
+                            loading="lazy"
+                            alt="Front of the one-page job aid: a checklist of engagement, explanation and expectation clarity, each with a question to ask and a sentence starter."
+                            class="artifact-image"
+                        />
+                        <h3>Job Aid, Front</h3>
+                        <p>The checklist participants keep for their next decision or change.</p>
+                    </article>
+                    <article class="video-card">
+                        <img
+                            src={jobAidBack.src}
+                            width={jobAidBack.width}
+                            height={jobAidBack.height}
+                            loading="lazy"
+                            alt="Back of the job aid with a line for the in-session practice sentence and a four-line template: coming up, I'll ask the team, I'll explain why, and what changes and by when."
+                            class="artifact-image"
+                        />
+                        <h3>Job Aid, Back</h3>
+                        <p>The practice line and the template for a real change.</p>
+                    </article>
+                    <article class="video-card">
+                        <img
+                            src={facilitatorGuidePart6.src}
+                            width={facilitatorGuidePart6.width}
+                            height={facilitatorGuidePart6.height}
+                            loading="lazy"
+                            alt="Facilitator guide page for Part 6, with slide thumbnails and color-coded Say, Do, Note and Transition cues."
+                            class="artifact-image"
+                        />
+                        <h3>Facilitator Guide</h3>
+                        <p>Color-coded cues, slide thumbnails and timing for one part.</p>
+                    </article>
+                </div>
+
+                <h3 class="samples-heading">Full samples</h3>
+                <p>View the full materials:</p>
+                <ul>
+                    <li><a href="/samples/supervisor-training/supervisor-training-deck.pdf" target="_blank" rel="noopener">Slide deck (PDF, 22 slides)</a></li>
+                    <li><a href="/samples/supervisor-training/supervisor-training-facilitator-guide.pdf" target="_blank" rel="noopener">Facilitator guide (PDF, 9 pages)</a></li>
+                    <li><a href="/samples/supervisor-training/supervisor-training-job-aid.pdf" target="_blank" rel="noopener">Job aid (PDF, 2 pages)</a></li>
+                </ul>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>Measurement Plan</h2>
+                <div class="measurement-note">
+                    <strong>Note:</strong> The session was delivered once, to a three-person panel, so there is no learner data. The plan below is the evaluation designed for a real rollout.
+                </div>
+                <div class="table-scroll" role="region" aria-label="Measurement plan table" tabindex="0">
+                    <table class="wide-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Level</th>
+                                <th scope="col">What is measured</th>
+                                <th scope="col">How</th>
+                                <th scope="col">When</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Learning</td>
+                                <td>Identify the missing principle; write a sentence that supplies it</td>
+                                <td>Count-of-three vote; written sentence with specific feedback</td>
+                                <td>In the session</td>
+                            </tr>
+                            <tr>
+                                <td>Reaction</td>
+                                <td>Relevance, confidence, intent to apply</td>
+                                <td>Four-item survey</td>
+                                <td>Right after</td>
+                            </tr>
+                            <tr>
+                                <td>Learning, delayed</td>
+                                <td>Recall and use of the three principles</td>
+                                <td>Scenario-based knowledge check in the LMS</td>
+                                <td>30 days</td>
+                            </tr>
+                            <tr>
+                                <td>Behavior, self-report</td>
+                                <td>Completed and used the template</td>
+                                <td>LMS report-back</td>
+                                <td>30 days</td>
+                            </tr>
+                            <tr>
+                                <td>Behavior, observed by the team</td>
+                                <td>Supervisors explain why, report back on input, set clear expectations</td>
+                                <td>Three-item team pulse, before and after</td>
+                                <td>Baseline, then 60 to 90 days</td>
+                            </tr>
+                            <tr>
+                                <td>Results, lagging</td>
+                                <td>Early turnover and exit themes</td>
+                                <td>HR records</td>
+                                <td>Annually</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    The design document includes sample items for the survey, the knowledge check and the pulse. Turnover is treated as context, not proof: it has too many causes and too long a lag to show a training effect on its own.
+                </p>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section>
+                <h2>Outcomes and Gaps</h2>
+                <p>
+                    The materials were complete, delivered and shared with the hiring team. What this sample cannot show is impact: there were no learners beyond the panel, and the need itself was never confirmed with the college's data.
+                </p>
+            </section>
+
+            <hr class="section-divider" />
+
+            <section class="reflection">
+                <h2>Reflection</h2>
+                <p>
+                    This project showed me that "no goal" is still a design constraint. Asking the scoping questions before designing set the frame for the work. Labeling what was known, what was proposed and what was still unknown kept the research from quietly turning into a diagnosis.
+                </p>
+                <p>
+                    With a real stakeholder, I would test the hypothesis before building: a short conversation with HR and two or three supervisors, plus whatever climate or exit data the college already holds. That would take little time and would either confirm the topic or point to a better one.
+                </p>
+                <p>
+                    I would also scale the documentation to the decision it supports. An 18-page design document was more than a 10-minute session needed; a two-page design brief plus the facilitator guide would have carried the same decisions.
+                </p>
+                <p>
+                    The AI-assisted workflow is one I would use again as it stands. Each review pass caught real problems before they reached anyone else, which is why both stay in the process.
+                </p>
+            </section>
+        </div>
+
+        <Contact />
+        <Footer />
+    </main>
+</Layout>
+
+<style>
+    main {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .case-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .eyebrow {
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #3245ff;
+        margin: 0 0 0.5rem;
+    }
+
+    .lead {
+        font-size: 1.1rem;
+        color: #6b7280;
+        margin-top: -0.35rem;
+    }
+
+    section {
+        margin-bottom: 1rem;
+    }
+
+    .section-divider {
+        border: none;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        margin: 2.5rem 0;
+    }
+
+    .at-a-glance-card {
+        background: rgba(0, 0, 0, 0.02);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 8px;
+        padding: 1rem 1.1rem;
+    }
+
+    .at-a-glance-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem 1.25rem;
+    }
+
+    .at-a-glance-grid div {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+    .meta-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #6b7280;
+    }
+
+    .video-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+    }
+
+    .gallery-hint {
+        font-size: 0.88rem;
+        color: #6b7280;
+        margin: -0.25rem 0 0.9rem;
+    }
+
+    .video-card {
+        margin: 0;
+        padding: 1rem;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.72);
+    }
+
+    .video-card h3 {
+        margin: 0 0 0.35rem;
+        font-size: 1rem;
+    }
+
+    .video-card p {
+        margin: 0;
+        color: #4b5563;
+        line-height: 1.6;
+    }
+
+    .artifact-image {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin-bottom: 0.85rem;
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .samples-heading {
+        margin: 1.75rem 0 0.5rem;
+    }
+
+    .measurement-note,
+    section p {
+        line-height: 1.7;
+        color: #4b5563;
+    }
+
+    .measurement-note {
+        margin: 0 0 1rem;
+        padding: 0.9rem 1rem;
+        border-left: 3px solid #3245ff;
+        border-radius: 0 6px 6px 0;
+        background: rgba(50, 69, 255, 0.04);
+    }
+
+    section ul {
+        list-style-type: disc;
+        list-style-position: outside;
+        padding-left: 1.25rem;
+        color: #4b5563;
+    }
+
+    section ol {
+        list-style-type: decimal;
+        list-style-position: outside;
+        padding-left: 1.25rem;
+        color: #4b5563;
+    }
+
+    section ul li,
+    section ol li {
+        line-height: 1.6;
+    }
+
+    section ol li {
+        margin-bottom: 0.6rem;
+    }
+
+    .table-scroll {
+        overflow-x: auto;
+        margin-bottom: 1rem;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+    }
+
+    .table-scroll table {
+        margin-bottom: 0;
+    }
+
+    .wide-table {
+        min-width: 640px;
+    }
+
+    th,
+    td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        vertical-align: top;
+    }
+
+    th {
+        background-color: rgba(50, 69, 255, 0.05);
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .reflection {
+        margin-bottom: 2rem;
+    }
+
+    @media screen and (max-width: 768px) {
+        .at-a-glance-grid,
+        .video-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
