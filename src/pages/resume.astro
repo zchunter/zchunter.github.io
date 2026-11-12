@@ -1,0 +1,77 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import background from '../assets/background.svg';
+---
+
+<Layout
+    title="Resume - Zach Hunter"
+    description="Resume of Zach Hunter, instructional designer and technical curriculum developer."
+>
+    <img id="background" src={background.src} alt="" fetchpriority="high" />
+    <main>
+        <div class="container">
+            <h1>Resume</h1>
+            <p>Two pages. Open it in your browser or download a copy.</p>
+
+            <div class="button-group resume-actions">
+                <a
+                    class="btn contact-btn"
+                    href="/resume/Zachary-Hunter-Resume.pdf"
+                    target="_blank"
+                    rel="noopener"
+                >Open PDF</a>
+                <a
+                    class="btn contact-btn"
+                    href="/resume/Zachary-Hunter-Resume.pdf"
+                    download="Zachary-Hunter-Resume.pdf"
+                >Download PDF</a>
+            </div>
+
+            <object
+                class="resume-viewer"
+                data="/resume/Zachary-Hunter-Resume.pdf#view=FitH"
+                type="application/pdf"
+                aria-label="Resume PDF, two pages"
+            >
+                <p>Your browser cannot show the PDF here. Use the buttons above.</p>
+            </object>
+        </div>
+
+        <Contact />
+        <Footer />
+    </main>
+</Layout>
+
+<style>
+    main {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .container > p {
+        line-height: 1.7;
+        color: #4b5563;
+    }
+
+    .resume-actions {
+        margin: 1.5rem 0 2rem;
+    }
+
+    .resume-viewer {
+        display: block;
+        width: 100%;
+        height: 1100px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.72);
+    }
+
+    @media screen and (max-width: 768px) {
+        .resume-viewer {
+            display: none;
+        }
+    }
+</style>

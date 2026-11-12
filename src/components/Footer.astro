@@ -3,6 +3,7 @@
 
 <footer>
 	<p class="note" id="footer-quip"></p>
+	<p class="note coffee-note"><a href="https://buymeacoffee.com/zchunter" target="_blank" rel="noopener">Buy me a coffee</a></p>
 	<script is:inline>
 		const quips = [
 			"Nothing says 'learner-centered' like five paragraphs of intro text before the first interaction.",
@@ -30,5 +31,22 @@
 		margin-top: 4rem;
 		padding-top: 1rem;
 		border-top: 1px solid rgba(0, 0, 0, 0.1);
+	}
+
+	.coffee-note {
+		font-size: 0.85rem;
+		font-style: normal;
+	}
+
+	.coffee-note a {
+		color: #4b5563;
+		text-decoration: none;
+		transition: color 0.2s;
+	}
+
+	.coffee-note a:hover,
+	.coffee-note a:focus-visible {
+		color: #111827;
+		text-decoration: underline;
 	}
 </style>
