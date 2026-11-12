@@ -38,7 +38,10 @@ import background from '../../assets/background.svg';
                             <p><strong>Local-First Processing</strong><br>All file processing occurs in the browser. Course content never leaves the user's machine. This reduces privacy risk and allows the tool to function offline once loaded.</p>
 
                             <h5>Performance Impact</h5>
-                            <p>Manual updates that might otherwise require hours of repetitive editing are converted into a structured export-scan-import process that can be completed in minutes per course. Replacement counts provide visibility before republishing, reducing QA risk during release cycles.</p>
+                            <p>Manual updates that might otherwise require hours of repetitive editing are converted into a structured export-scan-import process that can be completed in minutes per course. These time figures are my estimates, not measured timings. Replacement counts provide visibility before republishing, reducing QA risk during release cycles.</p>
+
+                            <h5>Build Note</h5>
+                            <p>I defined the behavior for this tool and the implementation was written with AI assistance. The replacement logic itself is deterministic exact-match code, so the same input always produces the same output.</p>
 
                             <h5>Implementation Details</h5>
                             <ul>
@@ -56,7 +59,7 @@ import background from '../../assets/background.svg';
                                 <li>All file processing occurs entirely in the browser</li>
                                 <li>No course data is transmitted to a server</li>
                                 <li>Works offline after initial load</li>
-                                <li>Only anonymous usage metrics are collected</li>
+                                <li>Only two counts (text items checked and replacements made) and a timestamp are sent to a learning record store; no course text or file names are sent</li>
                             </ul>
                         </div>
                     </div>

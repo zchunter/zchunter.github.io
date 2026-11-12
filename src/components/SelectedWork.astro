@@ -1,0 +1,81 @@
+---
+---
+
+<section id="selected-work">
+    <h2>Selected Work</h2>
+    <p>Case studies from three projects: one shipped at scale, one built from an open brief, and one built to change on-the-job behavior.</p>
+
+    <div class="project-cards">
+        <a href="/case-studies/aws-security" class="card-link">
+            <div class="card">
+                <h3>AWS Security: Converting Instructor-Led Training to Async</h3>
+                <p>Converted four instructor-led security courses to self-paced, keeping the applied decision-making the live versions built. Rated 4.4 to 4.6 stars across 300+ reviews as of February 2026.</p>
+                <span class="tag">Case study</span>
+            </div>
+        </a>
+
+        <a href="/case-studies/supervisor-training-open-brief" class="card-link">
+            <div class="card">
+                <h3>Training Supervisors When the Brief Names a Topic</h3>
+                <p>A 10-minute supervisor session, facilitator guide and job aid built from a one-line brief, with an AI-assisted workflow that checked every claim against its source.</p>
+                <span class="tag">Case study</span>
+            </div>
+        </a>
+
+        <a href="/case-studies/adp-guide-fluency" class="card-link">
+            <div class="card">
+                <h3>Teaching Support Reps to Use the Guide, Not Memorize the Answer</h3>
+                <p>A three-part video series and open-book assessment that taught support reps to use a troubleshooting guide under live-call pressure.</p>
+                <span class="tag">Case study</span>
+            </div>
+        </a>
+    </div>
+</section>
+
+<style>
+    #selected-work {
+        margin-bottom: 4rem;
+    }
+
+    .project-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin: 1.5rem 0;
+    }
+
+    .card-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        height: 100%;
+        border-radius: 12px;
+    }
+
+    .card-link:focus-visible {
+        outline: 3px solid #3245ff;
+        outline-offset: 3px;
+    }
+
+    .project-cards .card h3 {
+        margin-top: 0;
+    }
+
+    .project-cards .card {
+        padding-top: 1rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .project-cards .tag {
+        margin-top: auto;
+        align-self: flex-start;
+    }
+
+    @media screen and (max-width: 768px) {
+        .project-cards {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
