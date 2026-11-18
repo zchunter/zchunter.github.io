@@ -1,40 +1,47 @@
 /**
- * Extracts full course data from an Articulate Rise xAPI export ZIP.
- * Requires JSZip to be available in scope.
+ * Extracts full course data from an Articulate Rise export ZIP.
  *
- * See docs/rise-extraction.md for full structure reference.
+ * Payload discovery is generalized (see ./rise-payload.js): the Rise course
+ * JSON is not assumed to live at any fixed path. See docs/PHASE-1-SPEC.md and
+ * docs/rise-extraction.md for the packaging strategies this recognizes.
  */
 
+import { locateRisePayload, decodeRisePayload } from './rise-payload.js';
+
 /**
- * @param {File} file - The uploaded .zip file
- * @returns {Promise<{ courseData: object, meta: object }>}
+ * @param {File|Buffer|ArrayBuffer} file - The uploaded/loaded .zip file
+ * @param {{ JSZip?: typeof import('jszip') }} [deps] - Inject a JSZip
+ *   implementation (e.g. under Jest, where there is no browser-supplied
+ *   global). In the browser this is omitted and the CDN-loaded global
+ *   `JSZip` is used automatically.
+ * @returns {Promise<{ courseData: object, meta: object, zip: object, extraction: { strategy: string, path: string, wrapper: string } }>}
  */
-export async function extractCourse(file) {
-  const zip = await JSZip.loadAsync(file);
-  const courseData = await extractCourseData(zip);
+export async function extractCourse(file, { JSZip: ZipImpl } = {}) {
+  const Zip = ZipImpl ?? globalThis.JSZip;
+  if (!Zip) {
+    throw new Error(
+      'JSZip is required — pass { JSZip } explicitly (e.g. in tests), or load it as a ' +
+        'global before calling extractCourse (index.html does this via a CDN <script>).',
+    );
+  }
+
+  const zip = await Zip.loadAsync(file);
+  const { courseData, source } = await extractCourseData(zip);
   const meta = extractCourseMeta(courseData, await extractTcConfig(zip), await extractTincan(zip));
   // `zip` is returned so the browser layer can build its image blob map from the
   // same archive instead of loading the ZIP a second time (courses run to tens of MB).
-  return { courseData, meta, zip };
+  return {
+    courseData,
+    meta,
+    zip,
+    extraction: { strategy: source.strategy, path: source.path, wrapper: source.wrapper },
+  };
 }
 
 async function extractCourseData(zip) {
-  // Rise exports the course data at locales/und.js (newer) or lib/locales/und.js (older).
-  // Fall back to searching for any file ending in /und.js for forward compatibility.
-  const undFile =
-    zip.file('locales/und.js') ??
-    zip.file('lib/locales/und.js') ??
-    Object.values(zip.files).find(f => f.name.endsWith('/und.js'));
-
-  if (!undFile) throw new Error('und.js not found in ZIP — is this a Rise xAPI export?');
-
-  const raw = await undFile.async('string');
-
-  // JSONP key varies — match any string in the first position
-  const match = raw.match(/^__resolveJsonp\("[^"]+","([\s\S]+)"\)\s*;?\s*$/);
-  if (!match) throw new Error('Unexpected und.js format — JSONP wrapper not found');
-
-  return JSON.parse(atob(match[1]));
+  const source = await locateRisePayload(zip);
+  const courseData = decodeRisePayload(source);
+  return { courseData, source };
 }
 
 async function extractTcConfig(zip) {
