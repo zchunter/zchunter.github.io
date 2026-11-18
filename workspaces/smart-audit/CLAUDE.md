@@ -249,22 +249,32 @@ That is a false success.
 
 # File Layout
 
-Current/recommended project organization will evolve during Phase 1.
-
-Existing files include:
+Current project organization (v1 report work, 2026-11-18). `src/report/` is the live v1 pipeline. The older inventory viewer files (`dump.js`, `images.js`, `issues.js`, `render.js`) are no longer wired into `index.html`; they are kept until the v1 checks make them redundant, then should be removed so there is one finding format.
 
 ```text
 workspaces/smart-audit/
-├── index.html
+├── index.html                  accessible shell: loads a ZIP, renders the report
 ├── src/
-│   ├── extract.js
-│   ├── dump.js
-│   ├── images.js
-│   ├── issues.js
-│   ├── render.js
-│   └── html.js
+│   ├── extract.js              ZIP + payload discovery -> raw parsed course
+│   ├── rise-payload.js         payload strategies, decoding, validation
+│   ├── census.js               lesson/block/identity counts
+│   ├── html.js                 esc() / stripHtml()
+│   ├── report/
+│   │   ├── walk.js             shared course walker; gives every finding a location
+│   │   ├── finding.js          the one finding shape (FAIL / REVIEW / NOT CHECKED)
+│   │   ├── run-checks.js       runs checks; a crashing check becomes NOT CHECKED
+│   │   ├── checks/index.js     the enabled checks (the six v1 families go here)
+│   │   ├── inventory.js        attachments, embeds, Storyline (section 4)
+│   │   ├── reminders.js        "keep in mind" text (section 2)
+│   │   ├── limitations.js      staleness rule for the limitations list (section 3)
+│   │   ├── scope.js            what is out of scope (section 4)
+│   │   ├── report.js           buildReport(): the four sections
+│   │   └── render-report.js    report -> escaped, accessible HTML
+│   ├── dump.js, images.js, issues.js, render.js   older viewer, unwired
 ├── tests/
-│   └── extract.test.js
+│   ├── extract.test.js
+│   ├── rise-payload.test.js
+│   └── report.test.js
 ├── tooling/
 │   └── serve-workspace.cjs
 ├── docs/
@@ -917,7 +927,7 @@ Do not modify expected values simply to make tests green without verifying why t
 
 # Current Work (v1)
 
-The authoritative scope is `docs/SCOPE-V1.md`. v1 is done when its seven-item definition of done is true; then stop building and publish. Open items (alt-text blank/decorative behaviour, the worked-example source, bare-URL link severity, what Rise stores for audio, lesson-header and theme fields) are listed in `docs/SCOPE-V1.md` and `docs/SCOPE-V1-EVIDENCE.md` and need resolving before the affected checks are built.
+The authoritative scope is `docs/SCOPE-V1.md`. v1 is done when its eight-item definition of done is true; then stop building and publish. Open items (alt-text blank/decorative behaviour, the worked-example source, bare-URL link severity, what Rise stores for audio, lesson-header and theme fields) are listed in `docs/SCOPE-V1.md` and `docs/SCOPE-V1-EVIDENCE.md` and need resolving before the affected checks are built.
 
 Already built and tested: the extraction boundary described below (payload discovery for locale-JSONP and runtime-data-JSONP, UTF-8-correct decoding, structural validation, loud failure, and an initial lesson/block/identity census). Nothing further is needed there for v1 unless a check requires it.
 
