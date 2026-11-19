@@ -101,6 +101,11 @@
     .badge-fail { color: var(--fail-fg); background: var(--fail-bg); }
     .badge-review { color: var(--review-fg); background: var(--review-bg); }
     .badge-notchecked { color: var(--nc-fg); background: var(--nc-bg); }
+    .badge-ok { color: #1a5c2e; background: #e3f4e8; }
+    .thumb {
+      display: block; max-width: 160px; max-height: 120px; width: auto; height: auto;
+      margin-bottom: 0.25rem; background: #fff; border: 1px solid var(--border);
+    }
 
     .table-scroll { overflow-x: auto; margin: 0.75rem 0; border: 1px solid var(--border); }
     table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
@@ -120,6 +125,37 @@
       cursor: pointer;
     }
     .export button:hover { background: #084a8c; border-color: #084a8c; }
+
+    .visually-hidden {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+    }
+    .view-image {
+      margin-top: 0.35rem; padding: 0.3rem 0.75rem; min-height: 2.25rem;
+      font: inherit; font-size: 0.9rem; font-weight: 600;
+      color: var(--accent); background: var(--bg);
+      border: 2px solid var(--accent); border-radius: 0.25rem; cursor: pointer;
+    }
+    .view-image:hover { background: var(--panel); }
+
+    #image-dialog {
+      width: min(56rem, calc(100vw - 2rem)); max-height: calc(100vh - 2rem);
+      padding: 1.25rem; color: var(--text); background: var(--bg);
+      border: 2px solid var(--border); border-radius: 0.5rem;
+    }
+    #image-dialog::backdrop { background: rgb(0 0 0 / 0.6); }
+    #image-dialog h2 { margin: 0 0 0.5rem; font-size: 1.25rem; }
+    #image-dialog p { margin: 0.5rem 0; overflow-wrap: anywhere; }
+    #image-dialog .preview {
+      display: flex; justify-content: center; margin: 0.75rem 0;
+      padding: 0.75rem; background: var(--panel); border: 1px solid var(--border);
+    }
+    #image-dialog img { display: block; max-width: 100%; max-height: 60vh; height: auto; }
+    #image-dialog-close {
+      padding: 0.5rem 1rem; min-height: 2.75rem; font: inherit; font-weight: 600;
+      color: #ffffff; background: var(--accent);
+      border: 2px solid var(--accent); border-radius: 0.25rem; cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -156,6 +192,15 @@
     </main>
   </div>
 
+  <dialog id="image-dialog" aria-labelledby="image-dialog-title">
+    <h2 id="image-dialog-title">Image preview</h2>
+    <p>File: <code id="image-dialog-name"></code></p>
+    <p id="image-dialog-alt"></p>
+    <div class="preview"><img id="image-dialog-img" alt=""></div>
+    <p class="muted">Shown from the file you loaded. Nothing was downloaded.</p>
+    <button type="button" id="image-dialog-close">Close</button>
+  </dialog>
+
 <script type="module">
 // index.html is a thin shell. All logic lives in src/*.js and is loaded as ES
 // modules, which is why the workspace must be served over local HTTP
@@ -167,6 +212,7 @@ import { buildReport } from './src/report/report.js';
 import { renderReport } from './src/report/render-report.js';
 import { RISE_LIMITATIONS } from './src/report/limitations-data.js';
 import { exportReportHtml, reportFileName } from './src/report/export-html.js';
+import { resolveImage } from './src/report/image-ref.js';
 
 const fileInput   = document.getElementById('file-input');
 const loader      = document.getElementById('loader');
@@ -179,10 +225,111 @@ const downloadBtn = document.getElementById('download-html');
 // The report currently on screen, kept so the download matches it exactly.
 let current = null;
 
-downloadBtn.addEventListener('click', () => {
-  if (!current) return;
-  const html = exportReportHtml(current.report, { sourceFileName: current.fileName });
-  const name = reportFileName(current.report);
+// ─── image preview ───────────────────────────────────────────────────────────
+// Images come from the loaded ZIP only, never from the network. Object URLs
+// are made on first view and released when another course is loaded.
+
+const dialog      = document.getElementById('image-dialog');
+const dialogImg   = document.getElementById('image-dialog-img');
+const dialogName  = document.getElementById('image-dialog-name');
+const dialogAlt   = document.getElementById('image-dialog-alt');
+const MIME = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif', svg: 'image/svg+xml', webp: 'image/webp' };
+let objectUrls = new Map();
+let opener = null;
+
+function releaseImages() {
+  for (const url of objectUrls.values()) URL.revokeObjectURL(url);
+  objectUrls = new Map();
+}
+
+async function imageUrl(path) {
+  if (objectUrls.has(path)) return objectUrls.get(path);
+  const entry = current?.zip.file(path);
+  if (!entry) return null;
+  const type = MIME[path.split('.').pop().toLowerCase()] ?? 'application/octet-stream';
+  const url = URL.createObjectURL(new Blob([await entry.async('arraybuffer')], { type }));
+  objectUrls.set(path, url);
+  return url;
+}
+
+reportEl.addEventListener('click', async (e) => {
+  const btn = e.target.closest('.view-image');
+  if (!btn) return;
+  const { asset, name, alt, hasAlt } = btn.dataset;
+  const url = await imageUrl(asset);
+  if (!url) {
+    statusEl.textContent = `The file for ${name} could not be read from the export.`;
+    return;
+  }
+  dialogName.textContent = name;
+  dialogAlt.textContent =
+    hasAlt === 'no' ? 'Alt text stored in the export: none.' :
+    alt.trim() === '' || alt.trim() === '""' ? 'Alt text stored in the export: empty.' :
+    `Alt text stored in the export: “${alt}”`;
+  dialogImg.alt = `Preview of ${name}`;
+  dialogImg.src = url;
+  opener = btn;
+  dialog.showModal();
+  document.getElementById('image-dialog-close').focus();
+});
+
+document.getElementById('image-dialog-close').addEventListener('click', () => dialog.close());
+// A click on the backdrop (outside the dialog box) closes it too.
+dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+dialog.addEventListener('close', () => {
+  dialogImg.removeAttribute('src');
+  opener?.focus();
+  opener = null;
+});
+
+// Small thumbnails embedded in the saved file as data: URLs, so it shows the
+// images while still loading nothing. Drawn through a canvas, which also turns
+// SVGs into plain raster images. A file that cannot be drawn is skipped.
+const THUMB_MAX_W = 320, THUMB_MAX_H = 240;
+
+async function embeddedThumbnails(state) {
+  if (state.embedded) return state.embedded;
+  const out = new Map();
+  const paths = new Set(state.report.images.map((r) => state.resolve(r.image)).filter(Boolean));
+  for (const path of paths) {
+    try {
+      const img = new Image();
+      img.src = await imageUrl(path);
+      await img.decode();
+      const w0 = img.naturalWidth || THUMB_MAX_W, h0 = img.naturalHeight || THUMB_MAX_H;
+      const scale = Math.min(1, THUMB_MAX_W / w0, THUMB_MAX_H / h0);
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(w0 * scale));
+      canvas.height = Math.max(1, Math.round(h0 * scale));
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      out.set(path, canvas.toDataURL('image/webp', 0.8)); // browsers without WebP encoding return PNG
+    } catch (err) {
+      // Some SVGs taint the canvas. Embed those as-is up to about 750 KB: an SVG
+      // shown through <img> runs no scripts and loads nothing.
+      const entry = /\.svg$/i.test(path) ? state.zip.file(path) : null;
+      const b64 = entry ? await entry.async('base64') : '';
+      if (b64 && b64.length <= 1_000_000) out.set(path, `data:image/svg+xml;base64,${b64}`);
+      else console.warn(`No thumbnail for ${path}:`, err);
+    }
+  }
+  state.embedded = out;
+  return out;
+}
+
+let preparing = false;
+downloadBtn.addEventListener('click', async () => {
+  if (!current || preparing) return;
+  preparing = true;
+  statusEl.textContent = 'Preparing the download…';
+  const state = current;
+  const thumbs = await embeddedThumbnails(state);
+  preparing = false;
+  if (state !== current) return; // another course was loaded meanwhile
+  const html = exportReportHtml(state.report, {
+    sourceFileName: state.fileName,
+    thumbnailFor: (ref) => thumbs.get(state.resolve(ref)) ?? null,
+  });
+  const name = reportFileName(state.report);
   const url = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
   const a = document.createElement('a');
   a.href = url;
@@ -211,14 +358,23 @@ async function handleFile(file) {
   errorEl.hidden = true;
   exportEl.hidden = true;
   current = null;
+  releaseImages();
   reportEl.replaceChildren();
   statusEl.textContent = `Reading ${file.name}…`;
 
   try {
-    const { courseData, extraction } = await extractCourse(file);
+    const { courseData, extraction, zip } = await extractCourse(file);
     const report = buildReport(courseData, { extraction, registry: RISE_LIMITATIONS });
-    reportEl.innerHTML = renderReport(report);
-    current = { report, fileName: file.name };
+    const resolve = (ref) => resolveImage(ref, (p) => !!zip.file(p));
+    current = { report, fileName: file.name, zip, resolve, embedded: null };
+
+    // Thumbnails for the "All images" table, straight from the ZIP.
+    const thumbs = new Map();
+    for (const row of report.images) {
+      const p = resolve(row.image);
+      if (p && !thumbs.has(p)) thumbs.set(p, await imageUrl(p));
+    }
+    reportEl.innerHTML = renderReport(report, { resolveImage: resolve, thumbnailFor: (ref) => thumbs.get(resolve(ref)) ?? null });
     exportEl.hidden = false;
     statusEl.textContent =
       `Report ready: ${report.summary.fail} FAIL, ${report.summary.review} REVIEW. The report is below; the download button is just above it.`;

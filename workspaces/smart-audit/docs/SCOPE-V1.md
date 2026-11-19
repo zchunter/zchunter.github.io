@@ -13,10 +13,11 @@ Evidence behind each change is in `SCOPE-V1-EVIDENCE.md`, `WCAG-COVERAGE.md` and
 - Heading checks use the verified block-to-level mapping. The open h1-versus-h2 question is closed.
 - Heading checks that are best practice rather than WCAG failures are REVIEW and labelled as such: skipped level (no failure defined) and empty heading (the W3C 2.4.6 page does not address it; axe classes it as best practice).
 - Bare URL as link text is REVIEW, not FAIL: the W3C 2.4.4 page does not define it as a failure and allows purpose to come from context. Empty link text stays FAIL (axe `link-name` is Level A for 2.4.4 and 4.1.2).
-- Alt text FAIL applies only to slots where real exports prove an alt field exists. Other image slots are REVIEW or NOT CHECKED (see family 1).
+- Alt text FAIL applies only to slots where real exports prove an alt field exists. Other image slots are REVIEW or NOT CHECKED (see family 1). (Superseded 2026-11-19: see the next-but-one bullet; family 1 now has no FAIL.)
 - Audio transcript is REVIEW until an export shows what Rise stores. WCAG requires only that an alternative exists, not a particular field.
 - The report has four sections, split by who controls the issue, instead of one list of findings.
 - v1 includes a small dated list of Rise's own documented accessibility limitations, with a required way to keep it current.
+- Missing alt text is REVIEW everywhere, never FAIL (changed 2026-11-19). Rendering a real export showed Rise publishes an image with no alt field as `alt=""`, which assistive technology treats as decorative. That is a defect only if the image is informative, which is human judgment. Image findings also name the file, and the live page can preview it from the ZIP.
 - The tool's own interface must meet the criteria it audits (added 2026-11-18). The original page failed its own checks: low-contrast text and a file loader that keyboard users could not operate.
 
 ## What this is
@@ -36,6 +37,8 @@ Every WCAG 2.1 A/AA criterion is accounted for in exactly one default section, s
 3. **Rise-documented limitations** - gaps Articulate itself documents, which the author cannot fix, shown when the course uses the affected block, theme or setting. Worded as "documented by Articulate as of <date>", never as the author's failure and never as SmartAudit's own claim.
 4. **Not applicable and not checked** - criteria that do not apply to exported content, plus real content the tool saw but did not examine: attachments, external embeds, Storyline blocks, and any block identity no check understands, each with a count.
 
+**Appendix: all images** (added 2026-11-19) - every image, with its stored alt text, location, thumbnail and what the alt-text check concluded ("REVIEW", "No problem detected", "Not checked"). It is a listing for a person's accuracy check, not a new check, and never says "pass". The saved HTML export embeds small thumbnails as data inside the file, so it still loads nothing.
+
 ## The check families in v1
 
 Each check must be unambiguously decidable from the parsed export. Each finding carries: success criterion, block location, severity, measured value where applicable, and a one-line remediation note.
@@ -49,7 +52,7 @@ Alt text locations are mapped across the nesting paths in the parsed schema, and
 - **Known Rise limitation:** Text on Image blocks, where Articulate documents that alt text is not output. REVIEW, and the finding says so.
 - **No alt field in the data model:** flashcard faces, block and item backgrounds, quote avatars, scenario backgrounds, unused editor slots. NOT CHECKED, grouped per lesson, with the reason.
 
-- FAIL: image in a confirmed alt slot with no alt property at all
+- REVIEW: image in a confirmed alt slot with no alt property at all. (Was FAIL until 2026-11-19. Rise renders it as `alt=""`, so it is announced as decorative; see `SCOPE-V1-EVIDENCE.md`.) If a future export shows Rise rendering a missing alt as a file name or with no alt attribute, that case can return to FAIL.
 - REVIEW: no alt property in an unconfirmed slot or a Text on Image block
 - REVIEW: empty alt string. An empty alt is correct for a decorative image, so this can never be an automatic fail. The report asks whether the image is decorative.
 - REVIEW: alt text that equals or contains the source filename (IMG_4521, Screenshot 2026-03-11, .jpg/.png/.gif anywhere in the string)
@@ -57,6 +60,7 @@ Alt text locations are mapped across the nesting paths in the parsed schema, and
 - REVIEW: alt text longer than 150 characters, which usually means the content belongs in a caption or long description
 - REVIEW: scenario slide or response with no alt text (the export cannot show whether that slide displays a character image)
 - Course cover and logo images follow the same text rules; a missing alt there is REVIEW, because the export cannot show whether the image is decorative
+- Every image finding names the uploaded file, so the author can find it in Rise. The live page offers a "View image" preview drawn from the loaded ZIP; the saved HTML export names the file only, because it loads nothing
 
 Deliberately out of scope: whether good alt text is actually good. Presence and plausibility only. Alt quality is not mechanically decidable and claiming to judge it would undermine the tool's credibility.
 

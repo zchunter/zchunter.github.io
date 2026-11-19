@@ -52,6 +52,8 @@ h4 { font-size: 1.05rem; margin: 1.25rem 0 0.4rem; }
 .badge-fail { color: var(--fail-fg); background: var(--fail-bg); }
 .badge-review { color: var(--review-fg); background: var(--review-bg); }
 .badge-notchecked { color: var(--nc-fg); background: var(--nc-bg); }
+.badge-ok { color: #1a5c2e; background: #e3f4e8; }
+.thumb { display: block; max-width: 160px; max-height: 120px; width: auto; height: auto; margin-bottom: 0.25rem; background: #fff; border: 1px solid var(--border); }
 .table-scroll { overflow-x: auto; margin: 0.75rem 0; border: 1px solid var(--border); }
 table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
 caption { text-align: left; font-weight: 600; padding: 0.5rem 0.75rem; }
@@ -68,16 +70,20 @@ code { font-family: ui-monospace, Consolas, monospace; font-size: 0.9em; overflo
 }
 `;
 
-// Blocks every fetch (scripts, styles, images, fonts, frames, connections);
-// only the inline <style> is allowed. Navigating via a link is unaffected.
-const CSP = "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'";
+// Blocks every fetch (scripts, styles, fonts, frames, connections, remote
+// images); only the inline <style> and thumbnails embedded in the file itself
+// (data: URLs) are allowed. Navigating via a link is unaffected.
+const CSP = "default-src 'none'; img-src data:; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'";
 
 /**
  * @param {object} report from buildReport
- * @param {{ sourceFileName?: string }} [options] name of the ZIP the report was made from
+ * @param {{ sourceFileName?: string, thumbnailFor?: (ref: object) => string|null }} [options]
+ *   sourceFileName: name of the ZIP the report was made from
+ *   thumbnailFor: an embedded data:image URL for an image reference, or null.
+ *     The renderer accepts only raster data: URLs here, so nothing is fetched.
  * @returns {string} a complete HTML document
  */
-export function exportReportHtml(report, { sourceFileName } = {}) {
+export function exportReportHtml(report, { sourceFileName, thumbnailFor = null } = {}) {
   const { meta } = report;
   const title = `SmartAudit triage report${meta.title ? ` — ${meta.title}` : ''}`;
   const fromFile = sourceFileName ? ` from <code>${esc(sourceFileName)}</code>` : '';
@@ -98,7 +104,10 @@ export function exportReportHtml(report, { sourceFileName } = {}) {
     'The course was read in the browser of the person who ran the tool; it was not uploaded anywhere. ' +
     'This file is a saved copy of the report and does not update.</p>\n' +
     '</header>\n' +
-    renderReport(report) +
+    renderReport(report, { thumbnailFor: thumbnailFor ? (ref) => {
+      const t = thumbnailFor(ref);
+      return typeof t === 'string' && t.startsWith('data:') ? t : null;
+    } : null }) +
     '\n</main>\n</body>\n</html>\n'
   );
 }

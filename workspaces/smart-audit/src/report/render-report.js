@@ -37,9 +37,30 @@ function table({ id, caption, headers, rows }) {
 const cell = (html) => `<td>${html}</td>`;
 const textCell = (text) => cell(esc(text));
 
+/**
+ * The "Where" cell. Image findings also name the file, and, when the host page
+ * can show the image (resolveImage returns a ZIP path), offer a preview button.
+ * The host page wires the button up; this module only emits it.
+ */
+function whereCell(f, resolveImage) {
+  let html = esc(describeLocation(f.location));
+  if (f.image) {
+    html += `<br><span class="muted">Image file: <code>${esc(f.image.name)}</code></span>`;
+    const path = resolveImage ? resolveImage(f.image) : null;
+    if (path) {
+      const alt = f.image.alt === null ? '' : f.image.alt;
+      html +=
+        `<br><button type="button" class="view-image" data-asset="${esc(path)}" data-name="${esc(f.image.name)}"` +
+        ` data-alt="${esc(alt)}" data-has-alt="${f.image.alt === null ? 'no' : 'yes'}">` +
+        `View image<span class="visually-hidden"> ${esc(f.image.name)}</span></button>`;
+    }
+  }
+  return cell(html);
+}
+
 // ─── Section 1 ───────────────────────────────────────────────────────────────
 
-function renderFindings(report) {
+function renderFindings(report, resolveImage) {
   const { findings, meta } = report;
   const ran = meta.checks.length
     ? `<p class="muted">Checks that ran: ${meta.checks.map((c) => esc(c.title)).join('; ')}.</p>`
@@ -55,7 +76,7 @@ function renderFindings(report) {
           return [
             cell(`<span class="badge badge-${slug(f.severity)}">${esc(f.severity)}</span>`),
             textCell(f.basis === 'best-practice' ? `${scText(f.sc)} (best practice)` : scText(f.sc)),
-            textCell(describeLocation(f.location)),
+            whereCell(f, resolveImage),
             textCell(measured ? `${f.message} (${measured})` : f.message),
             textCell(f.remediation ?? '—'),
           ];
@@ -201,9 +222,80 @@ function renderNotChecked(report) {
   );
 }
 
+// ─── Appendix: all images ────────────────────────────────────────────────────
+
+// Only local object URLs and embedded image data are ever used as thumbnails,
+// so a bad value can never point the page at the network. SVG is allowed as
+// embedded data because an SVG shown through <img> runs no scripts and loads
+// no external resources; some SVGs cannot be rasterised (they taint a canvas).
+const SAFE_THUMB = /^(blob:|data:image\/(png|jpeg|gif|webp|svg\+xml);base64,[a-z0-9+/=]+$)/i;
+
+const RESULT_LABEL = { REVIEW: 'REVIEW', 'NO PROBLEM DETECTED': 'No problem detected', 'NOT CHECKED': 'Not checked' };
+const RESULT_BADGE = { REVIEW: 'review', 'NO PROBLEM DETECTED': 'ok', 'NOT CHECKED': 'notchecked' };
+
+function altCell(row) {
+  if (row.altState === 'absent') return cell('<em>None</em>');
+  if (row.altState === 'empty') return cell('<em>Empty</em> <span class="muted">(marks the image as decorative)</span>');
+  return textCell(row.image?.alt ?? '');
+}
+
+function renderImages(report, resolveImage, thumbnailFor) {
+  const rows = report.images ?? [];
+  const counts = { REVIEW: 0, 'NO PROBLEM DETECTED': 0, 'NOT CHECKED': 0 };
+  for (const r of rows) counts[r.result] += 1;
+
+  const imageCell = (row) => {
+    const ref = row.image;
+    if (!ref) return textCell('—');
+    const thumb = thumbnailFor ? thumbnailFor(ref) : null;
+    const img =
+      typeof thumb === 'string' && SAFE_THUMB.test(thumb)
+        ? `<img class="thumb" src="${esc(thumb)}" alt="Thumbnail of ${esc(ref.name)}"><br>`
+        : thumbnailFor
+          ? '<span class="muted">No thumbnail: the file is not inside the export, or could not be drawn.</span><br>'
+          : '';
+    const path = resolveImage ? resolveImage(ref) : null;
+    const button = path
+      ? `<br><button type="button" class="view-image" data-asset="${esc(path)}" data-name="${esc(ref.name)}" data-alt="${esc(ref.alt ?? '')}" data-has-alt="${ref.alt === null ? 'no' : 'yes'}">View image<span class="visually-hidden"> ${esc(ref.name)}</span></button>`
+      : '';
+    return cell(`${img}<code>${esc(ref.name)}</code>${button}`);
+  };
+
+  const body = rows.length
+    ? `<p>${esc(plural(rows.length, 'image'))}: ${counts.REVIEW} REVIEW, ${counts['NO PROBLEM DETECTED']} with no problem detected, ${counts['NOT CHECKED']} not checked.</p>` +
+      table({
+        id: 'cap-images',
+        caption: 'Every image, in course order, with its stored alt text',
+        headers: ['Image', 'Where', 'Alt text in the export', 'Result'],
+        rows: rows.map((r) => [
+          imageCell(r),
+          textCell(describeLocation(r.location)),
+          altCell(r),
+          cell(`<span class="badge badge-${RESULT_BADGE[r.result]}">${esc(RESULT_LABEL[r.result])}</span><br>${esc(r.note)}`),
+        ]),
+      })
+    : '<p>The course has no images.</p>';
+
+  return (
+    `<section id="sec-images" aria-labelledby="h-images">` +
+    `<h3 id="h-images">Appendix: all images</h3>` +
+    `<p>Every image the tool found, with the alt text stored in the export, so a person can check that each description is accurate. No tool can judge that. “No problem detected” means only that alt text is present and does not look like a placeholder or file name.</p>` +
+    body +
+    `</section>`
+  );
+}
+
 // ─── Whole report ────────────────────────────────────────────────────────────
 
-export function renderReport(report) {
+/**
+ * @param {object} report from buildReport
+ * @param {{ resolveImage?: (ref: object) => string|null, thumbnailFor?: (ref: object) => string|null }} [options]
+ *   resolveImage: given an image reference, the ZIP path of the file, or null.
+ *     Supplied by the live page only; it turns on the "View image" buttons.
+ *   thumbnailFor: given an image reference, a blob: URL (live page) or an
+ *     embedded data:image URL (saved export), or null. Anything else is ignored.
+ */
+export function renderReport(report, { resolveImage = null, thumbnailFor = null } = {}) {
   const { meta, summary } = report;
   const source = meta.extraction
     ? `Read from <code>${esc(meta.extraction.path)}</code> (${esc(meta.extraction.strategy)}). `
@@ -218,11 +310,13 @@ export function renderReport(report) {
     `<li><strong>${summary.fail}</strong> FAIL</li><li><strong>${summary.review}</strong> REVIEW</li><li><strong>${summary.notChecked}</strong> not evaluated</li></ul>` +
     `<nav aria-label="Report sections"><ul class="plain-list inline-list">` +
     `<li><a href="#sec-findings">Findings</a></li><li><a href="#sec-keep">Keep in mind</a></li>` +
-    `<li><a href="#sec-limits">Rise limitations</a></li><li><a href="#sec-notchecked">Not checked</a></li></ul></nav>` +
-    renderFindings(report) +
+    `<li><a href="#sec-limits">Rise limitations</a></li><li><a href="#sec-notchecked">Not checked</a></li>` +
+    `<li><a href="#sec-images">All images</a></li></ul></nav>` +
+    renderFindings(report, resolveImage) +
     renderKeepInMind(report) +
     renderLimitations(report) +
     renderNotChecked(report) +
+    renderImages(report, resolveImage, thumbnailFor) +
     `</section>`
   );
 }

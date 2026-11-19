@@ -19,6 +19,7 @@ import { renderReport } from '../src/report/render-report.js';
 import { createFinding } from '../src/report/finding.js';
 import { courseLocation } from '../src/report/walk.js';
 import { extractCourse } from '../src/extract.js';
+import { resolveImage } from '../src/report/image-ref.js';
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 
@@ -195,10 +196,14 @@ describe('altTextProblems', () => {
 // ─── the image alt check ─────────────────────────────────────────────────────
 
 describe('image-alt check', () => {
-  test('FAIL for a missing alt in a confirmed slot, with a precise location', () => {
+  // Rendering a real export (2026-11-19) showed Rise publishes a missing alt as
+  // alt="" (decorative), so a missing alt is a defect only if the image is
+  // informative: human judgment, so REVIEW, never FAIL.
+  test('REVIEW, not FAIL, for a missing alt in a confirmed slot, with a precise location', () => {
     const data = course([block('image/image/text aside', { items: [{ id: 'i', media: { image: img() } }] })]);
     const [f] = run(data);
-    expect(f).toMatchObject({ severity: 'FAIL', checkId: 'image-alt', sc: ['1.1.1'], basis: 'wcag' });
+    expect(f).toMatchObject({ severity: 'REVIEW', checkId: 'image-alt', sc: ['1.1.1'], basis: 'wcag' });
+    expect(f.message).toMatch(/publishes it as decorative/);
     expect(f.location).toMatchObject({ blockIndex: 0, itemPath: 'items[0].media.image', identity: 'image/image/text aside' });
     expect(f.remediation).toBeTruthy();
   });
@@ -206,8 +211,34 @@ describe('image-alt check', () => {
   test('block-level slot (labeled graphic base image) is located without an item prefix', () => {
     const data = course([block('interactive-fullscreen/interactive/labeledgraphic', { media: { image: img() } })]);
     const [f] = run(data);
-    expect(f.severity).toBe('FAIL');
+    expect(f.severity).toBe('REVIEW');
     expect(f.location.itemPath).toBe('media.image');
+  });
+
+  test('the check never produces FAIL, whatever the slot or alt state', () => {
+    const slots = ['image/image/text aside', 'image/image/hero', 'interactive/interactive/accordion', 'interactive-fullscreen/interactive/process', 'gallery/image/two column', 'image/image/text overlay'];
+    for (const id of slots) {
+      for (const alt of [undefined, '', '""', 'IMG_1234.png']) {
+        const data = course([block(id, { items: [{ media: { image: img(alt === undefined ? {} : { alt }) } }] })]);
+        expect(bySeverity(run(data), 'FAIL')).toHaveLength(0);
+      }
+    }
+  });
+
+  test('every image finding names its file and carries the stored alt', () => {
+    const data = course([
+      block('image/image/hero', { items: [{ media: { image: { key: 'rise/courses/x/abc-Chart%2520One.png', crushedKey: 'Chart_One.png', originalUrl: 'Chart One.png' } } }] }),
+      block('image/image/hero', { items: [{ media: { image: { key: 'k.png', originalUrl: 'Second.png', alt: '' } } }] }),
+    ]);
+    const [a, b] = run(data);
+    expect(a.image).toMatchObject({ name: 'Chart One.png', alt: null });
+    expect(a.image.candidates[0]).toBe('assets/Chart_One.png');
+    expect(b.image).toMatchObject({ name: 'Second.png', alt: '' });
+  });
+
+  test('NOT CHECKED groups say "images in unused editor slots" when there are several', () => {
+    const data = course([block('interactive/interactive/accordion', { items: [{ media: { tmp: { image: img() } } }, { media: { tmp: { image: img() } } }] })]);
+    expect(bySeverity(run(data), 'NOT CHECKED')[0].message).toMatch(/^2 images in unused editor slots in this lesson have/);
   });
 
   test('a nested item is located by its full path', () => {
@@ -406,8 +437,9 @@ describe('registered checks', () => {
     };
     // Only the two checks under test, so the coverage statements below stay about them.
     const report = buildReport(data, { checks: [imageAlt, themeContrast], now: new Date('2026-11-19T00:00:00Z') });
-    expect(report.summary).toMatchObject({ fail: 1, review: 1, notChecked: 1 });
-    expect(report.findings.map((f) => f.checkId)).toEqual(['image-alt', 'theme-contrast']);
+    expect(report.summary).toMatchObject({ fail: 0, review: 2, notChecked: 1 });
+    // Both REVIEW, so course order decides: the course-wide theme finding comes first.
+    expect(report.findings.map((f) => f.checkId)).toEqual(['theme-contrast', 'image-alt']);
     // The paragraph and the custom HTML block are not read by either check, and the report says so.
     expect(report.notChecked.uninspected.map((u) => u.identity)).toEqual(expect.arrayContaining(['text/text/paragraph', 'html/html/inline']));
     expect(report.notChecked.uninspected.map((u) => u.identity)).not.toContain('image/image/hero');
@@ -434,5 +466,13 @@ describe('real local sample', () => {
       expect(f.location.scope).toBeTruthy();
       expect(f.remediation).toBeTruthy();
     }
+  });
+
+  (hasSample ? test : test.skip)('every image finding names a file that resolves inside the ZIP', async () => {
+    const { courseData, zip } = await extractCourse(fs.readFileSync(samplePath), { JSZip });
+    const imageFindings = buildReport(courseData).findings.filter((f) => f.image);
+    expect(imageFindings.length).toBeGreaterThan(0);
+    const unresolved = imageFindings.filter((f) => !resolveImage(f.image, (p) => !!zip.file(p))).map((f) => f.image.name);
+    expect(unresolved).toEqual([]);
   });
 });
