@@ -89,7 +89,9 @@ Rise-documented limitations are reported as "documented by Articulate as of <dat
 
 Do not treat an LMS export standard as a Rise content format.
 
-The architecture is:
+The diagram below is the Phase 1 target architecture, kept for reference. Under v1 the built pipeline is: ZIP → payload discovery → decoding and validation → census → the v1 checks and the four-section report (`src/report/`). The completeness gate and "Phase 2" stages are superseded by `docs/SCOPE-V1.md`.
+
+The Phase 1 architecture was:
 
 ```text
 Rise ZIP
@@ -274,12 +276,17 @@ workspaces/smart-audit/
 │   │   ├── limitations-data.js the dated, sourced list of Rise-documented gaps (data)
 │   │   ├── scope.js            what is out of scope (section 4)
 │   │   ├── report.js           buildReport(): the four sections
-│   │   └── render-report.js    report -> escaped, accessible HTML
+│   │   ├── render-report.js    report -> escaped, accessible HTML
+│   │   └── export-html.js      report -> standalone .html file (no scripts, CSP blocks fetches)
 │   ├── dump.js, images.js, issues.js, render.js   older viewer, unwired
 ├── tests/
 │   ├── extract.test.js
 │   ├── rise-payload.test.js
-│   └── report.test.js
+│   ├── report.test.js
+│   ├── checks.test.js
+│   ├── checks-content.test.js
+│   ├── limitations.test.js
+│   └── export-html.test.js
 ├── tooling/
 │   ├── serve-workspace.cjs
 │   ├── check-limitations.js    maintainer script: compare the list with Articulate's page (npm run smart-audit:limitations)
@@ -935,7 +942,7 @@ Do not modify expected values simply to make tests green without verifying why t
 
 # Current Work (v1)
 
-The authoritative scope is `docs/SCOPE-V1.md`. v1 is done when its eight-item definition of done is true; then stop building and publish. Open items (alt-text blank/decorative behaviour, the worked-example source, bare-URL link severity, what Rise stores for audio, lesson-header and theme fields) are listed in `docs/SCOPE-V1.md` and `docs/SCOPE-V1-EVIDENCE.md` and need resolving before the affected checks are built.
+The authoritative scope is `docs/SCOPE-V1.md`. v1 is done when its eight-item definition of done is true; then stop building and publish. All six check families are built; where evidence was missing they report REVIEW or NOT CHECKED rather than guessing. Still-open evidence items (how Rise stores a decorative image, the worked-example source, what Rise stores for audio, lesson-header and theme fields) are listed in `docs/SCOPE-V1.md` and `docs/SCOPE-V1-EVIDENCE.md`; resolving one may upgrade a REVIEW to FAIL, never the reverse by guesswork.
 
 Already built and tested: the extraction boundary described below (payload discovery for locale-JSONP and runtime-data-JSONP, UTF-8-correct decoding, structural validation, loud failure, and an initial lesson/block/identity census). Nothing further is needed there for v1 unless a check requires it.
 
@@ -1032,7 +1039,7 @@ Reuse concepts or isolated implementation only when they fit the current Phase 1
 
 # Definition of Done
 
-v1 is done when the six items in the "Definition of done" section of `docs/SCOPE-V1.md` are true. That supersedes the Phase 1 definition below, which is kept for reference only.
+v1 is done when the eight items in the "Definition of done" section of `docs/SCOPE-V1.md` are true. That supersedes the Phase 1 definition below, which is kept for reference only.
 
 **Superseded — Phase 1 definition:** Phase 1 would have been complete when SmartAudit could truthfully state, for its supported validation corpus:
 

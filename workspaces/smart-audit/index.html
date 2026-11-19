@@ -108,6 +108,18 @@
     th, td { text-align: left; vertical-align: top; padding: 0.5rem 0.75rem; border-top: 1px solid var(--border); }
     thead th { background: var(--panel); }
     code { font-family: ui-monospace, Consolas, monospace; font-size: 0.9em; overflow-wrap: anywhere; }
+
+    .export { margin: 1.5rem 0 0; }
+    .export[hidden] { display: none; }
+    .export p { margin: 0.4rem 0 0; }
+    .export button {
+      font: inherit; font-weight: 600;
+      padding: 0.5rem 1rem; min-height: 2.75rem;
+      color: #ffffff; background: var(--accent);
+      border: 2px solid var(--accent); border-radius: 0.25rem;
+      cursor: pointer;
+    }
+    .export button:hover { background: #084a8c; border-color: #084a8c; }
   </style>
 </head>
 <body>
@@ -135,6 +147,11 @@
 
       <noscript><p>SmartAudit needs JavaScript to read the export in your browser.</p></noscript>
 
+      <div id="export" class="export" hidden>
+        <button type="button" id="download-html">Download report (HTML)</button>
+        <p class="muted">Saves a single file you can file or share. It contains no scripts and loads nothing from the internet.</p>
+      </div>
+
       <div id="report"></div>
     </main>
   </div>
@@ -149,12 +166,33 @@ import { UnsupportedRisePackageError } from './src/rise-payload.js';
 import { buildReport } from './src/report/report.js';
 import { renderReport } from './src/report/render-report.js';
 import { RISE_LIMITATIONS } from './src/report/limitations-data.js';
+import { exportReportHtml, reportFileName } from './src/report/export-html.js';
 
-const fileInput = document.getElementById('file-input');
-const loader    = document.getElementById('loader');
-const statusEl  = document.getElementById('status');
-const errorEl   = document.getElementById('error');
-const reportEl  = document.getElementById('report');
+const fileInput   = document.getElementById('file-input');
+const loader      = document.getElementById('loader');
+const statusEl    = document.getElementById('status');
+const errorEl     = document.getElementById('error');
+const reportEl    = document.getElementById('report');
+const exportEl    = document.getElementById('export');
+const downloadBtn = document.getElementById('download-html');
+
+// The report currently on screen, kept so the download matches it exactly.
+let current = null;
+
+downloadBtn.addEventListener('click', () => {
+  if (!current) return;
+  const html = exportReportHtml(current.report, { sourceFileName: current.fileName });
+  const name = reportFileName(current.report);
+  const url = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name;
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+  statusEl.textContent = `Download started: ${name}.`;
+});
 
 function showError(heading, detail) {
   errorEl.replaceChildren();
@@ -171,6 +209,8 @@ function showError(heading, detail) {
 
 async function handleFile(file) {
   errorEl.hidden = true;
+  exportEl.hidden = true;
+  current = null;
   reportEl.replaceChildren();
   statusEl.textContent = `Reading ${file.name}…`;
 
@@ -178,8 +218,10 @@ async function handleFile(file) {
     const { courseData, extraction } = await extractCourse(file);
     const report = buildReport(courseData, { extraction, registry: RISE_LIMITATIONS });
     reportEl.innerHTML = renderReport(report);
+    current = { report, fileName: file.name };
+    exportEl.hidden = false;
     statusEl.textContent =
-      `Report ready: ${report.summary.fail} FAIL, ${report.summary.review} REVIEW. The report is below.`;
+      `Report ready: ${report.summary.fail} FAIL, ${report.summary.review} REVIEW. The report is below; the download button is just above it.`;
     document.getElementById('report-title')?.focus();
   } catch (err) {
     statusEl.textContent = '';
