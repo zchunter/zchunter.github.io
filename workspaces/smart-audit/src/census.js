@@ -11,6 +11,8 @@
  * known/unknown/supported is a separate later concern.
  */
 
+import { blockIdentity } from './report/walk.js';
+
 /**
  * @param {object} courseData - raw parsed Rise course data (from decodeRisePayload)
  * @returns {{ lessons: number, blocks: number, identities: Record<string, number> }}
@@ -23,7 +25,7 @@ export function buildCensus(courseData) {
   for (const lesson of lessons) {
     for (const block of lesson.items ?? []) {
       blocks++;
-      const identity = `${block.family}/${block.type}/${block.variant}`;
+      const identity = blockIdentity(block);
       identities[identity] = (identities[identity] ?? 0) + 1;
     }
   }

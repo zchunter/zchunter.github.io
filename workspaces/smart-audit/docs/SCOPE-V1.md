@@ -15,6 +15,7 @@ Evidence behind each change is in `SCOPE-V1-EVIDENCE.md`, `WCAG-COVERAGE.md` and
 - Audio transcript is REVIEW until an export shows what Rise stores. WCAG requires only that an alternative exists, not a particular field.
 - The report has four sections, split by who controls the issue, instead of one list of findings.
 - v1 includes a small dated list of Rise's own documented accessibility limitations, with a required way to keep it current.
+- The tool's own interface must meet the criteria it audits (added 2026-11-18). The original page failed its own checks: low-contrast text and a file loader that keyboard users could not operate.
 
 ## What this is
 
@@ -149,8 +150,9 @@ v1 ships when all of the following are true. No additional checks before shippin
 5. One worked example report exists, run against a real course Zach built himself, published alongside the tool. (Open: no Rise access currently; see `SCOPE-V1-EVIDENCE.md`. Not yet decided whether a permitted third-party export may substitute.)
 6. The limitations list is dated and sourced, the staleness warning works, and the maintainer script and recurring reminder exist (maintenance rule above).
 7. The portfolio write-up leads with the client-side privacy argument and states plainly that the tool is triage, not certification.
+8. The tool's own interface meets the WCAG criteria it audits, checked with an automated scan and a keyboard-only pass. An accessibility tool that fails its own audit undermines the whole piece.
 
-When those seven are true, stop building and publish. v1.1 can have inline-colour contrast.
+When those eight are true, stop building and publish. v1.1 can have inline-colour contrast.
 
 ## Effort note
 
