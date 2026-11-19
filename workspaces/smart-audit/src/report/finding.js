@@ -11,6 +11,13 @@
 
 export const SEVERITIES = Object.freeze(['FAIL', 'REVIEW', 'NOT CHECKED']);
 
+/**
+ * What a finding rests on: a WCAG success criterion, or "best-practice" where
+ * W3C guidance advises something but defines no failure (for example skipped
+ * heading levels). Best-practice findings are never FAIL.
+ */
+export const BASES = Object.freeze(['wcag', 'best-practice']);
+
 const SC_PATTERN = /^[1-4]\.\d{1,2}\.\d{1,2}$/;
 
 /**
@@ -18,7 +25,7 @@ const SC_PATTERN = /^[1-4]\.\d{1,2}\.\d{1,2}$/;
  * buggy check fails loudly in tests instead of producing a vague report.
  */
 export function createFinding(input) {
-  const { checkId, sc, severity, location, message, remediation = null, measured = null } = input ?? {};
+  const { checkId, sc, severity, location, message, remediation = null, measured = null, basis = 'wcag' } = input ?? {};
 
   if (typeof checkId !== 'string' || !checkId) throw new TypeError('finding.checkId is required');
   if (!SEVERITIES.includes(severity)) {
@@ -31,6 +38,11 @@ export function createFinding(input) {
   }
 
   if (typeof message !== 'string' || !message.trim()) throw new TypeError('finding.message is required');
+
+  if (!BASES.includes(basis)) throw new TypeError(`finding.basis must be one of ${BASES.join(', ')} (got ${JSON.stringify(basis)})`);
+  if (basis === 'best-practice' && severity === 'FAIL') {
+    throw new TypeError('a best-practice finding can never be FAIL; WCAG defines no failure for it');
+  }
 
   const needsRemediation = severity === 'FAIL' || severity === 'REVIEW';
   if (needsRemediation && (typeof remediation !== 'string' || !remediation.trim())) {
@@ -45,6 +57,7 @@ export function createFinding(input) {
     checkId,
     sc: Object.freeze([...scList]),
     severity,
+    basis,
     location,
     message: message.trim(),
     remediation: typeof remediation === 'string' ? remediation.trim() : null,

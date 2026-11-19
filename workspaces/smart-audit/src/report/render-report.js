@@ -54,7 +54,7 @@ function renderFindings(report) {
           const measured = formatMeasured(f.measured);
           return [
             cell(`<span class="badge badge-${slug(f.severity)}">${esc(f.severity)}</span>`),
-            textCell(scText(f.sc)),
+            textCell(f.basis === 'best-practice' ? `${scText(f.sc)} (best practice)` : scText(f.sc)),
             textCell(describeLocation(f.location)),
             textCell(measured ? `${f.message} (${measured})` : f.message),
             textCell(f.remediation ?? '—'),
