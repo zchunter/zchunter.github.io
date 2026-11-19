@@ -49,7 +49,7 @@ export function buildReport(courseData, { extraction = null, checks = CHECKS, re
     },
     findings,
     keepInMind: buildReminders(facts),
-    limitations: limitationsSection(registry, now),
+    limitations: limitationsSection(registry, now, { courseData, blocks, findings }),
     notChecked: {
       items: notCheckedItems,
       inventory,

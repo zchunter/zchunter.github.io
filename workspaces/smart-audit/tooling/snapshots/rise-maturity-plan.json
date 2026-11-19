@@ -1,0 +1,204 @@
+{
+  "asOf": "2026-09-24",
+  "checkedOn": "2026-11-19",
+  "gaps": [
+    {
+      "fingerprint": "c4b913bfaa33b869",
+      "sc": [
+        "1.2.3"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": true
+    },
+    {
+      "fingerprint": "eacdf92da701f888",
+      "sc": [
+        "1.3.1"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": true
+    },
+    {
+      "fingerprint": "2b38cc7f512708ab",
+      "sc": [
+        "1.1.1"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": true
+    },
+    {
+      "fingerprint": "9a2e28842110b018",
+      "sc": [
+        "2.4.3"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": true
+    },
+    {
+      "fingerprint": "7cf923e35e7c3d8c",
+      "sc": [
+        "1.3.1"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": false
+    },
+    {
+      "fingerprint": "09f3983b758c4900",
+      "sc": [
+        "3.3.2"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": false
+    },
+    {
+      "fingerprint": "47d30eafc619f5b9",
+      "sc": [
+        "1.3.1"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": false
+    },
+    {
+      "fingerprint": "1c6acc2961d70e7b",
+      "sc": [
+        "1.3.1"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": false
+    },
+    {
+      "fingerprint": "80562e83c9ee3349",
+      "sc": [
+        "1.4.10"
+      ],
+      "level": "AA",
+      "status": "Planned",
+      "hasWorkaround": false
+    },
+    {
+      "fingerprint": "b550771b1196c26c",
+      "sc": [
+        "4.1.2"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": true
+    },
+    {
+      "fingerprint": "ea6de580e92fbf49",
+      "sc": [
+        "2.4.3"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": false
+    },
+    {
+      "fingerprint": "89a275d6b4936313",
+      "sc": [
+        "4.1.2"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": true
+    },
+    {
+      "fingerprint": "5d070472d6606f07",
+      "sc": [
+        "4.1.2"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": false
+    },
+    {
+      "fingerprint": "a4d8dd8f3be839cd",
+      "sc": [
+        "2.4.7"
+      ],
+      "level": "AA",
+      "status": "Planned",
+      "hasWorkaround": false
+    },
+    {
+      "fingerprint": "1391d2f25f834b85",
+      "sc": [
+        "2.4.3"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": false
+    },
+    {
+      "fingerprint": "3e6e00805a7b14fc",
+      "sc": [
+        "2.3.3"
+      ],
+      "level": "AAA",
+      "status": "Planned",
+      "hasWorkaround": false
+    },
+    {
+      "fingerprint": "ee777232e98b0910",
+      "sc": [
+        "2.4.3"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": true
+    },
+    {
+      "fingerprint": "46b460b80e854d4d",
+      "sc": [
+        "2.4.3"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": false
+    },
+    {
+      "fingerprint": "7434c8590fa402d0",
+      "sc": [
+        "2.4.3"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": false
+    },
+    {
+      "fingerprint": "4a4768f46a0c3dcf",
+      "sc": [
+        "1.3.1"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": false
+    },
+    {
+      "fingerprint": "3f9a90a4262ffb9b",
+      "sc": [
+        "3.1.2"
+      ],
+      "level": "AA",
+      "status": "Planned",
+      "hasWorkaround": false
+    },
+    {
+      "fingerprint": "992e089776dcad51",
+      "sc": [
+        "2.2.2"
+      ],
+      "level": "A",
+      "status": "Planned",
+      "hasWorkaround": false
+    }
+  ]
+}

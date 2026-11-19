@@ -148,6 +148,7 @@ import { extractCourse } from './src/extract.js';
 import { UnsupportedRisePackageError } from './src/rise-payload.js';
 import { buildReport } from './src/report/report.js';
 import { renderReport } from './src/report/render-report.js';
+import { RISE_LIMITATIONS } from './src/report/limitations-data.js';
 
 const fileInput = document.getElementById('file-input');
 const loader    = document.getElementById('loader');
@@ -175,7 +176,7 @@ async function handleFile(file) {
 
   try {
     const { courseData, extraction } = await extractCourse(file);
-    const report = buildReport(courseData, { extraction });
+    const report = buildReport(courseData, { extraction, registry: RISE_LIMITATIONS });
     reportEl.innerHTML = renderReport(report);
     statusEl.textContent =
       `Report ready: ${report.summary.fail} FAIL, ${report.summary.review} REVIEW. The report is below.`;

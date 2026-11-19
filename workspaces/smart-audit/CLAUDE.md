@@ -270,7 +270,8 @@ workspaces/smart-audit/
 │   │   ├── colour.js           contrast ratio maths and nearest compliant colour
 │   │   ├── inventory.js        attachments, embeds, Storyline (section 4)
 │   │   ├── reminders.js        "keep in mind" text (section 2)
-│   │   ├── limitations.js      staleness rule for the limitations list (section 3)
+│   │   ├── limitations.js      which Rise gaps apply to a course, and staleness (section 3)
+│   │   ├── limitations-data.js the dated, sourced list of Rise-documented gaps (data)
 │   │   ├── scope.js            what is out of scope (section 4)
 │   │   ├── report.js           buildReport(): the four sections
 │   │   └── render-report.js    report -> escaped, accessible HTML
@@ -280,7 +281,10 @@ workspaces/smart-audit/
 │   ├── rise-payload.test.js
 │   └── report.test.js
 ├── tooling/
-│   └── serve-workspace.cjs
+│   ├── serve-workspace.cjs
+│   ├── check-limitations.js    maintainer script: compare the list with Articulate's page (npm run smart-audit:limitations)
+│   ├── limitations-source.js   its page parser and diff helpers
+│   └── snapshots/              fingerprints of the last reviewed page
 ├── docs/
 │   ├── SCOPE-V1.md
 │   ├── SCOPE-V1-EVIDENCE.md

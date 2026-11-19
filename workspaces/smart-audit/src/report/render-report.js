@@ -103,14 +103,29 @@ function renderLimitations(report) {
     const linkable = typeof l.sourceUrl === 'string' && /^https?:\/\//i.test(l.sourceUrl);
     const source = linkable ? ` Source: <a href="${esc(l.sourceUrl)}">${esc(l.sourceUrl)}</a>.` : '';
     const stale = l.stale
-      ? `<p class="warning" role="note"><strong>This list may be out of date.</strong> It is older than ${esc(l.staleAfterDays)} days or has no valid date. Check the source before relying on it.</p>`
+      ? `<p class="warning" role="note"><strong>This list may be out of date.</strong> It was last compared with Articulate’s page more than ${esc(l.staleAfterDays)} days ago, or has no valid date. Check the source before relying on it.</p>`
       : '';
+    const row = (e) =>
+      `<li><strong>${esc(e.title)}</strong> <span class="muted">(WCAG ${esc(scText(e.sc ?? []))}${e.level ? `, Level ${esc(e.level)}` : ''}; status per Articulate: ${esc(e.status ?? 'unknown')})</span>` +
+      `<br>${esc(e.summary)}` +
+      (e.because ? `<br><span class="muted">Why it is listed: ${esc(e.because)}.</span>` : '') +
+      (e.workaround ? `<br>Workaround documented by Articulate: ${esc(e.workaround)}` : '') +
+      `</li>`;
     const entries = l.entries.length
-      ? `<ul class="plain-list">${l.entries
-          .map((e) => `<li><strong>${esc(e.title)}</strong> <span class="muted">(WCAG ${esc(scText(e.sc ?? []))})</span><br>${esc(e.summary)}${e.workaround ? `<br>Workaround documented by Articulate: ${esc(e.workaround)}` : ''}</li>`)
-          .join('')}</ul>`
-      : '<p>No documented limitations matched this course’s content. The source lists others that apply to every Rise course.</p>';
-    body = `<p>Documented by Articulate as of ${esc(l.asOf ?? 'an unknown date')}.${source} These are gaps in Rise itself, not mistakes by the author, and not independently verified by this tool.</p>${stale}${entries}`;
+      ? `<ul class="plain-list">${l.entries.map(row).join('')}</ul>`
+      : '<p>No documented limitation was matched to this course’s content.</p>';
+    const standing = l.standing?.length
+      ? `<h4 id="h-limits-standing">Documented gaps that apply to any Rise course</h4><ul class="plain-list">${l.standing.map(row).join('')}</ul>`
+      : '';
+    const c = l.counts;
+    const rest = c
+      ? `<p>${esc(c.listed)} gaps are on the list. ${esc(c.notPresent)} concern content this course does not appear to use. ${esc(c.notDetectable)} concern blocks or settings that this tool cannot yet detect from an export, so it cannot say whether they apply; see the source for the full list.</p>`
+      : '';
+    const dates =
+      `Articulate’s page was last updated ${esc(l.asOf ?? 'on an unknown date')}` +
+      (l.checkedOn ? `; this list was last compared with it on ${esc(l.checkedOn)}` : '') +
+      '.';
+    body = `<p>Documented by Articulate as of ${esc(l.asOf ?? 'an unknown date')}.${source} ${dates} These are gaps in Rise itself, not mistakes by the author, and not independently verified by this tool.</p>${stale}${entries}${standing}${rest}`;
   }
   return (
     `<section id="sec-limits" aria-labelledby="h-limits">` +
