@@ -82,7 +82,7 @@ Reflected in the revised `SCOPE-V1.md`:
 
 Still open:
 
-- **Family 1:** the blank-versus-decorative alt experiment. FAIL and REVIEW split stays provisional.
-- **Family 3:** bare URL as link text stays FAIL in the contract but is unverified against SC 2.4.4.
+- **Family 1:** resolved enough to build on 2026-11-19 by classifying slots from a 9-export survey. FAIL only where a field is proven; how Rise stores a decorative image is still not verified.
+- **Family 3:** verified 2026-11-19. Bare URL as link text is not a defined failure under SC 2.4.4 (purpose may come from context), so it is now REVIEW. Empty link text stays FAIL (axe `link-name` is Level A). Empty heading is REVIEW, best practice (W3C 2.4.6 silent; axe best-practice).
 - **Definition of done, item 5:** the worked example source. No Rise access; a permitted third-party export is not yet approved as a substitute.
 - **Limitations list fields:** whether the export records "lesson header disabled", the Horizon theme id, and Microlearning navigation.

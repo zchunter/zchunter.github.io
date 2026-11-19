@@ -11,7 +11,9 @@ Evidence behind each change is in `SCOPE-V1-EVIDENCE.md`, `WCAG-COVERAGE.md` and
 - The v1 cut line is now every Level A/AA criterion that can be checked cheaply from data the parser already reads (tier A in `WCAG-COVERAGE.md`). That adds page titles, multiple ways, and a standing audio-description note, and keeps the original five families.
 - Theme contrast is narrowed. The export holds one theme colour, not colour pairs.
 - Heading checks use the verified block-to-level mapping. The open h1-versus-h2 question is closed.
-- Skipped heading level is REVIEW, not FAIL, because WCAG lists no heading-level failure for it.
+- Heading checks that are best practice rather than WCAG failures are REVIEW and labelled as such: skipped level (no failure defined) and empty heading (the W3C 2.4.6 page does not address it; axe classes it as best practice).
+- Bare URL as link text is REVIEW, not FAIL: the W3C 2.4.4 page does not define it as a failure and allows purpose to come from context. Empty link text stays FAIL (axe `link-name` is Level A for 2.4.4 and 4.1.2).
+- Alt text FAIL applies only to slots where real exports prove an alt field exists. Other image slots are REVIEW or NOT CHECKED (see family 1).
 - Audio transcript is REVIEW until an export shows what Rise stores. WCAG requires only that an alternative exists, not a particular field.
 - The report has four sections, split by who controls the issue, instead of one list of findings.
 - v1 includes a small dated list of Rise's own documented accessibility limitations, with a required way to keep it current.
@@ -40,27 +42,34 @@ Each check must be unambiguously decidable from the parsed export. Each finding 
 
 ### 1. Image alternative text - SC 1.1.1 (Level A)
 
-Alt text locations are already mapped across the multiple nesting paths in the parsed schema. Checks apply only to slots that have an alt field in Rise's data model.
+Alt text locations are mapped across the nesting paths in the parsed schema, and each slot is classified by what real exports show:
 
-- FAIL: image block with no alt property at all
+- **Confirmed alt slots** (an alt value has been seen populated or explicitly empty): text-and-image and hero image blocks, the labeled graphic base image, process step images, accordion panel images.
+- **Unconfirmed slots** (only absent alt seen, so the export cannot prove Rise offers a field): other image blocks, galleries, tab images, any slot not yet seen. A missing alt is REVIEW here, never FAIL.
+- **Known Rise limitation:** Text on Image blocks, where Articulate documents that alt text is not output. REVIEW, and the finding says so.
+- **No alt field in the data model:** flashcard faces, block and item backgrounds, quote avatars, scenario backgrounds, unused editor slots. NOT CHECKED, grouped per lesson, with the reason.
+
+- FAIL: image in a confirmed alt slot with no alt property at all
+- REVIEW: no alt property in an unconfirmed slot or a Text on Image block
 - REVIEW: empty alt string. An empty alt is correct for a decorative image, so this can never be an automatic fail. The report asks whether the image is decorative.
 - REVIEW: alt text that equals or contains the source filename (IMG_4521, Screenshot 2026-03-11, .jpg/.png/.gif anywhere in the string)
 - REVIEW: alt text matching a placeholder list - image, picture, photo, graphic, logo, icon, untitled, alt text
 - REVIEW: alt text longer than 150 characters, which usually means the content belongs in a caption or long description
-- NOT CHECKED, with the reason: images in slots with no alt field in the data model (flashcard faces, quote backgrounds, scenario backgrounds and character poses)
+- REVIEW: scenario slide or response with no alt text (the export cannot show whether that slide displays a character image)
+- Course cover and logo images follow the same text rules; a missing alt there is REVIEW, because the export cannot show whether the image is decorative
 
 Deliberately out of scope: whether good alt text is actually good. Presence and plausibility only. Alt quality is not mechanically decidable and claiming to judge it would undermine the tool's credibility.
 
-Unverified before build: whether Rise stores a deliberately blank or decorative alt as absent, as an empty string, or as a pair of quote characters. The corpus shows both `""` and `'""'`. Until verified, the FAIL and REVIEW split for this family stays provisional.
+Still unverified: how Rise stores a deliberately decorative image. The corpus shows absent alt, `""` and a literal pair of quote characters, all treated as "no alt text" or "empty" as described above. The confirmed-slot list grows as more real exports are seen.
 
 ### 2. Heading structure - SC 1.3.1 (Level A), SC 2.4.6 (Level AA)
 
 The outline is computed from the verified block-to-level mapping: the lesson title is h1, `heading` and `heading paragraph` blocks are h2, `subheading` and `subheading paragraph` blocks are h3, plus any literal h1-h6 tags in rich text. Blocks whose heading level has not been verified (accordion, tab and process titles, impact, quote, labeled graphic) are left out of the outline and named in section 4.
 
-- FAIL: empty heading element
-- REVIEW: skipped heading level (for example a subheading before any heading in its lesson, h1 to h3). Labelled a best practice; WCAG 2.1 lists no failure for it.
+- REVIEW: empty heading element. Labelled best practice: the W3C 2.4.6 page does not address empty headings, and axe classes the rule as best practice, not a WCAG failure.
+- REVIEW: skipped heading level (for example a subheading before any heading in its lesson, h1 to h3). Labelled best practice; W3C guidance advises avoiding it but defines no failure.
 - REVIEW: lesson with no heading-level block
-- REVIEW: heading under 4 characters, which usually means a heading style was used for visual emphasis rather than structure
+- REVIEW: heading under 4 characters, which usually means a heading style was used for visual emphasis rather than structure (the W3C failure F43 covers heading markup used only for appearance)
 
 Known Rise limitation, reported in section 3: Rise cannot assign an h1 when the lesson header is disabled, so a missing h1 may not be the author's doing.
 
@@ -69,7 +78,7 @@ Known Rise limitation, reported in section 3: Rise cannot assign an h1 when the 
 Covers button labels and destinations and links inside rich text (which needs an HTML parser, not a regex).
 
 - FAIL: link with empty or whitespace-only text
-- FAIL: link text that is a bare URL (starts http, www, or contains :// ). Unverified against SC 2.4.4 before build; downgrade to REVIEW if the criterion does not support FAIL.
+- REVIEW: link text that is a bare URL (starts http, www, or contains :// ). SC 2.4.4 does not define this as a failure and allows purpose to come from context.
 - REVIEW: link text matching the non-descriptive list - click here, here, read more, learn more, more, this link, link, this page, download, see more. SC 2.4.4 allows purpose to come from surrounding context, which is why this is REVIEW.
 - REVIEW: identical link text pointing to two or more different destinations within the same lesson
 
@@ -118,9 +127,11 @@ This section exists to be enforced. Anything here is a "no" until v1 has shipped
 
 Three result states, and the three-state model is itself part of what the portfolio demonstrates:
 
-- FAIL - mechanically certain. A missing attribute, an empty element. Never used where the export lacks the information to be certain.
+- FAIL - mechanically certain, and a defined WCAG failure. Never used where the export lacks the information to be certain, or where WCAG itself defines no failure.
 - REVIEW - detected, but correctness depends on human judgment or on information the export does not contain.
 - NOT CHECKED - named explicitly in the report, with the reason. The out-of-v1 list above appears in every report so a reader knows what the tool did not look at.
+
+Each finding also carries a basis: a WCAG success criterion, or best practice where W3C guidance advises something but defines no failure. Best-practice findings are labelled as such in the report.
 
 A report that silently omits what it cannot test is worse than one that names its own blind spots.
 
