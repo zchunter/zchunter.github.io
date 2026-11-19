@@ -277,7 +277,8 @@ workspaces/smart-audit/
 │   │   ├── scope.js            what is out of scope (section 4)
 │   │   ├── report.js           buildReport(): the four sections
 │   │   ├── render-report.js    report -> escaped, accessible HTML
-│   │   └── export-html.js      report -> standalone .html file (no scripts, CSP blocks fetches)
+│   │   ├── export-html.js      report -> standalone .html file (no scripts, CSP blocks fetches)
+│   │   └── image-ref.js        which image a finding is about; its ZIP path for previews
 │   ├── dump.js, images.js, issues.js, render.js   older viewer, unwired
 ├── tests/
 │   ├── extract.test.js
@@ -286,7 +287,8 @@ workspaces/smart-audit/
 │   ├── checks.test.js
 │   ├── checks-content.test.js
 │   ├── limitations.test.js
-│   └── export-html.test.js
+│   ├── export-html.test.js
+│   └── image-ref.test.js
 ├── tooling/
 │   ├── serve-workspace.cjs
 │   ├── check-limitations.js    maintainer script: compare the list with Articulate's page (npm run smart-audit:limitations)

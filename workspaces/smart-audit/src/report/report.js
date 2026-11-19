@@ -4,6 +4,7 @@
  *   2. keepInMind     manual-review reminders keyed to what the course contains
  *   3. limitations    Rise-documented gaps the author cannot fix
  *   4. notChecked     everything seen but not examined, and what is out of scope
+ * plus an appendix, images: every image with its stored alt text.
  *
  * Pure: takes the raw parsed course, returns a plain object. Rendering is in
  * render-report.js. The report never claims conformance.
@@ -17,6 +18,7 @@ import { scanFacts, buildReminders } from './reminders.js';
 import { limitationsSection } from './limitations.js';
 import { NOT_CHECKED_SCOPE } from './scope.js';
 import { CHECKS } from './checks/index.js';
+import { imageInventory } from './checks/image-alt.js';
 
 /**
  * @param {object} courseData raw parsed Rise course (from extractCourse)
@@ -56,5 +58,7 @@ export function buildReport(courseData, { extraction = null, checks = CHECKS, re
       uninspected: summarizeUninspected(blocks, checks),
       scope: NOT_CHECKED_SCOPE,
     },
+    // Appendix: every image with its stored alt text, for a person to check accuracy.
+    images: imageInventory(course, blocks),
   };
 }

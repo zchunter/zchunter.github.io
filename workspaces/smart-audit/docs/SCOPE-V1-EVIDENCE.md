@@ -83,6 +83,8 @@ Reflected in the revised `SCOPE-V1.md`:
 Still open:
 
 - **Family 1:** resolved enough to build on 2026-11-19 by classifying slots from a 9-export survey. FAIL only where a field is proven; how Rise stores a decorative image is still not verified.
+- **Family 1, rendered output (2026-11-19):** Zach's own course export was served locally and opened in Chrome. Three images with no `alt` property in the data (two text-aside icons, one labeled-graphic base image; none with `zoomOnClick` set) all rendered as `<img alt="">`. So "no alt property" is published as decorative, not as a missing attribute. That makes it REVIEW, not FAIL: wrong only if the image is informative. Not yet observed: a missing alt on an image with zoom enabled, where Articulate documents that the file name is announced (Maturity Plan gap 3). If confirmed, that case could be a FAIL.
+- **Image files in the ZIP (2026-11-19):** uploaded images sit at `assets/<crushedKey>` (sometimes percent-encoded); Rise block defaults sit at `assets/<src>`, which can include a folder. Some unused editor slots point only at Articulate's CDN and have no local copy; they are never fetched.
 - **Family 3:** verified 2026-11-19. Bare URL as link text is not a defined failure under SC 2.4.4 (purpose may come from context), so it is now REVIEW. Empty link text stays FAIL (axe `link-name` is Level A). Empty heading is REVIEW, best practice (W3C 2.4.6 silent; axe best-practice).
 - **Definition of done, item 5:** the worked example source. No Rise access; a permitted third-party export is not yet approved as a substitute.
 - **Limitations list fields:** whether the export records "lesson header disabled", the Horizon theme id, and Microlearning navigation.

@@ -9,7 +9,10 @@
  * are classified from what real exports show (see docs/SCOPE-V1-EVIDENCE.md):
  *
  *   confirmed    alt has been seen populated or explicitly empty in real
- *                exports, so the field exists. Missing alt -> FAIL.
+ *                exports, so the field exists. Missing alt -> REVIEW: Rise
+ *                publishes it as alt="" (decorative), verified 2026-11-19 by
+ *                rendering a real export, so it is a defect only if the image
+ *                carries information, which needs human judgment.
  *   unconfirmed  only a missing alt has ever been seen, so the export cannot
  *                prove Rise offers a field. Missing alt -> REVIEW, never FAIL.
  *   limited      Articulate documents a bug: alt text is not output. -> REVIEW.
@@ -17,11 +20,13 @@
  *                avatars, unused editor slots). -> NOT CHECKED, grouped per
  *                lesson so a deck of decorative backgrounds is one line.
  *
- * Unknown slots default to "unconfirmed": a new block type must never
- * produce a FAIL until real evidence promotes it to "confirmed".
+ * This check therefore never produces FAIL. Every finding about one image
+ * carries an image reference (file name, stored alt, ZIP paths) so the
+ * reviewer can find it in Rise and preview it.
  */
 
 import { walkItems, matchesIdentity } from '../walk.js';
+import { imageRef } from '../image-ref.js';
 
 const SC = ['1.1.1'];
 
@@ -37,10 +42,10 @@ const CONFIRMED = [
 const LIMITED = [{ identity: 'image/image/text overlay', level: 'item' }];
 
 const NO_FIELD_GROUPS = [
-  { group: 'editor-slot', matches: (p) => p.split('.').includes('tmp'), noun: 'image in an unused editor slot' },
-  { group: 'flashcard', matches: (p) => /^(front|back)\./.test(p), noun: 'flashcard image' },
-  { group: 'avatar', matches: (p) => /^avatar\./.test(p), noun: 'avatar image' },
-  { group: 'background', matches: (p) => /^background\./.test(p), noun: 'background image' },
+  { group: 'editor-slot', matches: (p) => p.split('.').includes('tmp'), noun: 'image in an unused editor slot', nouns: 'images in unused editor slots' },
+  { group: 'flashcard', matches: (p) => /^(front|back)\./.test(p), noun: 'flashcard image', nouns: 'flashcard images' },
+  { group: 'avatar', matches: (p) => /^avatar\./.test(p), noun: 'avatar image', nouns: 'avatar images' },
+  { group: 'background', matches: (p) => /^background\./.test(p), noun: 'background image', nouns: 'background images' },
 ];
 
 /**
@@ -50,7 +55,7 @@ const NO_FIELD_GROUPS = [
  */
 export function classifySlot(identity, level, relPath) {
   const noField = NO_FIELD_GROUPS.find((g) => g.matches(relPath));
-  if (noField) return { kind: 'no-field', group: noField.group, noun: noField.noun };
+  if (noField) return { kind: 'no-field', group: noField.group, noun: noField.noun, nouns: noField.nouns };
 
   if (relPath === 'media.image') {
     if (LIMITED.some((r) => r.level === level && matchesIdentity(r.identity, identity))) return { kind: 'limited' };
@@ -114,11 +119,23 @@ const REMEDY_TEXT = 'Rewrite the alt text as a short description of what the ima
 
 /** Findings for one image record in a slot of a given class. */
 function assess({ slot, record, location }) {
+  const image = imageRef(record);
+  return assessState({ slot, record, location }).map((f) => ({ ...f, image }));
+}
+
+function assessState({ slot, record, location }) {
   const state = altState(record);
 
   if (state === 'absent') {
     if (slot.kind === 'confirmed') {
-      return [{ severity: 'FAIL', location, message: 'This image has no alt text.', remediation: REMEDY_MISSING }];
+      return [
+        {
+          severity: 'REVIEW',
+          location,
+          message: 'This image has no alt text. Rise publishes it as decorative (an empty alt), so screen readers skip it. That is correct only if the image carries no information.',
+          remediation: REMEDY_MISSING,
+        },
+      ];
     }
     const why =
       slot.kind === 'limited'
@@ -166,6 +183,83 @@ function* imageRecords(node, path = '') {
   }
 }
 
+// ─── walking every image slot ────────────────────────────────────────────────
+
+/** Every block and item that can own images, with its location and item path. */
+function* owners(blocks) {
+  for (const entry of blocks) {
+    yield { owner: entry.block, level: 'block', identity: entry.identity, location: entry.location, prefix: '' };
+    for (const it of walkItems(entry)) yield { owner: it.item, level: 'item', identity: entry.identity, location: it.location, prefix: it.itemPath };
+  }
+}
+
+/**
+ * Every image in the course, in course order: cover and logo first, then each
+ * block and item. Shared by the check and the "All images" table so the two
+ * can never disagree about which images exist or how a slot is classified.
+ * Yields { slot, record, where }; course images have slot.kind 'course'.
+ */
+export function* imageSlots(course, blocks) {
+  for (const [label, record] of [
+    ['cover image', course?.coverImage?.media?.image],
+    ['logo', course?.media?.image],
+  ]) {
+    if (isImageRecord(record)) yield { slot: { kind: 'course', label }, record, where: { scope: 'course' } };
+  }
+  for (const { owner, level, identity, location, prefix } of owners(blocks)) {
+    for (const { path, record } of imageRecords(owner)) {
+      yield { slot: classifySlot(identity, level, path), record, where: { ...location, itemPath: prefix ? `${prefix}.${path}` : path } };
+    }
+  }
+}
+
+/** Findings for one image that has an alt field (or may have one). Never FAIL. */
+function assessSlot(slot, record, where) {
+  if (slot.kind !== 'course') return assess({ slot, record, location: where });
+  const { label } = slot;
+  const image = imageRef(record);
+  const state = altState(record);
+  if (state === 'present') {
+    const problems = altTextProblems(record.alt, record);
+    return problems.length ? [{ severity: 'REVIEW', location: where, image, message: `The course ${label} alt text may need attention: ${problems.join('; ')}.`, remediation: REMEDY_TEXT }] : [];
+  }
+  return [
+    {
+      severity: 'REVIEW',
+      location: where,
+      image,
+      message: `The course ${label} has ${state === 'absent' ? 'no alt text' : 'empty alt text'}. That is fine only if it is purely decorative.`,
+      remediation: REMEDY_EMPTY,
+    },
+  ];
+}
+
+/**
+ * The "All images" table: one row per image with the alt text stored in the
+ * export and what the check concluded. It judges nothing new; "no problem
+ * detected" means only that alt text exists and does not look like a
+ * placeholder or file name. Whether it is accurate is for a person to decide.
+ *
+ * @returns {Array<{ location, image, altState: 'absent'|'empty'|'present', result: 'REVIEW'|'NO PROBLEM DETECTED'|'NOT CHECKED', note: string }>}
+ */
+export function imageInventory(course, blocks) {
+  const rows = [];
+  for (const { slot, record, where } of imageSlots(course, blocks)) {
+    const base = { location: where, image: imageRef(record), altState: altState(record) };
+    if (slot.kind === 'no-field') {
+      rows.push({ ...base, result: 'NOT CHECKED', note: `Rise has no alt text field for this ${slot.noun.replace(/^image in an /, '')}.` });
+      continue;
+    }
+    const findings = assessSlot(slot, record, where);
+    rows.push(
+      findings.length
+        ? { ...base, result: 'REVIEW', note: findings[0].message }
+        : { ...base, result: 'NO PROBLEM DETECTED', note: 'Alt text is present and does not look like a placeholder or file name. Check that it is accurate.' },
+    );
+  }
+  return rows;
+}
+
 // ─── the check ───────────────────────────────────────────────────────────────
 
 export const imageAlt = {
@@ -188,66 +282,36 @@ export const imageAlt = {
 
   run({ course, blocks }) {
     const results = [];
-    const notChecked = new Map(); // `${lessonIndex}|${kind}` -> { count, noun, location }
+    const notChecked = new Map(); // `${lessonIndex}|${group}` -> { count, noun, nouns, location }
 
-    const visit = (owner, level, identity, location, itemPathPrefix) => {
-      for (const { path, record } of imageRecords(owner)) {
-        const slot = classifySlot(identity, level, path);
-        const where = { ...location, itemPath: itemPathPrefix ? `${itemPathPrefix}.${path}` : path };
-
-        if (slot.kind === 'no-field') {
-          const key = `${location.lessonIndex}|${slot.group}`;
-          const entry = notChecked.get(key) ?? { count: 0, noun: slot.noun, location: { scope: 'lesson', lessonIndex: location.lessonIndex, lessonId: location.lessonId, lessonTitle: location.lessonTitle, lessonType: location.lessonType } };
-          entry.count += 1;
-          notChecked.set(key, entry);
-          continue;
-        }
-        results.push(...assess({ slot, record, location: where }));
+    for (const { slot, record, where } of imageSlots(course, blocks)) {
+      if (slot.kind === 'no-field') {
+        const key = `${where.lessonIndex}|${slot.group}`;
+        const entry = notChecked.get(key) ?? { count: 0, noun: slot.noun, nouns: slot.nouns, location: { scope: 'lesson', lessonIndex: where.lessonIndex, lessonId: where.lessonId, lessonTitle: where.lessonTitle, lessonType: where.lessonType } };
+        entry.count += 1;
+        notChecked.set(key, entry);
+        continue;
       }
-
-      // Scenario slides carry their own alt fields for the character and responses.
-      if (owner && Array.isArray(owner.slides)) {
-        owner.slides.forEach((slide, s) => {
-          const slidePath = `${itemPathPrefix ? `${itemPathPrefix}.` : ''}slides[${s}]`;
-          results.push(...assessSlideAlt(slide, { ...location, itemPath: `${slidePath}.alt` }, 'The scenario slide'));
-          (slide?.responses ?? []).forEach((response, r) => {
-            results.push(...assessSlideAlt(response, { ...location, itemPath: `${slidePath}.responses[${r}].alt` }, 'The scenario response'));
-          });
-        });
-      }
-    };
-
-    for (const entry of blocks) {
-      visit(entry.block, 'block', entry.identity, entry.location, '');
-      for (const it of walkItems(entry)) visit(it.item, 'item', entry.identity, it.location, it.itemPath);
+      results.push(...assessSlot(slot, record, where));
     }
 
-    // Course-level images: cover and logo.
-    const courseWhere = { scope: 'course' };
-    for (const [label, record] of [
-      ['cover image', course?.coverImage?.media?.image],
-      ['logo', course?.media?.image],
-    ]) {
-      if (!isImageRecord(record)) continue;
-      const state = altState(record);
-      if (state === 'present') {
-        const problems = altTextProblems(record.alt, record);
-        if (problems.length) results.push({ severity: 'REVIEW', location: courseWhere, message: `The course ${label} alt text may need attention: ${problems.join('; ')}.`, remediation: REMEDY_TEXT });
-      } else {
-        results.push({
-          severity: 'REVIEW',
-          location: courseWhere,
-          message: `The course ${label} has ${state === 'absent' ? 'no alt text' : 'empty alt text'}. That is fine only if it is purely decorative.`,
-          remediation: REMEDY_EMPTY,
+    // Scenario slides carry their own alt fields for the character and responses.
+    for (const { owner, location, prefix } of owners(blocks)) {
+      if (!Array.isArray(owner?.slides)) continue;
+      owner.slides.forEach((slide, s) => {
+        const slidePath = `${prefix ? `${prefix}.` : ''}slides[${s}]`;
+        results.push(...assessSlideAlt(slide, { ...location, itemPath: `${slidePath}.alt` }, 'The scenario slide'));
+        (slide?.responses ?? []).forEach((response, r) => {
+          results.push(...assessSlideAlt(response, { ...location, itemPath: `${slidePath}.responses[${r}].alt` }, 'The scenario response'));
         });
-      }
+      });
     }
 
-    for (const { count, noun, location } of notChecked.values()) {
+    for (const { count, noun, nouns, location } of notChecked.values()) {
       results.push({
         severity: 'NOT CHECKED',
         location,
-        message: `${count} ${noun}${count === 1 ? '' : 's'} in this lesson ${count === 1 ? 'has' : 'have'} no alt text field in Rise's data model, so ${count === 1 ? 'it was' : 'they were'} not checked.`,
+        message: `${count} ${count === 1 ? noun : nouns} in this lesson ${count === 1 ? 'has' : 'have'} no alt text field in Rise's data model, so ${count === 1 ? 'it was' : 'they were'} not checked.`,
       });
     }
     return results;

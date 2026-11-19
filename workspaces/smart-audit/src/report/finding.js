@@ -25,7 +25,11 @@ const SC_PATTERN = /^[1-4]\.\d{1,2}\.\d{1,2}$/;
  * buggy check fails loudly in tests instead of producing a vague report.
  */
 export function createFinding(input) {
-  const { checkId, sc, severity, location, message, remediation = null, measured = null, basis = 'wcag' } = input ?? {};
+  const { checkId, sc, severity, location, message, remediation = null, measured = null, basis = 'wcag', image = null } = input ?? {};
+
+  if (image !== null && (typeof image !== 'object' || typeof image.name !== 'string' || !Array.isArray(image.candidates))) {
+    throw new TypeError('finding.image must be null or an image reference from imageRef()');
+  }
 
   if (typeof checkId !== 'string' || !checkId) throw new TypeError('finding.checkId is required');
   if (!SEVERITIES.includes(severity)) {
@@ -62,6 +66,7 @@ export function createFinding(input) {
     message: message.trim(),
     remediation: typeof remediation === 'string' ? remediation.trim() : null,
     measured,
+    image: image ? Object.freeze({ name: image.name, alt: image.alt ?? null, candidates: Object.freeze([...image.candidates]) }) : null,
   });
 }
 
