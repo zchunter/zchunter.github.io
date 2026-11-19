@@ -13,7 +13,7 @@ import { parseHex, toHex, contrastRatio, formatRatio, nearestCompliantOnWhite } 
 import { classifySlot, altState, altTextProblems, imageAlt, MAX_ALT_LENGTH } from '../src/report/checks/image-alt.js';
 import { themeContrast } from '../src/report/checks/theme-contrast.js';
 import { CHECKS } from '../src/report/checks/index.js';
-import { runChecks } from '../src/report/run-checks.js';
+import { runChecks, validateCheck } from '../src/report/run-checks.js';
 import { buildReport } from '../src/report/report.js';
 import { renderReport } from '../src/report/render-report.js';
 import { createFinding } from '../src/report/finding.js';
@@ -377,8 +377,12 @@ describe('theme-contrast check', () => {
 // ─── the checks together ─────────────────────────────────────────────────────
 
 describe('registered checks', () => {
-  test('image alt text and theme contrast are enabled', () => {
-    expect(CHECKS.map((c) => c.id)).toEqual(['image-alt', 'theme-contrast']);
+  test('all six v1 families are enabled, in the contract order', () => {
+    expect(CHECKS.map((c) => c.id)).toEqual(['image-alt', 'heading-structure', 'link-purpose', 'media-alternatives', 'theme-contrast', 'titles-navigation']);
+  });
+
+  test('every enabled check is a valid definition', () => {
+    for (const c of CHECKS) expect(() => validateCheck(c)).not.toThrow();
   });
 
   test('a full report over a small course has findings, NOT CHECKED items and honest coverage', () => {
@@ -400,7 +404,8 @@ describe('registered checks', () => {
         ],
       },
     };
-    const report = buildReport(data, { now: new Date('2026-11-19T00:00:00Z') });
+    // Only the two checks under test, so the coverage statements below stay about them.
+    const report = buildReport(data, { checks: [imageAlt, themeContrast], now: new Date('2026-11-19T00:00:00Z') });
     expect(report.summary).toMatchObject({ fail: 1, review: 1, notChecked: 1 });
     expect(report.findings.map((f) => f.checkId)).toEqual(['image-alt', 'theme-contrast']);
     // The paragraph and the custom HTML block are not read by either check, and the report says so.

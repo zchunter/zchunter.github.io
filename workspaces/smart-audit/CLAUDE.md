@@ -263,7 +263,11 @@ workspaces/smart-audit/
 │   │   ├── walk.js             shared course walker; gives every finding a location
 │   │   ├── finding.js          the one finding shape (FAIL / REVIEW / NOT CHECKED)
 │   │   ├── run-checks.js       runs checks; a crashing check becomes NOT CHECKED
-│   │   ├── checks/index.js     the enabled checks (the six v1 families go here)
+│   │   ├── checks/             one file per family: image-alt, heading-structure,
+│   │   │                       link-purpose, media-alternatives, theme-contrast,
+│   │   │                       titles-navigation; index.js lists them in contract order
+│   │   ├── rich-text.js        DOMParser helpers: links, headings, plain text
+│   │   ├── colour.js           contrast ratio maths and nearest compliant colour
 │   │   ├── inventory.js        attachments, embeds, Storyline (section 4)
 │   │   ├── reminders.js        "keep in mind" text (section 2)
 │   │   ├── limitations.js      staleness rule for the limitations list (section 3)

@@ -85,7 +85,7 @@ Covers button labels and destinations and links inside rich text (which needs an
 ### 4. Media captions and transcripts - SC 1.2.1, SC 1.2.2, SC 1.2.3, SC 1.2.5
 
 - FAIL: self-hosted video block with no captions track referenced. The finding states the limits: not a failure if the video has no audio or has open (burned-in) captions, which the export cannot show.
-- REVIEW: audio block present; transcript not verifiable from the export. WCAG requires only that an alternative exists, in any form and place. Upgrade to FAIL for an empty transcript only if a real audio export shows Rise stores a transcript field.
+- Audio blocks are not detected yet. No export examined contains one, so the block's identity and fields are unverified and are never guessed. An audio block therefore appears in the report's list of block types no check read. Once a real export shows what Rise stores, add: REVIEW when audio is present (WCAG requires only that a text alternative exists, in any form and place), and FAIL for an empty transcript only if the export shows Rise stores a transcript field.
 - REVIEW: externally embedded media (YouTube, Vimeo, Wistia and similar). Caption presence is not knowable from the export, and the report must say exactly that rather than guess.
 - REVIEW, standing: every video and embed carries "audio description not verifiable from the export" (SC 1.2.3 Level A, SC 1.2.5 Level AA).
 
